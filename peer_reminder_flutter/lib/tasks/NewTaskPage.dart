@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:peer_reminder_flutter/common/constant.dart' as Constant;
+import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
+import 'package:peer_reminder_flutter/common/Util.dart';
 
 class NewTaskPage extends StatefulWidget {
   const NewTaskPage({super.key});
@@ -16,6 +17,14 @@ class NewTaskFormState extends State<NewTaskPage> {
   // Note: This is a `GlobalKey<FormState>`,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
+
+  // Controllers
+  final _startDateController = TextEditingController();
+  final _startTimeController = TextEditingController();
+  final _endDateController = TextEditingController();
+  final _endTimeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +43,9 @@ class NewTaskFormState extends State<NewTaskPage> {
             children: <Widget>[
               // List TextFormField here
               createTaskNameField(),
+              createTaskStartDateField(),
               createTaskStartTimeField(),
+              createTaskEndDateField(),
               createTaskEndTimeField(),
               createTaskNoteField(),
               createTaskPeerField(),
@@ -55,28 +66,66 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
-  // TODO: time picker
+
+  // --------------------------------------
+  // Start Date and Time
+  TextFormField createTaskStartDateField() {
+    return TextFormField(
+      readOnly: true,
+      controller: _startDateController,
+      onTap: () => Util.selectDateForTexFormField(context, _startDateController, selectedDate),
+      decoration: const InputDecoration(
+        icon: Icon(Icons.calendar_month_outlined),
+        hintText: 'Select starting date',
+        labelText: 'Start date',
+      ),
+    );
+  }
+
   TextFormField createTaskStartTimeField() {
     return TextFormField(
+      readOnly: true,
+      controller: _startTimeController,
+      onTap: () => Util.selectTimeForTexFormField(context, _startTimeController, selectedTime),
       decoration: const InputDecoration(
         icon: Icon(Icons.access_time),
-        hintText: 'Enter starting time',
+        hintText: 'Select starting time',
         labelText: 'Start time',
       ),
     );
   }
 
-  // TODO: time picker
+
+  // --------------------------------------
+  // End Date and Time
+  TextFormField createTaskEndDateField() {
+    return TextFormField(
+      readOnly: true,
+      controller: _endDateController,
+      onTap: () => Util.selectDateForTexFormField(context, _endDateController, selectedDate),
+      decoration: const InputDecoration(
+        icon: Icon(Icons.calendar_month),
+        hintText: 'Select ending date',
+        labelText: 'End date',
+      ),
+    );
+  }
+
   TextFormField createTaskEndTimeField() {
     return TextFormField(
+      readOnly: true,
+      controller: _endTimeController,
+      onTap: () => Util.selectTimeForTexFormField(context, _endTimeController, selectedTime),
       decoration: const InputDecoration(
         icon: Icon(Icons.access_time_filled),
-        hintText: 'Enter ending time',
+        hintText: 'Select ending time',
         labelText: 'End time',
       ),
     );
   }
 
+
+  // --------------------------------------
   TextFormField createTaskNoteField() {
     return TextFormField(
       decoration: const InputDecoration(
@@ -102,13 +151,14 @@ class NewTaskFormState extends State<NewTaskPage> {
     return TextButton(
       onPressed: () {
         print('Button pressed');
+        print(_startDateController.text);
       },
       style: TextButton.styleFrom(
         foregroundColor: Colors.white,
       ),
       child: const Text(
         'Add',
-        style: TextStyle(fontSize: Constant.FONTSIZE_XL),
+        style: TextStyle(fontSize: constant.FONTSIZE_XL),
       ),
     );
   }
