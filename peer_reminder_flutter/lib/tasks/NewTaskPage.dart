@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
 import 'package:peer_reminder_flutter/common/Util.dart';
+import 'package:simple_autocomplete_formfield/simple_autocomplete_formfield.dart';
+import 'package:intl/intl.dart';
 
 class NewTaskPage extends StatefulWidget {
   const NewTaskPage({super.key});
@@ -26,8 +28,20 @@ class NewTaskFormState extends State<NewTaskPage> {
   final _endDateController = TextEditingController();
   final _endTimeController = TextEditingController();
 
+  // FIXME: finalize this
+  final letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+  String? selectedLetter;
+  static const List<String> _kOptions = <String>[
+    'aardvark',
+    'bobcat',
+    'chameleon',
+  ];
+
   @override
   Widget build(BuildContext context) {
+    // Set default values
+    setDefaultDateTime();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Task'),
@@ -66,14 +80,14 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
-
   // --------------------------------------
   // Start Date and Time
   TextFormField createTaskStartDateField() {
     return TextFormField(
       readOnly: true,
       controller: _startDateController,
-      onTap: () => Util.selectDateForTexFormField(context, _startDateController, selectedDate),
+      onTap: () => Util.selectDateForTexFormField(
+          context, _startDateController, selectedDate),
       decoration: const InputDecoration(
         icon: Icon(Icons.calendar_month_outlined),
         hintText: 'Select starting date',
@@ -86,7 +100,8 @@ class NewTaskFormState extends State<NewTaskPage> {
     return TextFormField(
       readOnly: true,
       controller: _startTimeController,
-      onTap: () => Util.selectTimeForTexFormField(context, _startTimeController, selectedTime),
+      onTap: () => Util.selectTimeForTexFormField(
+          context, _startTimeController, selectedTime),
       decoration: const InputDecoration(
         icon: Icon(Icons.access_time),
         hintText: 'Select starting time',
@@ -95,14 +110,14 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
-
   // --------------------------------------
   // End Date and Time
   TextFormField createTaskEndDateField() {
     return TextFormField(
       readOnly: true,
       controller: _endDateController,
-      onTap: () => Util.selectDateForTexFormField(context, _endDateController, selectedDate),
+      onTap: () => Util.selectDateForTexFormField(
+          context, _endDateController, selectedDate),
       decoration: const InputDecoration(
         icon: Icon(Icons.calendar_month),
         hintText: 'Select ending date',
@@ -115,7 +130,8 @@ class NewTaskFormState extends State<NewTaskPage> {
     return TextFormField(
       readOnly: true,
       controller: _endTimeController,
-      onTap: () => Util.selectTimeForTexFormField(context, _endTimeController, selectedTime),
+      onTap: () => Util.selectTimeForTexFormField(
+          context, _endTimeController, selectedTime),
       decoration: const InputDecoration(
         icon: Icon(Icons.access_time_filled),
         hintText: 'Select ending time',
@@ -123,7 +139,6 @@ class NewTaskFormState extends State<NewTaskPage> {
       ),
     );
   }
-
 
   // --------------------------------------
   TextFormField createTaskNoteField() {
@@ -137,15 +152,56 @@ class NewTaskFormState extends State<NewTaskPage> {
   }
 
   // TODO: Auto Suggestion
-  TextFormField createTaskPeerField() {
-    return TextFormField(
+  SimpleAutocompleteFormField<String> createTaskPeerField() {
+    return SimpleAutocompleteFormField<String>(
       decoration: const InputDecoration(
         icon: Icon(Icons.assignment_ind_outlined),
         hintText: 'Enter your reminder email or contact',
         labelText: 'Reminder contact',
+        // border: OutlineInputBorder()
       ),
+      // suggestionsHeight: 200.0,
+      maxSuggestions: 5,
+      itemBuilder: (context, item) => Padding(
+        padding: const EdgeInsets.only(
+          top: 5.0,
+          bottom: 5.0,
+          left: 45,
+        ),
+        child: Text(
+          item!,
+          style: const TextStyle(fontSize: constant.FONTSIZE_L),
+        ),
+      ),
+      onSearch: (String search) async => search.isEmpty
+          ? letters
+          : letters
+              .where((letter) => search.toLowerCase().contains(letter))
+              .toList(),
+      itemFromString: (string) => letters.singleWhere(
+          (letter) => letter == string.toLowerCase(),
+          orElse: () => ''),
+      onChanged: (value) => setState(() => selectedLetter = value),
+      onSaved: (value) => setState(() => selectedLetter = value),
+      validator: (letter) => letter == null ? 'Invalid contact.' : null,
     );
   }
+
+  // Autocomplete<String> createTestAuto() {
+  //   return Autocomplete<String>(
+  //     optionsBuilder: (TextEditingValue textEditingValue) {
+  //       if (textEditingValue.text == '') {
+  //         return const Iterable<String>.empty();
+  //       }
+  //       return _kOptions.where((String option) {
+  //         return option.contains(textEditingValue.text.toLowerCase());
+  //       });
+  //     },
+  //     onSelected: (String selection) {
+  //       debugPrint('You just selected $selection');
+  //     },
+  //   );
+  // }
 
   TextButton createSaveButton() {
     return TextButton(
@@ -161,5 +217,17 @@ class NewTaskFormState extends State<NewTaskPage> {
         style: TextStyle(fontSize: constant.FONTSIZE_XL),
       ),
     );
+  }
+
+  void setDefaultDateTime() {
+    String hour = Util.getHourFromTimeOfDay(selectedTime);
+    String minute = Util.getMinuteFromTimeOfDay(selectedTime);
+
+    // Init values
+    _startDateController.text = DateFormat.yMd().format(selectedDate);
+    _endDateController.text = DateFormat.yMd().format(selectedDate);
+
+    _startTimeController.text = '$hour:$minute';
+    _endTimeController.text = '$hour:$minute';
   }
 }
