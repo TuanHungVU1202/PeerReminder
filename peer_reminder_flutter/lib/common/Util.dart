@@ -25,10 +25,17 @@ class Util {
         initialEntryMode: TimePickerEntryMode.input);
 
     if (newTime == null) return;
-    final hours = newTime.hour.toString().padLeft(2, '0');
-    final minutes = newTime.minute.toString().padLeft(2, '0');
-
+    final hour = Util.getHourFromTimeOfDay(newTime);
+    final minute = Util.getMinuteFromTimeOfDay(newTime);
     //assign the chosen date to the controller
-    controller.text = '$hours:$minutes';
+    controller.text = '$hour:$minute';
+  }
+
+  static String getHourFromTimeOfDay(TimeOfDay timeOfDay) {
+    return timeOfDay.hour.toString().padLeft(2, '0');
+  }
+
+  static String getMinuteFromTimeOfDay(TimeOfDay timeOfDay) {
+    return timeOfDay.minute.toString().padLeft(2, '0');
   }
 }
