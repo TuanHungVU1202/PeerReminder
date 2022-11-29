@@ -3,6 +3,7 @@ import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
 import 'package:peer_reminder_flutter/common/Util.dart';
 import 'package:simple_autocomplete_formfield/simple_autocomplete_formfield.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class NewTaskPage extends StatefulWidget {
   const NewTaskPage({super.key});
@@ -173,11 +174,7 @@ class NewTaskFormState extends State<NewTaskPage> {
           style: const TextStyle(fontSize: constant.FONTSIZE_L),
         ),
       ),
-      onSearch: (String search) async => search.isEmpty
-          ? letters
-          : letters
-              .where((letter) => search.toLowerCase().contains(letter))
-              .toList(),
+      onSearch: (String search) => searchPeerContact(search),
       itemFromString: (string) => letters.singleWhere(
           (letter) => letter == string.toLowerCase(),
           orElse: () => ''),
@@ -205,7 +202,7 @@ class NewTaskFormState extends State<NewTaskPage> {
 
   TextButton createSaveButton() {
     return TextButton(
-      onPressed: () {
+      onPressed: () async {
         print('Button pressed');
         print(_startDateController.text);
       },
@@ -219,6 +216,8 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
+  // -------------------------------------------------------------------
+  // Private Utils
   void setDefaultDateTime() {
     String hour = Util.getHourFromTimeOfDay(selectedTime);
     String minute = Util.getMinuteFromTimeOfDay(selectedTime);
@@ -229,5 +228,13 @@ class NewTaskFormState extends State<NewTaskPage> {
 
     _startTimeController.text = '$hour:$minute';
     _endTimeController.text = '$hour:$minute';
+  }
+
+  Future<List<String>> searchPeerContact(String search) async {
+    return search.isEmpty
+        ? letters
+        : letters
+        .where((letter) => search.toLowerCase().contains(letter))
+        .toList();
   }
 }
