@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/NewTaskPage.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import '../common/Util.dart';
 
 
 class YourTaskPage extends StatefulWidget {
@@ -22,6 +26,9 @@ class _YourTaskPageState extends State<YourTaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Requesting Contact permission for the first time
+    requestPermission();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Your Tasks"),
@@ -46,5 +53,35 @@ class _YourTaskPageState extends State<YourTaskPage> {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  // -------------------------------------------------------------------
+  // Private Utils
+  Future<bool> requestPermission() async {
+    var permission = Util.getContactPermission();
+
+    if (await permission.isGranted){
+      return true;
+    }
+    else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+            title: const Text('Contacts Permission denied'),
+            content: const Text('Please enable contacts access '
+                'permission in system settings to search for peer contacts'),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: const Text('Maybe later'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              CupertinoDialogAction(
+                child: const Text('Open Settings'),
+                onPressed: () => openAppSettings(),
+              )
+            ],
+          ));
+    }
+    return true;
   }
 }

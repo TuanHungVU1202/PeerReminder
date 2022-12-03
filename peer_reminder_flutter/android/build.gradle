@@ -29,3 +29,9 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+// For permission handler, might change in the future
+// Ref: https://pub.dev/packages/permission_handler
+android {
+    compileSdkVersion 33
+}
