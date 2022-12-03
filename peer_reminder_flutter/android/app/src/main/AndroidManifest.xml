@@ -1,5 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.peer_reminder_flutter">
+
+    <!-- For permission_handler   -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <!-- END - For permission_handler   -->
+
    <application
         android:label="peer_reminder_flutter"
         android:name="${applicationName}"

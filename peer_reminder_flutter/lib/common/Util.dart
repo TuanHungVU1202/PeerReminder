@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
 
 class Util {
   static Future<void> selectDateForTexFormField(BuildContext context,
@@ -29,6 +31,17 @@ class Util {
     final minute = Util.getMinuteFromTimeOfDay(newTime);
     //assign the chosen date to the controller
     controller.text = '$hour:$minute';
+  }
+
+  static Future<PermissionStatus> getContactPermission() async {
+    final PermissionStatus permission = await Permission.contacts.status;
+
+    if (permission == PermissionStatus.granted){
+      return permission;
+    }
+
+    final Map<Permission, PermissionStatus> permissionStatus = await [Permission.contacts].request();
+    return permissionStatus[Permission.contacts] ?? PermissionStatus.permanentlyDenied;
   }
 
   static String getHourFromTimeOfDay(TimeOfDay timeOfDay) {

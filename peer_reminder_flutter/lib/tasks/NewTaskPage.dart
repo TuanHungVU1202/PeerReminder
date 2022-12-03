@@ -3,7 +3,6 @@ import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
 import 'package:peer_reminder_flutter/common/Util.dart';
 import 'package:simple_autocomplete_formfield/simple_autocomplete_formfield.dart';
 import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class NewTaskPage extends StatefulWidget {
   const NewTaskPage({super.key});
