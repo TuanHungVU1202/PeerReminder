@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
-import 'package:peer_reminder_flutter/common/Util.dart';
 import 'package:simple_autocomplete_formfield/simple_autocomplete_formfield.dart';
 import 'package:intl/intl.dart';
+
+// Local imports
+import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
+import 'package:peer_reminder_flutter/common/Util.dart';
+import 'package:peer_reminder_flutter/peers/ModelContact.dart';
 
 class NewTaskPage extends StatefulWidget {
   const NewTaskPage({super.key});
@@ -29,13 +32,12 @@ class NewTaskFormState extends State<NewTaskPage> {
   final _endTimeController = TextEditingController();
 
   // FIXME: finalize this
-  final letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
-  String? selectedLetter;
-  static const List<String> _kOptions = <String>[
-    'aardvark',
-    'bobcat',
-    'chameleon',
+  final contactsList = <Contact>[
+    Contact('Alice', '123 Main', 'asas'),
+    Contact('Bob', '456 Main', 'weqwe')
   ];
+
+  Contact? selectedPerson;
 
   @override
   Widget build(BuildContext context) {
@@ -56,12 +58,19 @@ class NewTaskFormState extends State<NewTaskPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               // List TextFormField here
+              const SizedBox(height: 16.0),
               createTaskNameField(),
+              const SizedBox(height: 16.0),
               createTaskStartDateField(),
+              const SizedBox(height: 16.0),
               createTaskStartTimeField(),
+              const SizedBox(height: 16.0),
               createTaskEndDateField(),
+              const SizedBox(height: 16.0),
               createTaskEndTimeField(),
+              const SizedBox(height: 16.0),
               createTaskNoteField(),
+              const SizedBox(height: 16.0),
               createTaskPeerField(),
             ],
           ),
@@ -76,7 +85,9 @@ class NewTaskFormState extends State<NewTaskPage> {
         icon: Icon(Icons.task),
         hintText: 'Enter task name',
         labelText: 'Task Name',
+        border: OutlineInputBorder(),
       ),
+      // validator: (taskName) => taskName == null ? 'Task name is required.' : null,
     );
   }
 
@@ -92,6 +103,7 @@ class NewTaskFormState extends State<NewTaskPage> {
         icon: Icon(Icons.calendar_month_outlined),
         hintText: 'Select starting date',
         labelText: 'Start date',
+        border: OutlineInputBorder(),
       ),
     );
   }
@@ -106,6 +118,7 @@ class NewTaskFormState extends State<NewTaskPage> {
         icon: Icon(Icons.access_time),
         hintText: 'Select starting time',
         labelText: 'Start time',
+        border: OutlineInputBorder(),
       ),
     );
   }
@@ -122,6 +135,7 @@ class NewTaskFormState extends State<NewTaskPage> {
         icon: Icon(Icons.calendar_month),
         hintText: 'Select ending date',
         labelText: 'End date',
+        border: OutlineInputBorder(),
       ),
     );
   }
@@ -136,6 +150,7 @@ class NewTaskFormState extends State<NewTaskPage> {
         icon: Icon(Icons.access_time_filled),
         hintText: 'Select ending time',
         labelText: 'End time',
+        border: OutlineInputBorder(),
       ),
     );
   }
@@ -147,57 +162,44 @@ class NewTaskFormState extends State<NewTaskPage> {
         icon: Icon(Icons.note),
         hintText: 'Enter notes',
         labelText: 'Notes',
+        border: OutlineInputBorder(),
       ),
     );
   }
 
   // TODO: Auto Suggestion
-  SimpleAutocompleteFormField<String> createTaskPeerField() {
-    return SimpleAutocompleteFormField<String>(
+  SimpleAutocompleteFormField<Contact> createTaskPeerField() {
+    return SimpleAutocompleteFormField<Contact>(
       decoration: const InputDecoration(
-        icon: Icon(Icons.assignment_ind_outlined),
-        hintText: 'Enter your reminder email or contact',
-        labelText: 'Reminder contact',
-        // border: OutlineInputBorder()
-      ),
-      // suggestionsHeight: 200.0,
+          icon: Icon(Icons.assignment_ind_outlined),
+          hintText: 'Enter your reminder email or contact',
+          labelText: 'Reminder contact',
+          border: OutlineInputBorder()),
+      suggestionsHeight: 200.0,
       maxSuggestions: 5,
-      itemBuilder: (context, item) => Padding(
-        padding: const EdgeInsets.only(
-          top: 5.0,
-          bottom: 5.0,
-          left: 45,
-        ),
-        child: Text(
-          item!,
-          style: const TextStyle(fontSize: constant.FONTSIZE_L),
-        ),
-      ),
+      itemBuilder: (context, contact) => Padding(
+          padding: const EdgeInsets.only(
+            top: 5.0,
+            bottom: 5.0,
+            left: 45,
+          ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(contact!.name,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(contact.phone)
+          ])),
       onSearch: (String search) => searchPeerContact(search),
-      itemFromString: (string) => letters.singleWhere(
-          (letter) => letter == string.toLowerCase(),
-          orElse: () => ''),
-      onChanged: (value) => setState(() => selectedLetter = value),
-      onSaved: (value) => setState(() => selectedLetter = value),
-      validator: (letter) => letter == null ? 'Invalid contact.' : null,
+      itemFromString: (string) {
+        final matches = contactsList.where(
+            (contact) => contact.name.toLowerCase() == string.toLowerCase());
+        return matches.isEmpty ? null : matches.first;
+      },
+      onChanged: (value) => setState(() => selectedPerson = value),
+      onSaved: (value) => setState(() => selectedPerson = value),
+      validator: (contact) => contact == null ? 'Invalid contact.' : null,
     );
   }
-
-  // Autocomplete<String> createTestAuto() {
-  //   return Autocomplete<String>(
-  //     optionsBuilder: (TextEditingValue textEditingValue) {
-  //       if (textEditingValue.text == '') {
-  //         return const Iterable<String>.empty();
-  //       }
-  //       return _kOptions.where((String option) {
-  //         return option.contains(textEditingValue.text.toLowerCase());
-  //       });
-  //     },
-  //     onSelected: (String selection) {
-  //       debugPrint('You just selected $selection');
-  //     },
-  //   );
-  // }
 
   TextButton createSaveButton() {
     return TextButton(
@@ -229,11 +231,12 @@ class NewTaskFormState extends State<NewTaskPage> {
     _endTimeController.text = '$hour:$minute';
   }
 
-  Future<List<String>> searchPeerContact(String search) async {
-    return search.isEmpty
-        ? letters
-        : letters
-        .where((letter) => search.toLowerCase().contains(letter))
+  Future<List<Contact>> searchPeerContact(String search) async {
+    return contactsList
+        .where((contact) =>
+            contact.name.toLowerCase().contains(search.toLowerCase()) ||
+            contact.phone.toLowerCase().contains(search.toLowerCase()) ||
+            contact.email.toLowerCase().contains(search.toLowerCase()))
         .toList();
   }
 }
