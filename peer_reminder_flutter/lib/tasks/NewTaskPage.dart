@@ -187,7 +187,8 @@ class NewTaskFormState extends State<NewTaskPage> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(contact!.name,
                 style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text(contact.phone)
+            Text(contact.phone),
+            Text(contact.email)
           ])),
       onSearch: (String search) => searchPeerContact(search),
       itemFromString: (string) {
