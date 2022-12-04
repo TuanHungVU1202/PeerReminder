@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:simple_autocomplete_formfield/simple_autocomplete_formfield.dart';
 import 'package:intl/intl.dart';
 
 // Local imports
 import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
 import 'package:peer_reminder_flutter/common/Util.dart';
-import 'package:peer_reminder_flutter/peers/ModelContact.dart';
 
 class NewTaskPage extends StatefulWidget {
   const NewTaskPage({super.key});
@@ -31,12 +32,7 @@ class NewTaskFormState extends State<NewTaskPage> {
   final _endDateController = TextEditingController();
   final _endTimeController = TextEditingController();
 
-  // FIXME: finalize this
-  final contactsList = <Contact>[
-    Contact('Alice', '123 Main', 'asas'),
-    Contact('Bob', '456 Main', 'weqwe')
-  ];
-
+  List<Contact> contactsList = <Contact>[];
   Contact? selectedPerson;
 
   @override
@@ -185,15 +181,15 @@ class NewTaskFormState extends State<NewTaskPage> {
           ),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(contact!.name,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text(contact.phone),
-            Text(contact.email)
+                  Text(contact?.displayName ?? "",
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(contact?.phones![0].value ?? ""),
+                  Text(contact?.emails![0].value ?? "")
           ])),
       onSearch: (String search) => searchPeerContact(search),
       itemFromString: (string) {
         final matches = contactsList.where(
-            (contact) => contact.name.toLowerCase() == string.toLowerCase());
+            (contact) => contact.displayName?.toLowerCase() == string.toLowerCase());
         return matches.isEmpty ? null : matches.first;
       },
       onChanged: (value) => setState(() => selectedPerson = value),
@@ -233,11 +229,20 @@ class NewTaskFormState extends State<NewTaskPage> {
   }
 
   Future<List<Contact>> searchPeerContact(String search) async {
+    // Check permission
+    var permission = await Util.getContactPermission();
+
+    // If no permission, return empty list
+    if (permission != PermissionStatus.granted){
+      return <Contact>[];
+    }
+    contactsList = await ContactsService.getContacts(query : search);
+
     return contactsList
         .where((contact) =>
-            contact.name.toLowerCase().contains(search.toLowerCase()) ||
-            contact.phone.toLowerCase().contains(search.toLowerCase()) ||
-            contact.email.toLowerCase().contains(search.toLowerCase()))
+            contact.displayName!.toLowerCase().contains(search.toLowerCase()) ||
+            contact.phones![0].value!.toLowerCase().contains(search.toLowerCase()) ||
+            contact.emails![0].value!.toLowerCase().contains(search.toLowerCase()))
         .toList();
   }
 }
