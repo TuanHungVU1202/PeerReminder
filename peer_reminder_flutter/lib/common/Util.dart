@@ -15,7 +15,7 @@ class Util {
     if (picked != null) {
       selectedDate = picked;
       //assign the chosen date to the controller
-      controller.text = DateFormat.yMd().format(selectedDate);
+      controller.text = formatDate(selectedDate);
     }
   }
 
@@ -50,5 +50,10 @@ class Util {
 
   static String getMinuteFromTimeOfDay(TimeOfDay timeOfDay) {
     return timeOfDay.minute.toString().padLeft(2, '0');
+  }
+
+  static String formatDate(DateTime date){
+    String formattedDate = DateFormat(constant.DATE_FORMAT).format(date);
+    return formattedDate;
   }
 }

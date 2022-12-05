@@ -83,7 +83,12 @@ class NewTaskFormState extends State<NewTaskPage> {
         labelText: 'Task Name',
         border: OutlineInputBorder(),
       ),
-      // validator: (taskName) => taskName == null ? 'Task name is required.' : null,
+      validator: (taskName) {
+        if (taskName == null || taskName.isEmpty) {
+          return 'Task name is required';
+        }
+        return null;
+      },
     );
   }
 
@@ -133,6 +138,12 @@ class NewTaskFormState extends State<NewTaskPage> {
         labelText: 'End date',
         border: OutlineInputBorder(),
       ),
+      validator: (endDateTime) {
+        if (!isEndTimeBeforeStartTime(endDateTime!)){
+          return "End time must be same or after start time";
+        }
+        return null;
+      },
     );
   }
 
@@ -163,7 +174,6 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
-  // TODO: Auto Suggestion
   SimpleAutocompleteFormField<Contact> createTaskPeerField() {
     return SimpleAutocompleteFormField<Contact>(
       decoration: const InputDecoration(
@@ -181,28 +191,28 @@ class NewTaskFormState extends State<NewTaskPage> {
           ),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(contact?.displayName ?? "",
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
-                  Text(contact?.phones![0].value ?? ""),
-                  Text(contact?.emails![0].value ?? "")
+            Text(contact?.displayName ?? "",
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(contact?.phones![0].value ?? ""),
+            Text(contact?.emails![0].value ?? "")
           ])),
       onSearch: (String search) => searchPeerContact(search),
       itemFromString: (string) {
-        final matches = contactsList.where(
-            (contact) => contact.displayName?.toLowerCase() == string.toLowerCase());
+        final matches = contactsList.where((contact) =>
+            contact.displayName?.toLowerCase() == string.toLowerCase());
         return matches.isEmpty ? null : matches.first;
       },
       onChanged: (value) => setState(() => selectedPerson = value),
       onSaved: (value) => setState(() => selectedPerson = value),
-      validator: (contact) => contact == null ? 'Invalid contact.' : null,
+      validator: (contact) =>
+          contact == null ? "Peer contact is required" : null,
     );
   }
 
   TextButton createSaveButton() {
     return TextButton(
-      onPressed: () async {
-        print('Button pressed');
-        print(_startDateController.text);
+      onPressed: () {
+        addTask();
       },
       style: TextButton.styleFrom(
         foregroundColor: Colors.white,
@@ -221,8 +231,8 @@ class NewTaskFormState extends State<NewTaskPage> {
     String minute = Util.getMinuteFromTimeOfDay(selectedTime);
 
     // Init values
-    _startDateController.text = DateFormat.yMd().format(selectedDate);
-    _endDateController.text = DateFormat.yMd().format(selectedDate);
+    _startDateController.text = Util.formatDate(selectedDate);
+    _endDateController.text = Util.formatDate(selectedDate);
 
     _startTimeController.text = '$hour:$minute';
     _endTimeController.text = '$hour:$minute';
@@ -233,16 +243,45 @@ class NewTaskFormState extends State<NewTaskPage> {
     var permission = await Util.getContactPermission();
 
     // If no permission, return empty list
-    if (permission != PermissionStatus.granted){
+    if (permission != PermissionStatus.granted) {
       return <Contact>[];
     }
-    contactsList = await ContactsService.getContacts(query : search);
+    contactsList = await ContactsService.getContacts(query: search);
 
     return contactsList
         .where((contact) =>
             contact.displayName!.toLowerCase().contains(search.toLowerCase()) ||
-            contact.phones![0].value!.toLowerCase().contains(search.toLowerCase()) ||
-            contact.emails![0].value!.toLowerCase().contains(search.toLowerCase()))
+            contact.phones![0].value!
+                .toLowerCase()
+                .contains(search.toLowerCase()) ||
+            contact.emails![0].value!
+                .toLowerCase()
+                .contains(search.toLowerCase()))
         .toList();
+  }
+
+
+  // Not Before means Equals or After
+  bool isEndTimeBeforeStartTime(String endDateStr){
+    DateTime endDateTime = DateFormat(constant.DATETIME_FORMAT).parse("$endDateStr ${_endTimeController.text}");
+    DateTime startDateTime = DateFormat(constant.DATETIME_FORMAT).parse("${_startDateController.text} ${_startTimeController.text}");
+
+    if (endDateTime.isBefore(startDateTime)){
+      return false;
+    }
+
+    return true;
+  }
+
+  // -------------------------------------------------------------------
+  void addTask(){
+    // Validate returns true if the form is valid, or false otherwise.
+    if (_formKey.currentState!.validate()) {
+      // If the form is valid, display a snackbar. In the real world,
+      // you'd often call a server or save the information in a database.
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Adding task...')),
+      );
+    }
   }
 }
