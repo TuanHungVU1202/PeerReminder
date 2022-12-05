@@ -23,8 +23,8 @@ class NewTaskFormState extends State<NewTaskPage> {
   // Note: This is a `GlobalKey<FormState>`,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
+  final DateTime _selectedDate = DateTime.now();
+  final TimeOfDay _selectedTime = TimeOfDay.now();
 
   // Controllers
   final _startDateController = TextEditingController();
@@ -32,8 +32,8 @@ class NewTaskFormState extends State<NewTaskPage> {
   final _endDateController = TextEditingController();
   final _endTimeController = TextEditingController();
 
-  List<Contact> contactsList = <Contact>[];
-  Contact? selectedPerson;
+  List<Contact> _contactsList = <Contact>[];
+  Contact? _selectedPerson;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class NewTaskFormState extends State<NewTaskPage> {
       readOnly: true,
       controller: _startDateController,
       onTap: () => Util.selectDateForTexFormField(
-          context, _startDateController, selectedDate),
+          context, _startDateController, _selectedDate),
       decoration: const InputDecoration(
         icon: Icon(Icons.calendar_month_outlined),
         hintText: 'Select starting date',
@@ -114,7 +114,7 @@ class NewTaskFormState extends State<NewTaskPage> {
       readOnly: true,
       controller: _startTimeController,
       onTap: () => Util.selectTimeForTexFormField(
-          context, _startTimeController, selectedTime),
+          context, _startTimeController, _selectedTime),
       decoration: const InputDecoration(
         icon: Icon(Icons.access_time),
         hintText: 'Select starting time',
@@ -131,7 +131,7 @@ class NewTaskFormState extends State<NewTaskPage> {
       readOnly: true,
       controller: _endDateController,
       onTap: () => Util.selectDateForTexFormField(
-          context, _endDateController, selectedDate),
+          context, _endDateController, _selectedDate),
       decoration: const InputDecoration(
         icon: Icon(Icons.calendar_month),
         hintText: 'Select ending date',
@@ -152,7 +152,7 @@ class NewTaskFormState extends State<NewTaskPage> {
       readOnly: true,
       controller: _endTimeController,
       onTap: () => Util.selectTimeForTexFormField(
-          context, _endTimeController, selectedTime),
+          context, _endTimeController, _selectedTime),
       decoration: const InputDecoration(
         icon: Icon(Icons.access_time_filled),
         hintText: 'Select ending time',
@@ -199,12 +199,12 @@ class NewTaskFormState extends State<NewTaskPage> {
       onSearch: (String search) => searchPeerContact(search),
       itemToString: (contact) => contact?.displayName ?? "",
       itemFromString: (string) {
-        final matches = contactsList.where((contact) =>
+        final matches = _contactsList.where((contact) =>
             contact.displayName?.toLowerCase() == string.toLowerCase());
         return matches.isEmpty ? null : matches.first;
       },
-      onChanged: (value) => setState(() => selectedPerson = value),
-      onSaved: (value) => setState(() => selectedPerson = value),
+      onChanged: (value) => setState(() => _selectedPerson = value),
+      onSaved: (value) => setState(() => _selectedPerson = value),
       validator: (contact) =>
           contact == null ? "Peer contact is required" : null,
     );
@@ -228,12 +228,12 @@ class NewTaskFormState extends State<NewTaskPage> {
   // -------------------------------------------------------------------
   // Private Utils
   void setDefaultDateTime() {
-    String hour = Util.getHourFromTimeOfDay(selectedTime);
-    String minute = Util.getMinuteFromTimeOfDay(selectedTime);
+    String hour = Util.getHourFromTimeOfDay(_selectedTime);
+    String minute = Util.getMinuteFromTimeOfDay(_selectedTime);
 
     // Init values
-    _startDateController.text = Util.formatDate(selectedDate);
-    _endDateController.text = Util.formatDate(selectedDate);
+    _startDateController.text = Util.formatDate(_selectedDate);
+    _endDateController.text = Util.formatDate(_selectedDate);
 
     _startTimeController.text = '$hour:$minute';
     _endTimeController.text = '$hour:$minute';
@@ -247,9 +247,9 @@ class NewTaskFormState extends State<NewTaskPage> {
     if (permission != PermissionStatus.granted) {
       return <Contact>[];
     }
-    contactsList = await ContactsService.getContacts(query: search);
+    _contactsList = await ContactsService.getContacts(query: search);
 
-    return contactsList
+    return _contactsList
         .where((contact) =>
             contact.displayName!.toLowerCase().contains(search.toLowerCase()) ||
             contact.phones![0].value!
