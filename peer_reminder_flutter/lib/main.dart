@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'peers/PeerPage.dart';
-import 'tasks/TaskPage.dart';
+import 'tasks/YourTaskPage.dart';
 
 void main() {
   runApp(const MyApp());
