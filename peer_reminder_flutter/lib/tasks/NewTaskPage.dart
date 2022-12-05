@@ -38,13 +38,13 @@ class NewTaskFormState extends State<NewTaskPage> {
   @override
   Widget build(BuildContext context) {
     // Set default values
-    setDefaultDateTime();
+    _setDefaultDateTime();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Task'),
         actions: <Widget>[
-          createSaveButton(),
+          _createSaveButton(),
         ],
       ),
       body: Center(
@@ -55,19 +55,19 @@ class NewTaskFormState extends State<NewTaskPage> {
             children: <Widget>[
               // List TextFormField here
               const SizedBox(height: 16.0),
-              createTaskNameField(),
+              _createTaskNameField(),
               const SizedBox(height: 16.0),
-              createTaskStartDateField(),
+              _createTaskStartDateField(),
               const SizedBox(height: 16.0),
-              createTaskStartTimeField(),
+              _createTaskStartTimeField(),
               const SizedBox(height: 16.0),
-              createTaskEndDateField(),
+              _createTaskEndDateField(),
               const SizedBox(height: 16.0),
-              createTaskEndTimeField(),
+              _createTaskEndTimeField(),
               const SizedBox(height: 16.0),
-              createTaskNoteField(),
+              _createTaskNoteField(),
               const SizedBox(height: 16.0),
-              createTaskPeerField(),
+              _createTaskPeerField(),
             ],
           ),
         ),
@@ -75,7 +75,7 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
-  TextFormField createTaskNameField() {
+  TextFormField _createTaskNameField() {
     return TextFormField(
       decoration: const InputDecoration(
         icon: Icon(Icons.task),
@@ -94,7 +94,7 @@ class NewTaskFormState extends State<NewTaskPage> {
 
   // --------------------------------------
   // Start Date and Time
-  TextFormField createTaskStartDateField() {
+  TextFormField _createTaskStartDateField() {
     return TextFormField(
       readOnly: true,
       controller: _startDateController,
@@ -109,7 +109,7 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
-  TextFormField createTaskStartTimeField() {
+  TextFormField _createTaskStartTimeField() {
     return TextFormField(
       readOnly: true,
       controller: _startTimeController,
@@ -126,7 +126,7 @@ class NewTaskFormState extends State<NewTaskPage> {
 
   // --------------------------------------
   // End Date and Time
-  TextFormField createTaskEndDateField() {
+  TextFormField _createTaskEndDateField() {
     return TextFormField(
       readOnly: true,
       controller: _endDateController,
@@ -139,7 +139,7 @@ class NewTaskFormState extends State<NewTaskPage> {
         border: OutlineInputBorder(),
       ),
       validator: (endDateTime) {
-        if (!isEndTimeBeforeStartTime(endDateTime!)){
+        if (!_isEndTimeBeforeStartTime(endDateTime!)){
           return "End time must be same or after start time";
         }
         return null;
@@ -147,7 +147,7 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
-  TextFormField createTaskEndTimeField() {
+  TextFormField _createTaskEndTimeField() {
     return TextFormField(
       readOnly: true,
       controller: _endTimeController,
@@ -163,7 +163,7 @@ class NewTaskFormState extends State<NewTaskPage> {
   }
 
   // --------------------------------------
-  TextFormField createTaskNoteField() {
+  TextFormField _createTaskNoteField() {
     return TextFormField(
       decoration: const InputDecoration(
         icon: Icon(Icons.note),
@@ -174,7 +174,7 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
-  SimpleAutocompleteFormField<Contact> createTaskPeerField() {
+  SimpleAutocompleteFormField<Contact> _createTaskPeerField() {
     return SimpleAutocompleteFormField<Contact>(
       decoration: const InputDecoration(
           icon: Icon(Icons.assignment_ind_outlined),
@@ -196,7 +196,7 @@ class NewTaskFormState extends State<NewTaskPage> {
             Text(contact?.phones![0].value ?? ""),
             Text(contact?.emails![0].value ?? "")
           ])),
-      onSearch: (String search) => searchPeerContact(search),
+      onSearch: (String search) => _searchPeerContact(search),
       itemToString: (contact) => contact?.displayName ?? "",
       itemFromString: (string) {
         final matches = _contactsList.where((contact) =>
@@ -210,10 +210,10 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
-  TextButton createSaveButton() {
+  TextButton _createSaveButton() {
     return TextButton(
       onPressed: () {
-        addTask();
+        _addTask();
       },
       style: TextButton.styleFrom(
         foregroundColor: Colors.white,
@@ -227,7 +227,7 @@ class NewTaskFormState extends State<NewTaskPage> {
 
   // -------------------------------------------------------------------
   // Private Utils
-  void setDefaultDateTime() {
+  void _setDefaultDateTime() {
     String hour = Util.getHourFromTimeOfDay(_selectedTime);
     String minute = Util.getMinuteFromTimeOfDay(_selectedTime);
 
@@ -239,7 +239,7 @@ class NewTaskFormState extends State<NewTaskPage> {
     _endTimeController.text = '$hour:$minute';
   }
 
-  Future<List<Contact>> searchPeerContact(String search) async {
+  Future<List<Contact>> _searchPeerContact(String search) async {
     // Check permission
     var permission = await Util.getContactPermission();
 
@@ -263,7 +263,7 @@ class NewTaskFormState extends State<NewTaskPage> {
 
 
   // Not Before means Equals or After
-  bool isEndTimeBeforeStartTime(String endDateStr){
+  bool _isEndTimeBeforeStartTime(String endDateStr){
     DateTime endDateTime = DateFormat(constant.DATETIME_FORMAT).parse("$endDateStr ${_endTimeController.text}");
     DateTime startDateTime = DateFormat(constant.DATETIME_FORMAT).parse("${_startDateController.text} ${_startTimeController.text}");
 
@@ -275,7 +275,7 @@ class NewTaskFormState extends State<NewTaskPage> {
   }
 
   // -------------------------------------------------------------------
-  void addTask(){
+  void _addTask(){
     // Validate returns true if the form is valid, or false otherwise.
     if (_formKey.currentState!.validate()) {
       // If the form is valid, display a snackbar. In the real world,
