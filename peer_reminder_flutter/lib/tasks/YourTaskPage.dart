@@ -23,7 +23,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
   @override
   Widget build(BuildContext context) {
     // Requesting Contact permission for the first time
-    requestPermission();
+    _requestPermission();
 
     return Scaffold(
       appBar: AppBar(
@@ -37,12 +37,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
 
             final index = i ~/ 2;
 
-            return ListTile(
-              title: Text(
-                _taskList[index],
-                style: _biggerFont,
-              ),
-            );
+            return _onSwipeTask(index);
           }),
       floatingActionButton: FloatingActionButton(
         onPressed: _addNewTask,
@@ -63,9 +58,36 @@ class _YourTaskPageState extends State<YourTaskPage> {
     );
   }
 
+  Dismissible _onSwipeTask(int index){
+    final item = _taskList[index];
+    return Dismissible(
+      // Each Dismissible must contain a Key. Keys allow Flutter to
+      // uniquely identify widgets.
+      key: Key(item),
+      // Provide a function that tells the app
+      // what to do after an item has been swiped away.
+      onDismissed: (direction) {
+        // print(direction);
+        // Remove the item from the data source.
+        setState(() {
+          _taskList.removeAt(index);
+        });
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('$item dismissed')));
+      },
+      background: Container(color: Colors.red),
+      child: ListTile(
+        title: Text(
+          _taskList[index],
+          style: _biggerFont,
+        ),
+      ),
+    );
+  }
   // -------------------------------------------------------------------
   // Private Utils
-  Future<bool> requestPermission() async {
+  Future<bool> _requestPermission() async {
     var permission = Util.getContactPermission();
 
     if (await permission.isGranted) {
