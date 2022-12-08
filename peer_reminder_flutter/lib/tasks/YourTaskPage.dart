@@ -103,7 +103,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
             Navigator.pop(context);
           },
           isDefaultAction: true,
-          trailingIcon: CupertinoIcons.arrow_turn_down_left,
+          trailingIcon: Icons.edit,
           child: const Text('Edit'),
         ),
         CupertinoContextMenuAction(
@@ -112,6 +112,13 @@ class _YourTaskPageState extends State<YourTaskPage> {
           },
           trailingIcon: CupertinoIcons.archivebox,
           child: const Text('Archive'),
+        ),
+        CupertinoContextMenuAction(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          trailingIcon: Icons.done,
+          child: const Text('Mark as Done'),
         ),
         CupertinoContextMenuAction(
           onPressed: () {
