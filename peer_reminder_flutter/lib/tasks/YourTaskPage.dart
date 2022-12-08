@@ -65,7 +65,6 @@ class _YourTaskPageState extends State<YourTaskPage> {
       startActionPane: ActionPane(
         motion: const DrawerMotion(),
 
-        // A pane can dismiss the Slidable.
         dismissible: DismissiblePane(confirmDismiss: () async {
           Future<bool> isConfirmed = _onConfirmDeleteTask();
           return Future(() => isConfirmed);
@@ -76,8 +75,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
         // All actions are defined in the children parameter.
         children: [
           SlidableAction(
-            // TODO: figure out to use stateful function here
-            onPressed: doNothing,
+            onPressed: (context) => _onPressedDelete(itemIndex),
             backgroundColor: const Color(0xFFFE4A49),
             foregroundColor: Colors.white,
             icon: Icons.delete,
@@ -112,6 +110,14 @@ class _YourTaskPageState extends State<YourTaskPage> {
 
   void doNothing(BuildContext context) {
     print("abc");
+  }
+
+  Future<void> _onPressedDelete(int itemIndex) async {
+    Future<bool> isConfirmed = _onConfirmDeleteTask();
+
+    if (await isConfirmed) {
+      _deleteTask(itemIndex);
+    }
   }
 
   Future<bool> _onConfirmDeleteTask() async {
@@ -155,6 +161,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
   }
 
   void _deleteTask(int itemIndex) {
+    // TODO: Call DB
     setState(() {
       _taskList.removeAt(itemIndex);
     });
