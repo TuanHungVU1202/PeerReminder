@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:peer_reminder_flutter/tasks/Task.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:simple_autocomplete_formfield/simple_autocomplete_formfield.dart';
@@ -27,10 +28,12 @@ class NewTaskFormState extends State<NewTaskPage> {
   final TimeOfDay _selectedTime = TimeOfDay.now();
 
   // Controllers
+  final _taskNameController = TextEditingController();
   final _startDateController = TextEditingController();
   final _startTimeController = TextEditingController();
   final _endDateController = TextEditingController();
   final _endTimeController = TextEditingController();
+  final _taskNoteController = TextEditingController();
 
   List<Contact> _contactsList = <Contact>[];
   Contact? _selectedPerson;
@@ -77,6 +80,7 @@ class NewTaskFormState extends State<NewTaskPage> {
 
   TextFormField _createTaskNameField() {
     return TextFormField(
+      controller: _taskNameController,
       decoration: const InputDecoration(
         icon: Icon(Icons.task),
         hintText: 'Enter task name',
@@ -139,7 +143,7 @@ class NewTaskFormState extends State<NewTaskPage> {
         border: OutlineInputBorder(),
       ),
       validator: (endDateTime) {
-        if (!_isEndTimeBeforeStartTime(endDateTime!)){
+        if (!_isEndTimeBeforeStartTime(endDateTime!)) {
           return "End time must be same or after start time";
         }
         return null;
@@ -165,6 +169,7 @@ class NewTaskFormState extends State<NewTaskPage> {
   // --------------------------------------
   TextFormField _createTaskNoteField() {
     return TextFormField(
+      controller: _taskNoteController,
       decoration: const InputDecoration(
         icon: Icon(Icons.note),
         hintText: 'Enter notes',
@@ -261,13 +266,14 @@ class NewTaskFormState extends State<NewTaskPage> {
         .toList();
   }
 
-
   // Not Before means Equals or After
-  bool _isEndTimeBeforeStartTime(String endDateStr){
-    DateTime endDateTime = DateFormat(constant.DATETIME_FORMAT).parse("$endDateStr ${_endTimeController.text}");
-    DateTime startDateTime = DateFormat(constant.DATETIME_FORMAT).parse("${_startDateController.text} ${_startTimeController.text}");
+  bool _isEndTimeBeforeStartTime(String endDateStr) {
+    DateTime endDateTime = DateFormat(constant.DATETIME_FORMAT)
+        .parse("$endDateStr ${_endTimeController.text}");
+    DateTime startDateTime = DateFormat(constant.DATETIME_FORMAT)
+        .parse("${_startDateController.text} ${_startTimeController.text}");
 
-    if (endDateTime.isBefore(startDateTime)){
+    if (endDateTime.isBefore(startDateTime)) {
       return false;
     }
 
@@ -275,7 +281,7 @@ class NewTaskFormState extends State<NewTaskPage> {
   }
 
   // -------------------------------------------------------------------
-  void _addTask(){
+  void _addTask() {
     // Validate returns true if the form is valid, or false otherwise.
     if (_formKey.currentState!.validate()) {
       // If the form is valid, display a snackbar. In the real world,
@@ -283,6 +289,20 @@ class NewTaskFormState extends State<NewTaskPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Adding task...')),
       );
+
+      Task newTask = Task(
+        _taskNameController.text,
+        _startDateController.text,
+        _startTimeController.text,
+        _endDateController.text,
+        _endTimeController.text,
+        _taskNoteController.text,
+        _selectedPerson!.emails![0].value!,
+        _selectedPerson!.phones![0].value!,
+      );
+
+      var newTaskJson = newTask.toJson();
+      // TODO: send parsed JSON to backend
     }
   }
 }
