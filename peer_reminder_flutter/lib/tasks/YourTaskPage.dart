@@ -47,16 +47,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
   }
 
   // -------------------------------------------------------------------
-  // Components
-  void _addNewTask() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => const NewTaskPage(),
-      ),
-    );
-  }
-
+  // UI Components
   Slidable _onSlideTask(int itemIndex) {
     return Slidable(
       // Specify a key if the Slidable is dismissible.
@@ -99,11 +90,107 @@ class _YourTaskPageState extends State<YourTaskPage> {
 
       // The child of the Slidable is what the user sees when the
       // component is not dragged.
+      child: _createTaskContextMenu(itemIndex),
+    );
+  }
+
+  // TODO: create corresponding callbacks for each menu selection
+  CupertinoContextMenu _createTaskContextMenu(int itemIndex) {
+    return CupertinoContextMenu(
+      actions: <Widget>[
+        CupertinoContextMenuAction(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          isDefaultAction: true,
+          trailingIcon: CupertinoIcons.arrow_turn_down_left,
+          child: const Text('Edit'),
+        ),
+        CupertinoContextMenuAction(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          trailingIcon: CupertinoIcons.archivebox,
+          child: const Text('Archive'),
+        ),
+        CupertinoContextMenuAction(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          trailingIcon: CupertinoIcons.phone,
+          child: const Text('Call peer'),
+        ),
+      ],
+      child: _createTaskMaterial(itemIndex),
+      // TODO: create preview function here
+      previewBuilder: (context, animation, child) {
+        return const Dialog(
+          child: Text("This is a preview"),
+        );
+      },
+    );
+  }
+
+  Material _createTaskMaterial(int itemIndex) {
+    return Material(
+      // Create Material widget for each ListTile
       child: ListTile(
         title: Text(
           _taskList[itemIndex],
           style: _biggerFont,
         ),
+      ),
+    );
+  }
+
+  InkWell _createConfirmCancelButton(double width, double height) {
+    return InkWell(
+      child: Container(
+        width: width,
+        padding: const EdgeInsets.all(15.0),
+        decoration: const BoxDecoration(
+            color: Colors.white70,
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        child: const Center(
+          child: Text(
+            'Cancel',
+            style: TextStyle(
+                fontSize: constant.FONTSIZE_XL, color: Colors.lightBlue),
+          ),
+        ),
+      ),
+      // false means this pop return value bool = false
+      onTap: () => Navigator.pop(context, false),
+    );
+  }
+
+  InkWell _createConfirmDeleteButton(double width, double height) {
+    return InkWell(
+      child: Container(
+        width: width,
+        // height: height*0.3,
+        padding: const EdgeInsets.all(5.0),
+        decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        child: const Center(
+          child: Text(
+            'Delete',
+            style: TextStyle(fontSize: constant.FONTSIZE_XL, color: Colors.red),
+          ),
+        ),
+      ),
+      // true means this pop return value bool = true
+      onTap: () => Navigator.pop(context, true),
+    );
+  }
+
+  // -------------------------------------------------------------------
+  // Components' callbacks
+  void _addNewTask() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const NewTaskPage(),
       ),
     );
   }
@@ -165,47 +252,6 @@ class _YourTaskPageState extends State<YourTaskPage> {
     setState(() {
       _taskList.removeAt(itemIndex);
     });
-  }
-
-  InkWell _createConfirmCancelButton(double width, double height) {
-    return InkWell(
-      child: Container(
-        width: width,
-        padding: const EdgeInsets.all(15.0),
-        decoration: const BoxDecoration(
-            color: Colors.white70,
-            borderRadius: BorderRadius.all(Radius.circular(10.0))),
-        child: const Center(
-          child: Text(
-            'Cancel',
-            style: TextStyle(
-                fontSize: constant.FONTSIZE_XL, color: Colors.lightBlue),
-          ),
-        ),
-      ),
-      // false means this pop return value bool = false
-      onTap: () => Navigator.pop(context, false),
-    );
-  }
-
-  InkWell _createConfirmDeleteButton(double width, double height) {
-    return InkWell(
-      child: Container(
-        width: width,
-        // height: height*0.3,
-        padding: const EdgeInsets.all(5.0),
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10.0))),
-        child: const Center(
-          child: Text(
-            'Delete',
-            style: TextStyle(fontSize: constant.FONTSIZE_XL, color: Colors.red),
-          ),
-        ),
-      ),
-      // true means this pop return value bool = true
-      onTap: () => Navigator.pop(context, true),
-    );
   }
 
   // -------------------------------------------------------------------
