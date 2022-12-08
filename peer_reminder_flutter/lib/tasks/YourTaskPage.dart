@@ -26,8 +26,8 @@ class _YourTaskPageState extends State<YourTaskPage> {
     _requestPermission();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Your Tasks"),
+      appBar: const CupertinoNavigationBar(
+        middle: Text('Your Tasks'),
       ),
       body: ListView.builder(
           padding: const EdgeInsets.all(16.0),
