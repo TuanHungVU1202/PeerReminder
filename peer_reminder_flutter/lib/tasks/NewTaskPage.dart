@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/Task.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -44,11 +45,12 @@ class NewTaskFormState extends State<NewTaskPage> {
     _setDefaultDateTime();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('New Task'),
-        actions: <Widget>[
-          _createSaveButton(),
-        ],
+      appBar: CupertinoNavigationBar(
+        middle: const Text('New Task'),
+        leading: CupertinoNavigationBarBackButton(
+          onPressed: () => Navigator.pop(context),
+        ),
+        trailing: _createSaveButton(),
       ),
       body: Center(
         child: Form(
@@ -221,10 +223,10 @@ class NewTaskFormState extends State<NewTaskPage> {
         _addTask();
       },
       style: TextButton.styleFrom(
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.black,
       ),
       child: const Text(
-        'Add',
+        'Save',
         style: TextStyle(fontSize: constant.FONTSIZE_XL),
       ),
     );
