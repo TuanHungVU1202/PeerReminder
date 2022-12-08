@@ -202,7 +202,7 @@ class NewTaskFormState extends State<NewTaskPage> {
             Text(contact?.emails![0].value ?? "")
           ])),
       onSearch: (String search) => _searchPeerContact(search),
-      itemToString: (contact) => contact?.displayName ?? "",
+      itemToString: (contact) => contact?.emails?[0].value ?? "",
       itemFromString: (string) {
         final matches = _contactsList.where((contact) =>
             contact.displayName?.toLowerCase() == string.toLowerCase());
