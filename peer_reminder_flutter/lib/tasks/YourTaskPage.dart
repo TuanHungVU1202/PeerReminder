@@ -57,34 +57,6 @@ class _YourTaskPageState extends State<YourTaskPage> {
     );
   }
 
-  Dismissible _onSwipeTask(int index) {
-    final item = _taskList[index];
-    return Dismissible(
-      // Each Dismissible must contain a Key. Keys allow Flutter to
-      // uniquely identify widgets.
-      key: Key(item),
-      // Provide a function that tells the app
-      // what to do after an item has been swiped away.
-      onDismissed: (direction) {
-        // print(direction);
-        // Remove the item from the data source.
-        setState(() {
-          _taskList.removeAt(index);
-        });
-
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('$item dismissed')));
-      },
-      background: Container(color: Colors.red),
-      child: ListTile(
-        title: Text(
-          _taskList[index],
-          style: _biggerFont,
-        ),
-      ),
-    );
-  }
-
   Slidable _onSlideTask(int itemIndex) {
     return Slidable(
       // Specify a key if the Slidable is dismissible.
@@ -94,9 +66,9 @@ class _YourTaskPageState extends State<YourTaskPage> {
         motion: const DrawerMotion(),
 
         // A pane can dismiss the Slidable.
-        dismissible: DismissiblePane(confirmDismiss: () {
-          _onConfirmDeleteTask();
-          return Future(() => true);
+        dismissible: DismissiblePane(confirmDismiss: () async {
+          Future<bool> isConfirmed = _onConfirmDeleteTask();
+          return Future(() => isConfirmed);
         }, onDismissed: () {
           _deleteTask(itemIndex);
         }),
@@ -106,7 +78,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
           SlidableAction(
             // TODO: figure out to use stateful function here
             onPressed: doNothing,
-            backgroundColor: Color(0xFFFE4A49),
+            backgroundColor: const Color(0xFFFE4A49),
             foregroundColor: Colors.white,
             icon: Icons.delete,
             label: 'Delete',
@@ -119,7 +91,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
         children: [
           SlidableAction(
             onPressed: doNothing,
-            backgroundColor: Color(0xFF7BC043),
+            backgroundColor: const Color(0xFF7BC043),
             foregroundColor: Colors.white,
             icon: Icons.notifications_active_outlined,
             label: 'Notify Peer',
@@ -142,8 +114,8 @@ class _YourTaskPageState extends State<YourTaskPage> {
     print("abc");
   }
 
-  void _onConfirmDeleteTask() {
-    showDialog(
+  Future<bool> _onConfirmDeleteTask() async {
+    return await showDialog(
       context: context,
       builder: (BuildContext context) {
         double width = MediaQuery.of(context).size.width;
@@ -175,7 +147,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
                   height: 10,
                 ),
                 // Cancel button
-                _createCancelDeleteButton(width, height),
+                _createConfirmCancelButton(width, height),
               ],
             ));
       },
@@ -188,7 +160,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
     });
   }
 
-  InkWell _createCancelDeleteButton(double width, double height) {
+  InkWell _createConfirmCancelButton(double width, double height) {
     return InkWell(
       child: Container(
         width: width,
@@ -199,11 +171,13 @@ class _YourTaskPageState extends State<YourTaskPage> {
         child: const Center(
           child: Text(
             'Cancel',
-            style: TextStyle(fontSize: constant.FONTSIZE_XL, color: Colors.lightBlue),
+            style: TextStyle(
+                fontSize: constant.FONTSIZE_XL, color: Colors.lightBlue),
           ),
         ),
       ),
-      onTap: () => Navigator.of(context).pop(),
+      // false means this pop return value bool = false
+      onTap: () => Navigator.pop(context, false),
     );
   }
 
@@ -222,8 +196,8 @@ class _YourTaskPageState extends State<YourTaskPage> {
           ),
         ),
       ),
-      // FIXME: add callback for delete here
-      onTap: () => Navigator.of(context).pop(),
+      // true means this pop return value bool = true
+      onTap: () => Navigator.pop(context, true),
     );
   }
 
