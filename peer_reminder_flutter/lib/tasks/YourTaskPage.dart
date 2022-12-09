@@ -28,23 +28,41 @@ class _YourTaskPageState extends State<YourTaskPage> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: const FloatingAction(),
-      appBar: const CupertinoNavigationBar(
-        middle: Text('Your Tasks'),
-      ),
-      body: ListView.builder(
-          padding: const EdgeInsets.all(16.0),
-          itemBuilder: (context, i) {
-            // Add divider if position is odd
-            if (i.isOdd) return const Divider();
-            final index = i ~/ 2;
-
-            return _onSlideTask(index);
-          }),
+      body: _createYourTaskSliverBody(),
     );
   }
 
   // -------------------------------------------------------------------
   // UI Components
+  CustomScrollView _createYourTaskSliverBody() {
+    return CustomScrollView(
+      slivers: <Widget>[
+        // Appbar
+        _createYourTasksSliverAppBar(),
+        // Tasks list
+        _createTaskListView(),
+      ],
+    );
+  }
+
+  CupertinoSliverNavigationBar _createYourTasksSliverAppBar() {
+    return const CupertinoSliverNavigationBar(
+      largeTitle: Text('Your Tasks'),
+    );
+  }
+
+  SliverList _createTaskListView() {
+    return SliverList(delegate: SliverChildBuilderDelegate(
+      (context, i) {
+        // Add divider if position is odd
+        if (i.isOdd) return const Divider();
+        final index = i ~/ 2;
+
+        return _onSlideTask(index);
+      },
+    ));
+  }
+
   Slidable _onSlideTask(int itemIndex) {
     return Slidable(
       // Specify a key if the Slidable is dismissible.

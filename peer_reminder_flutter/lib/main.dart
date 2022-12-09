@@ -159,11 +159,13 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
   // UI components
   CupertinoTabView _createMyTasksTabView() {
     return CupertinoTabView(builder: (context) {
-      return const CupertinoPageScaffold(
-          navigationBar: CupertinoNavigationBar(
-            middle: Text('My Tasks'),
+      return const CustomScrollView(
+        slivers: <Widget>[
+          CupertinoSliverNavigationBar(
+            largeTitle: Text('My Tasks'),
           ),
-          child: Center(child: Text('My Tasks')));
+        ],
+      );
     });
   }
 
@@ -177,11 +179,13 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
 
   CupertinoTabView _createSettingsTabView() {
     return CupertinoTabView(builder: (context) {
-      return const CupertinoPageScaffold(
-          navigationBar: CupertinoNavigationBar(
-            middle: Text('Settings'),
+      return const CustomScrollView(
+        slivers: <Widget>[
+          CupertinoSliverNavigationBar(
+            largeTitle: Text('Settings'),
           ),
-          child: Center(child: Text('Settings')));
+        ],
+      );
     });
   }
 }
