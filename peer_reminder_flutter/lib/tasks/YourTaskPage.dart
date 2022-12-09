@@ -90,16 +90,15 @@ class _YourTaskPageState extends State<YourTaskPage> {
     );
   }
 
-  SliverGrid _createTaskSliverGrid() {
-    return SliverGrid(
+  SliverList _createTaskSliverGrid() {
+    return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          return _createSlidableTask(index);
+          if(index.isOdd) return const Divider(color: Colors.grey);
+
+          int itemIndex = index ~/2;
+          return _createSlidableTask(itemIndex);
         },
-      ),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1,
-        childAspectRatio: 5,
       ),
     );
   }
@@ -354,7 +353,7 @@ class TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(top: 25, left: 25),
+        margin: const EdgeInsets.only(top: 10, left: 25),
         child: Material(
           // Create Material widget for each ListTile
           child: ListTile(
