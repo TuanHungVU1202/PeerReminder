@@ -141,33 +141,47 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
         late final CupertinoTabView returnValue;
         switch (index) {
           case 0:
-            returnValue = CupertinoTabView(builder: (context) {
-              return const CupertinoPageScaffold(
-                  navigationBar: CupertinoNavigationBar(
-                    middle: Text('My Tasks'),
-                  ),
-                  child: Center(child: Text('My Tasks')));
-            });
+            returnValue = _createMyTasksTabView();
             break;
           case 1:
-            returnValue = CupertinoTabView(
-              builder: (context) {
-                return const YourTaskPage();
-              },
-            );
+            returnValue = _createYourTasksTabView();
             break;
           case 2:
-            returnValue = CupertinoTabView(builder: (context) {
-              return const CupertinoPageScaffold(
-                  navigationBar: CupertinoNavigationBar(
-                    middle: Text('Settings'),
-                  ),
-                  child: Center(child: Text('Settings')));
-            });
+            returnValue = _createSettingsTabView();
             break;
         }
         return returnValue;
       },
     );
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // UI components
+  CupertinoTabView _createMyTasksTabView() {
+    return CupertinoTabView(builder: (context) {
+      return const CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+            middle: Text('My Tasks'),
+          ),
+          child: Center(child: Text('My Tasks')));
+    });
+  }
+
+  CupertinoTabView _createYourTasksTabView() {
+    return CupertinoTabView(
+      builder: (context) {
+        return const YourTaskPage();
+      },
+    );
+  }
+
+  CupertinoTabView _createSettingsTabView() {
+    return CupertinoTabView(builder: (context) {
+      return const CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+            middle: Text('Settings'),
+          ),
+          child: Center(child: Text('Settings')));
+    });
   }
 }
