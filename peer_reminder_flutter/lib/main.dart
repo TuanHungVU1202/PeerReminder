@@ -155,7 +155,7 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
     );
   }
 
-  ////////////////////////////////////////////////////////////////////////////////
+  // -------------------------------------------------------------------
   // UI components
   CupertinoTabView _createMyTasksTabView() {
     return CupertinoTabView(builder: (context) {

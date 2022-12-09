@@ -8,6 +8,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
 import 'package:peer_reminder_flutter/common/Util.dart';
 
+// FIXME: finalize this, query from DB
+final _originalTaskList = List<String>.generate(10000, (i) => 'Item $i');
+const _biggerFont = TextStyle(fontSize: constant.FONTSIZE_XL);
+
 class YourTaskPage extends StatefulWidget {
   const YourTaskPage({super.key});
 
@@ -16,9 +20,18 @@ class YourTaskPage extends StatefulWidget {
 }
 
 class _YourTaskPageState extends State<YourTaskPage> {
-  // FIXME: finalize this, query from DB
-  final _taskList = List<String>.generate(10000, (i) => 'Item $i');
-  final _biggerFont = const TextStyle(fontSize: constant.FONTSIZE_XL);
+  // Controllers
+  final _searchBarController = TextEditingController();
+
+  late List<String> _filteredTaskList = _originalTaskList;
+
+  // To make sure things are mounted
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +52,8 @@ class _YourTaskPageState extends State<YourTaskPage> {
       slivers: <Widget>[
         // Appbar
         _createYourTasksSliverAppBar(),
+        // Search bar
+        _createSearchBar(),
         // Tasks list
         _createTaskSliverGrid(),
       ],
@@ -51,11 +66,35 @@ class _YourTaskPageState extends State<YourTaskPage> {
     );
   }
 
+  SliverToBoxAdapter _createSearchBar() {
+    return SliverToBoxAdapter(
+      child: FractionallySizedBox(
+        widthFactor: 0.9,
+        child: ClipRect(
+            child: Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: CupertinoSearchTextField(
+            controller: _searchBarController,
+            onChanged: (value) {
+              _updateSearchedTaskList(value);
+            },
+            onSubmitted: (value) {
+              _updateSearchedTaskList(value);
+            },
+            onSuffixTap: () {
+              _updateSearchedTaskList('');
+            },
+          ),
+        )),
+      ),
+    );
+  }
+
   SliverGrid _createTaskSliverGrid() {
     return SliverGrid(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          return _onSlideTask(index);
+          return _createSlidableTask(index);
         },
       ),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -65,7 +104,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
     );
   }
 
-  Slidable _onSlideTask(int itemIndex) {
+  Slidable _createSlidableTask(int itemIndex) {
     return Slidable(
       // Specify a key if the Slidable is dismissible.
       key: UniqueKey(),
@@ -117,7 +156,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
       actions: <Widget>[
         CupertinoContextMenuAction(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
           },
           isDefaultAction: true,
           trailingIcon: Icons.edit,
@@ -125,45 +164,33 @@ class _YourTaskPageState extends State<YourTaskPage> {
         ),
         CupertinoContextMenuAction(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
           },
           trailingIcon: CupertinoIcons.archivebox,
           child: const Text('Archive'),
         ),
         CupertinoContextMenuAction(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
           },
           trailingIcon: Icons.done,
           child: const Text('Mark as Done'),
         ),
         CupertinoContextMenuAction(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context, rootNavigator: true).pop();
           },
           trailingIcon: CupertinoIcons.phone,
           child: const Text('Call peer'),
         ),
       ],
-      child: _createTaskMaterial(itemIndex),
+      child: TaskTile(_filteredTaskList, itemIndex),
       // TODO: create preview function here
       previewBuilder: (context, animation, child) {
         return const Dialog(
           child: Text("This is a preview"),
         );
       },
-    );
-  }
-
-  Material _createTaskMaterial(int itemIndex) {
-    return Material(
-      // Create Material widget for each ListTile
-      child: ListTile(
-        title: Text(
-          _taskList[itemIndex],
-          style: _biggerFont,
-        ),
-      ),
     );
   }
 
@@ -265,8 +292,23 @@ class _YourTaskPageState extends State<YourTaskPage> {
   void _deleteTask(int itemIndex) {
     // TODO: Call DB
     setState(() {
-      _taskList.removeAt(itemIndex);
+      _filteredTaskList.removeAt(itemIndex);
     });
+  }
+
+  void _updateSearchedTaskList(String value) {
+    if (value.isNotEmpty) {
+      _filteredTaskList = _filteredTaskList
+          .where(
+              (element) => element.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+    } else {
+      _searchBarController.text = '';
+      _filteredTaskList = _originalTaskList;
+    }
+
+    // To rebuild
+    setState(() {});
   }
 
   // -------------------------------------------------------------------
@@ -299,6 +341,34 @@ class _YourTaskPageState extends State<YourTaskPage> {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+class TaskTile extends StatelessWidget {
+  final int _taskIndex;
+  final List<String> _filteredTaskList;
+
+  const TaskTile(
+    this._filteredTaskList,
+    this._taskIndex,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: const EdgeInsets.only(top: 25, left: 25),
+        child: Material(
+          // Create Material widget for each ListTile
+          child: ListTile(
+            selectedTileColor: Colors.lightBlue,
+            title: Text(
+              _filteredTaskList[_taskIndex],
+              style: _biggerFont,
+            ),
+          ),
+        ));
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 class FloatingAction extends StatelessWidget {
   const FloatingAction({super.key});
 
