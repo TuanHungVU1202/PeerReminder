@@ -26,6 +26,8 @@ class _YourTaskPageState extends State<YourTaskPage> {
     _requestPermission();
 
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: const FloatingAction(),
       appBar: const CupertinoNavigationBar(
         middle: Text('Your Tasks'),
       ),
@@ -38,11 +40,6 @@ class _YourTaskPageState extends State<YourTaskPage> {
 
             return _onSlideTask(index);
           }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addNewTask,
-        tooltip: 'Add Your Task',
-        child: const Icon(Icons.add),
-      ),
     );
   }
 
@@ -167,7 +164,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
         ),
       ),
       // false means this pop return value bool = false
-      onTap: () => Navigator.pop(context, false),
+      onTap: () => Navigator.of(context, rootNavigator: true).pop(false),
     );
   }
 
@@ -187,21 +184,12 @@ class _YourTaskPageState extends State<YourTaskPage> {
         ),
       ),
       // true means this pop return value bool = true
-      onTap: () => Navigator.pop(context, true),
+      onTap: () => Navigator.of(context, rootNavigator: true).pop(true),
     );
   }
 
   // -------------------------------------------------------------------
   // Components' callbacks
-  void _addNewTask() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => const NewTaskPage(),
-      ),
-    );
-  }
-
   void doNothing(BuildContext context) {
     print("abc");
   }
@@ -288,5 +276,39 @@ class _YourTaskPageState extends State<YourTaskPage> {
               ));
     }
     return true;
+  }
+}
+
+class FloatingAction extends StatelessWidget {
+  const FloatingAction({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(bottom: 60),
+          child: FloatingActionButton(
+            onPressed: () {
+              _onPressedAddTask(context);
+            },
+            backgroundColor: Colors.lightBlue,
+            child: const Icon(Icons.add),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // -------------------------------------------------------------------
+  // Components' callbacks
+  void _onPressedAddTask(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const NewTaskPage(),
+      ),
+    );
   }
 }
