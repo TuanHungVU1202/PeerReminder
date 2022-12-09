@@ -353,7 +353,7 @@ class TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(top: 10, left: 25),
+        margin: const EdgeInsets.only(top: 5, left: 10),
         child: Material(
           // Create Material widget for each ListTile
           child: ListTile(
@@ -362,6 +362,7 @@ class TaskTile extends StatelessWidget {
               _filteredTaskList[_taskIndex],
               style: _biggerFont,
             ),
+            trailing: const Icon(Icons.home),
           ),
         ));
   }
