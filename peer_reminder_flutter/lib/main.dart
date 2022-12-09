@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'peers/PeerPage.dart';
 import 'tasks/YourTaskPage.dart';
@@ -12,25 +13,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const YourTaskPage(),
+    return const CupertinoApp(
+      localizationsDelegates: [
+        DefaultMaterialLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+      ],
+      theme: CupertinoThemeData(brightness: Brightness.light),
+      home: CupertinoHomePage(),
     );
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Homepage Material Style
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -112,6 +108,66 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Homepage Cupertino Style
+
+class CupertinoHomePage extends StatefulWidget {
+  const CupertinoHomePage({Key? key}) : super(key: key);
+
+  @override
+  CupertinoHomePageState createState() => CupertinoHomePageState();
+}
+
+class CupertinoHomePageState extends State<CupertinoHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        currentIndex: 1,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.tray_arrow_down), label: 'My Tasks'),
+          BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.tray_arrow_up), label: 'Your Tasks'),
+          BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.settings), label: 'Settings'),
+        ],
+      ),
+      tabBuilder: (context, index) {
+        late final CupertinoTabView returnValue;
+        switch (index) {
+          case 0:
+            returnValue = CupertinoTabView(builder: (context) {
+              return const CupertinoPageScaffold(
+                  navigationBar: CupertinoNavigationBar(
+                    middle: Text('My Tasks'),
+                  ),
+                  child: Center(child: Text('My Tasks')));
+            });
+            break;
+          case 1:
+            returnValue = CupertinoTabView(
+              builder: (context) {
+                return const YourTaskPage();
+              },
+            );
+            break;
+          case 2:
+            returnValue = CupertinoTabView(builder: (context) {
+              return const CupertinoPageScaffold(
+                  navigationBar: CupertinoNavigationBar(
+                    middle: Text('Settings'),
+                  ),
+                  child: Center(child: Text('Settings')));
+            });
+            break;
+        }
+        return returnValue;
+      },
     );
   }
 }
