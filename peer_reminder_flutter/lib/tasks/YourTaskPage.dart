@@ -40,7 +40,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
         // Appbar
         _createYourTasksSliverAppBar(),
         // Tasks list
-        _createTaskListView(),
+        _createTaskSliverGrid(),
       ],
     );
   }
@@ -51,16 +51,18 @@ class _YourTaskPageState extends State<YourTaskPage> {
     );
   }
 
-  SliverList _createTaskListView() {
-    return SliverList(delegate: SliverChildBuilderDelegate(
-      (context, i) {
-        // Add divider if position is odd
-        if (i.isOdd) return const Divider();
-        final index = i ~/ 2;
-
-        return _onSlideTask(index);
-      },
-    ));
+  SliverGrid _createTaskSliverGrid() {
+    return SliverGrid(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return _onSlideTask(index);
+        },
+      ),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        childAspectRatio: 5,
+      ),
+    );
   }
 
   Slidable _onSlideTask(int itemIndex) {
