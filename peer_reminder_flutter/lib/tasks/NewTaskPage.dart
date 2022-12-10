@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:peer_reminder_flutter/tasks/Task.dart';
+import 'package:peer_reminder_flutter/tasks/model/Task.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:simple_autocomplete_formfield/simple_autocomplete_formfield.dart';
@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 // Local imports
 import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
 import 'package:peer_reminder_flutter/common/Util.dart';
+
+import 'model/TaskCategory.dart';
 
 class NewTaskPage extends StatefulWidget {
   const NewTaskPage({super.key});
@@ -35,6 +37,7 @@ class NewTaskFormState extends State<NewTaskPage> {
   final _endDateController = TextEditingController();
   final _endTimeController = TextEditingController();
   final _taskNoteController = TextEditingController();
+  final _taskCategoryController = TextEditingController();
 
   List<Contact> _contactsList = <Contact>[];
   Contact? _selectedPerson;
@@ -72,6 +75,8 @@ class NewTaskFormState extends State<NewTaskPage> {
               const SizedBox(height: 16.0),
               _createTaskNoteField(),
               const SizedBox(height: 16.0),
+              _createTaskCategoryField(),
+              const SizedBox(height: 16.0),
               _createTaskPeerField(),
             ],
           ),
@@ -80,6 +85,23 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
+  // --------------------------------------
+  TextButton _createSaveButton() {
+    return TextButton(
+      onPressed: () {
+        _addTask();
+      },
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.black,
+      ),
+      child: const Text(
+        'Save',
+        style: TextStyle(fontSize: constant.FONTSIZE_XL),
+      ),
+    );
+  }
+
+  // --------------------------------------
   TextFormField _createTaskNameField() {
     return TextFormField(
       controller: _taskNameController,
@@ -181,6 +203,7 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
+  // --------------------------------------
   SimpleAutocompleteFormField<Contact> _createTaskPeerField() {
     return SimpleAutocompleteFormField<Contact>(
       decoration: const InputDecoration(
@@ -191,18 +214,13 @@ class NewTaskFormState extends State<NewTaskPage> {
       suggestionsHeight: 200.0,
       maxSuggestions: 5,
       itemBuilder: (context, contact) => Padding(
-          padding: const EdgeInsets.only(
-            top: 5.0,
-            bottom: 5.0,
-            left: 45,
-          ),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(contact?.displayName ?? "",
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text(contact?.phones![0].value ?? ""),
-            Text(contact?.emails![0].value ?? "")
-          ])),
+        padding: const EdgeInsets.only(
+          top: 5.0,
+          bottom: 5.0,
+          left: 45,
+        ),
+        child: _createPeerSuggestColumn(contact!),
+      ),
       onSearch: (String search) => _searchPeerContact(search),
       itemToString: (contact) => contact?.emails?[0].value ?? "",
       itemFromString: (string) {
@@ -217,18 +235,78 @@ class NewTaskFormState extends State<NewTaskPage> {
     );
   }
 
-  TextButton _createSaveButton() {
-    return TextButton(
-      onPressed: () {
-        _addTask();
+  Column _createPeerSuggestColumn(Contact contact) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(contact?.displayName ?? "",
+          style: const TextStyle(fontWeight: FontWeight.bold)),
+      Text(contact?.phones![0].value ?? ""),
+      Text(contact?.emails![0].value ?? "")
+    ]);
+  }
+
+  // --------------------------------------
+  TextFormField _createTaskCategoryField() {
+    return TextFormField(
+      readOnly: true,
+      controller: _taskCategoryController,
+      decoration: const InputDecoration(
+        icon: Icon(Icons.category),
+        hintText: 'Enter task category',
+        labelText: 'Task Category',
+        border: OutlineInputBorder(),
+      ),
+      onTap: () => _showTaskCategoryPicker(),
+      validator: (taskCategory) {
+        if (taskCategory == null || taskCategory.isEmpty) {
+          return 'Task category is required';
+        }
+        return null;
       },
-      style: TextButton.styleFrom(
-        foregroundColor: Colors.black,
-      ),
-      child: const Text(
-        'Save',
-        style: TextStyle(fontSize: constant.FONTSIZE_XL),
-      ),
+    );
+  }
+
+  void _showTaskCategoryPicker() {
+    TaskCategory taskCategory = TaskCategory();
+    List<String> taskCategoryListStr = taskCategory.getTaskCategoryList();
+    List<Widget> taskCategoryListWidget =
+        Util.listStrToListWidget(taskCategoryListStr);
+
+    CupertinoPicker taskCategoryPicker = _createCupertinoPickerForTextForm(
+        32, taskCategoryListWidget, taskCategoryListStr);
+
+    showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => Container(
+              height: 216,
+              padding: const EdgeInsets.only(top: 6.0),
+              // The Bottom margin is provided to align the popup above the system navigation bar.
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              // Provide a background color for the popup.
+              color: CupertinoColors.systemBackground.resolveFrom(context),
+              // Use a SafeArea widget to avoid system overlaps.
+              child: SafeArea(
+                top: false,
+                child: taskCategoryPicker,
+              ),
+            ));
+  }
+
+  CupertinoPicker _createCupertinoPickerForTextForm(double kItemExtent,
+      List<Widget> itemWidgetList, List<String> itemStrList) {
+    return CupertinoPicker(
+      magnification: 1.22,
+      squeeze: 1.2,
+      useMagnifier: true,
+      itemExtent: kItemExtent,
+      // This is called when selected item is changed.
+      onSelectedItemChanged: (int selectedItem) {
+        setState(() {
+          _taskCategoryController.text = itemStrList[selectedItem];
+        });
+      },
+      children: itemWidgetList,
     );
   }
 
@@ -301,10 +379,12 @@ class NewTaskFormState extends State<NewTaskPage> {
         _taskNoteController.text,
         _selectedPerson!.emails![0].value!,
         _selectedPerson!.phones![0].value!,
+        _taskCategoryController.text,
       );
 
       var newTaskJson = newTask.toJson();
       // TODO: send parsed JSON to backend
+      print(newTaskJson);
     }
   }
 }

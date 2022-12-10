@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -36,12 +37,14 @@ class Util {
   static Future<PermissionStatus> getContactPermission() async {
     final PermissionStatus permission = await Permission.contacts.status;
 
-    if (permission == PermissionStatus.granted){
+    if (permission == PermissionStatus.granted) {
       return permission;
     }
 
-    final Map<Permission, PermissionStatus> permissionStatus = await [Permission.contacts].request();
-    return permissionStatus[Permission.contacts] ?? PermissionStatus.permanentlyDenied;
+    final Map<Permission, PermissionStatus> permissionStatus =
+        await [Permission.contacts].request();
+    return permissionStatus[Permission.contacts] ??
+        PermissionStatus.permanentlyDenied;
   }
 
   static String getHourFromTimeOfDay(TimeOfDay timeOfDay) {
@@ -52,8 +55,16 @@ class Util {
     return timeOfDay.minute.toString().padLeft(2, '0');
   }
 
-  static String formatDate(DateTime date){
+  static String formatDate(DateTime date) {
     String formattedDate = DateFormat(constant.DATE_FORMAT).format(date);
     return formattedDate;
+  }
+
+  static List<Widget> listStrToListWidget(List<String> listStr) {
+    List<Widget> widgetList = <Widget>[];
+    for (var i = 0; i < listStr.length; i++) {
+      widgetList.add(Text(listStr[i]));
+    }
+    return widgetList;
   }
 }
