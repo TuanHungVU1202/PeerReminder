@@ -94,9 +94,9 @@ class _YourTaskPageState extends State<YourTaskPage> {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          if(index.isOdd) return const Divider(color: Colors.grey);
+          if (index.isOdd) return const Divider(height: 0, color: Colors.grey);
 
-          int itemIndex = index ~/2;
+          int itemIndex = index ~/ 2;
           return _createSlidableTask(itemIndex);
         },
       ),
@@ -353,11 +353,13 @@ class TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.only(top: 5, left: 10),
+        padding: EdgeInsets.zero,
+        margin: const EdgeInsets.only(left: 10),
         child: Material(
           // Create Material widget for each ListTile
           child: ListTile(
-            selectedTileColor: Colors.lightBlue,
+            onTap: () {},
+            // selectedTileColor: Colors.lightBlue,
             title: Text(
               _filteredTaskList[_taskIndex],
               style: _biggerFont,
