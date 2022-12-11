@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:peer_reminder_flutter/tasks/ITaskItemIcon.dart';
 import 'package:peer_reminder_flutter/tasks/model/Task.dart';
+import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:simple_autocomplete_formfield/simple_autocomplete_formfield.dart';
@@ -38,6 +40,7 @@ class NewTaskFormState extends State<NewTaskPage> {
   final _endTimeController = TextEditingController();
   final _taskNoteController = TextEditingController();
   final _taskCategoryController = TextEditingController();
+  final _taskStatusController = TextEditingController(text: "TODO");
 
   List<Contact> _contactsList = <Contact>[];
   Contact? _selectedPerson;
@@ -76,6 +79,8 @@ class NewTaskFormState extends State<NewTaskPage> {
               _createTaskNoteField(),
               const SizedBox(height: 16.0),
               _createTaskCategoryField(),
+              const SizedBox(height: 16.0),
+              _createTaskStatusField(),
               const SizedBox(height: 16.0),
               _createTaskPeerField(),
             ],
@@ -237,10 +242,10 @@ class NewTaskFormState extends State<NewTaskPage> {
 
   Column _createPeerSuggestColumn(Contact contact) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(contact?.displayName ?? "",
+      Text(contact.displayName ?? "",
           style: const TextStyle(fontWeight: FontWeight.bold)),
-      Text(contact?.phones![0].value ?? ""),
-      Text(contact?.emails![0].value ?? "")
+      Text(contact.phones![0].value ?? ""),
+      Text(contact.emails![0].value ?? "")
     ]);
   }
 
@@ -266,48 +271,42 @@ class NewTaskFormState extends State<NewTaskPage> {
   }
 
   void _showTaskCategoryPicker() {
-    TaskCategory taskCategory = TaskCategory();
-    List<String> taskCategoryListStr = taskCategory.getTaskCategoryList();
-    List<Widget> taskCategoryListWidget =
-        Util.listStrToListWidget(taskCategoryListStr);
-
-    CupertinoPicker taskCategoryPicker = _createCupertinoPickerForTextForm(
-        32, taskCategoryListWidget, taskCategoryListStr);
-
-    showCupertinoModalPopup<void>(
-        context: context,
-        builder: (BuildContext context) => Container(
-              height: 216,
-              padding: const EdgeInsets.only(top: 6.0),
-              // The Bottom margin is provided to align the popup above the system navigation bar.
-              margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              // Provide a background color for the popup.
-              color: CupertinoColors.systemBackground.resolveFrom(context),
-              // Use a SafeArea widget to avoid system overlaps.
-              child: SafeArea(
-                top: false,
-                child: taskCategoryPicker,
-              ),
-            ));
+    TaskItemIcon taskCategory = TaskCategory();
+    List taskCategoryTwoListsWidgetAndStr =
+        _getItemTwoListsWidgetAndStr(taskCategory);
+    // Item at 0th is List<Widget>, 1st is List<String>
+    _showItemPicker(taskCategoryTwoListsWidgetAndStr[0],
+        taskCategoryTwoListsWidgetAndStr[1], _taskCategoryController);
   }
 
-  CupertinoPicker _createCupertinoPickerForTextForm(double kItemExtent,
-      List<Widget> itemWidgetList, List<String> itemStrList) {
-    return CupertinoPicker(
-      magnification: 1.22,
-      squeeze: 1.2,
-      useMagnifier: true,
-      itemExtent: kItemExtent,
-      // This is called when selected item is changed.
-      onSelectedItemChanged: (int selectedItem) {
-        setState(() {
-          _taskCategoryController.text = itemStrList[selectedItem];
-        });
+  // --------------------------------------
+  TextFormField _createTaskStatusField() {
+    return TextFormField(
+      readOnly: true,
+      controller: _taskStatusController,
+      decoration: const InputDecoration(
+        icon: Icon(Icons.checklist),
+        hintText: 'Enter task status',
+        labelText: 'Task Status',
+        border: OutlineInputBorder(),
+      ),
+      onTap: () => _showTaskStatusPicker(),
+      validator: (taskStatus) {
+        if (taskStatus == null || taskStatus.isEmpty) {
+          return 'Task status is required';
+        }
+        return null;
       },
-      children: itemWidgetList,
     );
+  }
+
+  void _showTaskStatusPicker() {
+    TaskItemIcon taskStatus = TaskStatus();
+    List taskStatusTwoListsWidgetAndStr =
+        _getItemTwoListsWidgetAndStr(taskStatus);
+    // Item at 0th is List<Widget>, 1st is List<String>
+    _showItemPicker(taskStatusTwoListsWidgetAndStr[0],
+        taskStatusTwoListsWidgetAndStr[1], _taskStatusController);
   }
 
   // -------------------------------------------------------------------
@@ -358,6 +357,57 @@ class NewTaskFormState extends State<NewTaskPage> {
     }
 
     return true;
+  }
+
+  // Utils for Cupertino Picker
+  List _getItemTwoListsWidgetAndStr(TaskItemIcon itemToPickObject) {
+    List<String>? itemListStr = itemToPickObject.getItemListStr();
+    List<Widget> itemListWidget = Util.listStrToListWidget(itemListStr!);
+    return [itemListWidget, itemListStr];
+  }
+
+  void _showItemPicker(List<Widget> itemListWidget, List<String> itemListStr,
+      TextEditingController textController) {
+    CupertinoPicker taskCategoryPicker = _createCupertinoPickerForTextForm(
+        32, itemListWidget, itemListStr, textController);
+
+    showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => Container(
+              height: 216,
+              padding: const EdgeInsets.only(top: 6.0),
+              // The Bottom margin is provided to align the popup above the system navigation bar.
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              // Provide a background color for the popup.
+              color: CupertinoColors.systemBackground.resolveFrom(context),
+              // Use a SafeArea widget to avoid system overlaps.
+              child: SafeArea(
+                top: false,
+                child: taskCategoryPicker,
+              ),
+            ));
+  }
+
+  CupertinoPicker _createCupertinoPickerForTextForm(
+      double kItemExtent,
+      List<Widget> itemWidgetList,
+      List<String> itemStrList,
+      TextEditingController controller) {
+    return CupertinoPicker(
+      magnification: 1.22,
+      squeeze: 1.2,
+      useMagnifier: true,
+      itemExtent: kItemExtent,
+      // This is called when selected item is changed.
+      onSelectedItemChanged: (int selectedItem) {
+        setState(() {
+          controller.text = itemStrList[selectedItem];
+        });
+      },
+      children: itemWidgetList,
+    );
   }
 
   // -------------------------------------------------------------------

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:peer_reminder_flutter/tasks/ITaskItemIcon.dart';
 
-class TaskCategory {
+class TaskCategory implements TaskItemIcon {
   // Task Categories
   final Map<String, IconData> _taskIconMap = {
     "Home": Icons.home,
@@ -10,11 +11,13 @@ class TaskCategory {
     "Others": Icons.question_mark,
   };
 
-  IconData? getTaskCategoryIcon(String taskCategory) {
-    return _taskIconMap[taskCategory];
+  @override
+  IconData? getItemIcon(String taskItemStr) {
+    return _taskIconMap[taskItemStr];
   }
 
-  List<String> getTaskCategoryList() {
+  @override
+  List<String>? getItemListStr() {
     return _taskIconMap.keys.toList();
   }
 }
