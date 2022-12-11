@@ -39,8 +39,10 @@ class NewTaskFormState extends State<NewTaskPage> {
   final _endDateController = TextEditingController();
   final _endTimeController = TextEditingController();
   final _taskNoteController = TextEditingController();
-  final _taskCategoryController = TextEditingController();
-  final _taskStatusController = TextEditingController(text: "TODO");
+  final _taskCategoryController = TextEditingController(
+      text: Util.capitalizeEnumValue(TaskCategoryEnum.home.name));
+  final _taskStatusController = TextEditingController(
+      text: Util.capitalizeEnumValue(TaskStatusEnum.todo.name));
 
   List<Contact> _contactsList = <Contact>[];
   Contact? _selectedPerson;
@@ -49,43 +51,55 @@ class NewTaskFormState extends State<NewTaskPage> {
   Widget build(BuildContext context) {
     // Set default values
     _setDefaultDateTime();
-
     return Scaffold(
-      appBar: CupertinoNavigationBar(
-        middle: const Text('New Task'),
-        leading: CupertinoNavigationBarBackButton(
-          onPressed: () => Navigator.pop(context),
-        ),
-        trailing: _createSaveButton(),
-      ),
-      body: Center(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // List TextFormField here
-              const SizedBox(height: 16.0),
-              _createTaskNameField(),
-              const SizedBox(height: 16.0),
-              _createTaskStartDateField(),
-              const SizedBox(height: 16.0),
-              _createTaskStartTimeField(),
-              const SizedBox(height: 16.0),
-              _createTaskEndDateField(),
-              const SizedBox(height: 16.0),
-              _createTaskEndTimeField(),
-              const SizedBox(height: 16.0),
-              _createTaskNoteField(),
-              const SizedBox(height: 16.0),
-              _createTaskCategoryField(),
-              const SizedBox(height: 16.0),
-              _createTaskStatusField(),
-              const SizedBox(height: 16.0),
-              _createTaskPeerField(),
-            ],
-          ),
-        ),
+      body: _createNewTaskSliverBody(),
+    );
+  }
+
+  CustomScrollView _createNewTaskSliverBody() {
+    return CustomScrollView(
+      slivers: <Widget>[
+        _createNewTasksSliverAppBar("New Task"),
+        // Real body
+        Util.sliverToBoxAdapter(_createBodyForm()),
+      ],
+    );
+  }
+
+  CupertinoSliverNavigationBar _createNewTasksSliverAppBar(String title) {
+    return CupertinoSliverNavigationBar(
+      largeTitle: Text(title),
+      trailing: _createSaveButton(),
+    );
+  }
+
+  // Body
+  Form _createBodyForm() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          // List TextFormField here
+          const SizedBox(height: 16.0),
+          _createTaskNameField(),
+          const SizedBox(height: 16.0),
+          _createTaskStartDateField(),
+          const SizedBox(height: 16.0),
+          _createTaskStartTimeField(),
+          const SizedBox(height: 16.0),
+          _createTaskEndDateField(),
+          const SizedBox(height: 16.0),
+          _createTaskEndTimeField(),
+          const SizedBox(height: 16.0),
+          _createTaskNoteField(),
+          const SizedBox(height: 16.0),
+          _createTaskCategoryField(),
+          const SizedBox(height: 16.0),
+          _createTaskStatusField(),
+          const SizedBox(height: 16.0),
+          _createTaskPeerField(),
+        ],
       ),
     );
   }
@@ -430,6 +444,7 @@ class NewTaskFormState extends State<NewTaskPage> {
         _selectedPerson!.emails![0].value!,
         _selectedPerson!.phones![0].value!,
         _taskCategoryController.text,
+        _taskStatusController.text,
       );
 
       var newTaskJson = newTask.toJson();

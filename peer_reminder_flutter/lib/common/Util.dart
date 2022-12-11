@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:basic_utils/basic_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
 
@@ -66,5 +67,13 @@ class Util {
       widgetList.add(Text(listStr[i]));
     }
     return widgetList;
+  }
+
+  static SliverToBoxAdapter sliverToBoxAdapter(Widget widgetToConvert){
+    return SliverToBoxAdapter(child: widgetToConvert);
+  }
+
+  static String capitalizeEnumValue(String enumStr) {
+    return StringUtils.capitalize(enumStr);
   }
 }
