@@ -157,6 +157,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
+            _editTask(context, _filteredTaskList[itemIndex]);
           },
           isDefaultAction: true,
           trailingIcon: Icons.edit,
@@ -292,6 +293,15 @@ class _YourTaskPageState extends State<YourTaskPage> {
     setState(() {
       _filteredTaskList.removeAt(itemIndex);
     });
+  }
+
+  void _editTask(BuildContext context, String taskTitle) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => TaskFormPage(taskTitle),
+      ),
+    );
   }
 
   void _updateSearchedTaskList(String value) {
