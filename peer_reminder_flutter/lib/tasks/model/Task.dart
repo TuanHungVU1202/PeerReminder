@@ -11,9 +11,19 @@ class Task {
   late String email;
   late String phoneNo;
   late String taskCategory;
+  late String taskStatus;
 
-  Task(this.taskName, this.startDate, this.startTime, this.endDate,
-      this.endTime, this.taskNote, this.email, this.phoneNo, this.taskCategory);
+  Task(
+      this.taskName,
+      this.startDate,
+      this.startTime,
+      this.endDate,
+      this.endTime,
+      this.taskNote,
+      this.email,
+      this.phoneNo,
+      this.taskCategory,
+      this.taskStatus);
 
   Task.fromJson(Map<String, dynamic> json)
       : taskName = json['taskName'],
@@ -24,7 +34,8 @@ class Task {
         taskNote = json['taskNote'],
         email = json['email'],
         phoneNo = json['phoneNo'],
-        taskCategory = json['taskCategory'];
+        taskCategory = json['taskCategory'],
+        taskStatus = json['taskStatus'];
 
   Map<String, dynamic> toJson() => {
         'taskName': taskName,
@@ -35,6 +46,7 @@ class Task {
         'taskNote': taskNote,
         'email': email,
         'phoneNo': phoneNo,
-        'taskCategory': taskCategory
+        'taskCategory': taskCategory,
+        'taskStatus': taskStatus,
       };
 }

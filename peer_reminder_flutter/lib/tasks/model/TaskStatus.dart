@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/ITaskItemIcon.dart';
 
-class TaskStatus implements TaskItemIcon{
+import '../../common/Util.dart';
+
+enum TaskStatusEnum { todo, doing, done, archived }
+
+class TaskStatus implements TaskItemIcon {
   // Task Statuses
   final Map<String, IconData> _taskStatusIconMap = {
-    "TODO": Icons.question_mark,
-    "In Progress": Icons.pending,
-    "Done": Icons.done,
-    "Archived": Icons.archive_rounded,
+    Util.capitalizeEnumValue(TaskStatusEnum.todo.name): Icons.question_mark,
+    Util.capitalizeEnumValue(TaskStatusEnum.doing.name): Icons.pending,
+    Util.capitalizeEnumValue(TaskStatusEnum.done.name): Icons.done,
+    Util.capitalizeEnumValue(TaskStatusEnum.archived.name): Icons.archive_rounded,
   };
 
   @override

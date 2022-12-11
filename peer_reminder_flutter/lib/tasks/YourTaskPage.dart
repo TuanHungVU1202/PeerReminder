@@ -55,7 +55,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
         // Search bar
         _createSearchBar(),
         // Tasks list
-        _createTaskSliverGrid(),
+        _createTaskSliverList(),
       ],
     );
   }
@@ -90,7 +90,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
     );
   }
 
-  SliverList _createTaskSliverGrid() {
+  SliverList _createTaskSliverList() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
