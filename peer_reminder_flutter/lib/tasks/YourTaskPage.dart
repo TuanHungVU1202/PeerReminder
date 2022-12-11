@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
+import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -345,10 +346,7 @@ class TaskTile extends StatelessWidget {
   final int _taskIndex;
   final List<String> _filteredTaskList;
 
-  const TaskTile(
-    this._filteredTaskList,
-    this._taskIndex,
-  );
+  const TaskTile(this._filteredTaskList, this._taskIndex, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -358,7 +356,8 @@ class TaskTile extends StatelessWidget {
         child: Material(
           // Create Material widget for each ListTile
           child: ListTile(
-            onTap: () {},
+            // TODO: pass JSON string here instead just String title
+            onTap: () => _viewTask(context, _filteredTaskList[_taskIndex]),
             // selectedTileColor: Colors.lightBlue,
             title: Text(
               _filteredTaskList[_taskIndex],
@@ -367,6 +366,17 @@ class TaskTile extends StatelessWidget {
             trailing: const Icon(Icons.home),
           ),
         ));
+  }
+
+  // -------------------------------------------------------------------
+  // Callbacks
+  void _viewTask(BuildContext context, String taskTitle) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => ViewTaskPage(taskTitle),
+      ),
+    );
   }
 }
 
