@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:peer_reminder_flutter/tasks/NewTaskPage.dart';
+import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -383,7 +383,7 @@ class FloatingAction extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 60),
           child: FloatingActionButton(
             onPressed: () {
-              _onPressedAddTask(context);
+              _onPressedAddNewTask(context);
             },
             backgroundColor: Colors.lightBlue,
             child: const Icon(Icons.add),
@@ -395,11 +395,11 @@ class FloatingAction extends StatelessWidget {
 
   // -------------------------------------------------------------------
   // Components' callbacks
-  void _onPressedAddTask(BuildContext context) {
+  void _onPressedAddNewTask(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => const NewTaskPage(),
+        builder: (BuildContext context) => const TaskFormPage("New Task"),
       ),
     );
   }
