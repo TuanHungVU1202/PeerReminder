@@ -185,11 +185,9 @@ class _YourTaskPageState extends State<YourTaskPage> {
         ),
       ],
       child: TaskTile(_filteredTaskList, itemIndex),
-      // TODO: create preview function here
       previewBuilder: (context, animation, child) {
-        return const Dialog(
-          child: Text("This is a preview"),
-        );
+        // Preview only => isPreview = true
+        return ViewTaskPage(_filteredTaskList[itemIndex], true);
       },
     );
   }
@@ -374,7 +372,8 @@ class TaskTile extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => ViewTaskPage(taskTitle),
+        // Not preview => isPreview = false
+        builder: (BuildContext context) => ViewTaskPage(taskTitle, false),
       ),
     );
   }

@@ -7,7 +7,8 @@ import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 
 class ViewTaskPage extends StatefulWidget {
   final String taskTitle;
-  const ViewTaskPage(this.taskTitle, {super.key});
+  final bool isPreview;
+  const ViewTaskPage(this.taskTitle, this.isPreview, {super.key});
 
   @override
   State<ViewTaskPage> createState() {
@@ -26,20 +27,27 @@ class _ViewTaskState extends State<ViewTaskPage> {
   // -------------------------------------------------------------------
   // UI Components
   CustomScrollView _createYourTaskSliverBody() {
+    List<Widget> widgetList = <Widget>[];
+
+    // Adding widgets
+    widgetList.add(_createViewTaskSliverAppBar(widget.taskTitle));
+    widgetList.add(_createViewTaskSliverList());
+
     return CustomScrollView(
-      slivers: <Widget>[
-        // Appbar
-        _createViewTaskSliverAppBar(widget.taskTitle),
-        // Tasks list
-        _createViewTaskSliverList(),
-      ],
+      slivers: widgetList,
     );
   }
 
   CupertinoSliverNavigationBar _createViewTaskSliverAppBar(String taskTitle) {
+    Widget? trailingWidget;
+    // Show Edit button only if this is not a Preview widget
+    if (!widget.isPreview) {
+      trailingWidget = _createEditButton();
+    }
+
     return CupertinoSliverNavigationBar(
       largeTitle: Text(taskTitle),
-      trailing: _createEditButton(),
+      trailing: trailingWidget,
     );
   }
 
