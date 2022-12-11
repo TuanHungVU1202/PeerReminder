@@ -14,18 +14,19 @@ import 'package:peer_reminder_flutter/common/Util.dart';
 
 import 'model/TaskCategory.dart';
 
-class NewTaskPage extends StatefulWidget {
-  const NewTaskPage({super.key});
+class TaskFormPage extends StatefulWidget {
+  final String taskFormTitle;
+  const TaskFormPage(this.taskFormTitle, {super.key});
 
   @override
-  NewTaskFormState createState() {
-    return NewTaskFormState();
+  State<TaskFormPage> createState() {
+    return _TaskFormState();
   }
 }
 
 // Define a corresponding State class.
 // This class holds data related to the form.
-class NewTaskFormState extends State<NewTaskPage> {
+class _TaskFormState extends State<TaskFormPage> {
   // Note: This is a `GlobalKey<FormState>`,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
@@ -52,21 +53,21 @@ class NewTaskFormState extends State<NewTaskPage> {
     // Set default values
     _setDefaultDateTime();
     return Scaffold(
-      body: _createNewTaskSliverBody(),
+      body: _createTaskFormSliverBody(),
     );
   }
 
-  CustomScrollView _createNewTaskSliverBody() {
+  CustomScrollView _createTaskFormSliverBody() {
     return CustomScrollView(
       slivers: <Widget>[
-        _createNewTasksSliverAppBar("New Task"),
+        _createTaskFormSliverAppBar(widget.taskFormTitle),
         // Real body
         Util.sliverToBoxAdapter(_createBodyForm()),
       ],
     );
   }
 
-  CupertinoSliverNavigationBar _createNewTasksSliverAppBar(String title) {
+  CupertinoSliverNavigationBar _createTaskFormSliverAppBar(String title) {
     return CupertinoSliverNavigationBar(
       largeTitle: Text(title),
       trailing: _createSaveButton(),
@@ -108,7 +109,7 @@ class NewTaskFormState extends State<NewTaskPage> {
   TextButton _createSaveButton() {
     return TextButton(
       onPressed: () {
-        _addTask();
+        _saveTask();
       },
       style: TextButton.styleFrom(
         foregroundColor: Colors.black,
@@ -425,7 +426,7 @@ class NewTaskFormState extends State<NewTaskPage> {
   }
 
   // -------------------------------------------------------------------
-  void _addTask() {
+  void _saveTask() {
     // Validate returns true if the form is valid, or false otherwise.
     if (_formKey.currentState!.validate()) {
       // If the form is valid, display a snackbar. In the real world,
@@ -434,7 +435,7 @@ class NewTaskFormState extends State<NewTaskPage> {
       //   const SnackBar(content: Text('Adding task...')),
       // );
 
-      Task newTask = Task(
+      Task task = Task(
         _taskNameController.text,
         _startDateController.text,
         _startTimeController.text,
@@ -447,9 +448,9 @@ class NewTaskFormState extends State<NewTaskPage> {
         _taskStatusController.text,
       );
 
-      var newTaskJson = newTask.toJson();
+      var taskJson = task.toJson();
       // TODO: send parsed JSON to backend
-      print(newTaskJson);
+      print(taskJson);
     }
   }
 }
