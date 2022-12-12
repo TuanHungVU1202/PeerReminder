@@ -13,7 +13,7 @@ import 'model/Task.dart';
 
 // FIXME: finalize this, query from DB
 final _originalTaskList = List<String>.generate(10000, (i) => 'Item $i');
-const _biggerFont = TextStyle(fontSize: constant.FONTSIZE_XL);
+const _biggerFont = TextStyle(fontSize: constant.FONTSIZE_XXL);
 // FIXME: using fake data now. Use object directly because the object should be received from YourTaskPage
 Task _task = Util.initFakeData();
 
