@@ -9,9 +9,13 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
 import 'package:peer_reminder_flutter/common/Util.dart';
 
+import 'model/Task.dart';
+
 // FIXME: finalize this, query from DB
 final _originalTaskList = List<String>.generate(10000, (i) => 'Item $i');
 const _biggerFont = TextStyle(fontSize: constant.FONTSIZE_XL);
+// FIXME: using fake data now. Use object directly because the object should be received from YourTaskPage
+Task _task = Util.initFakeData();
 
 class YourTaskPage extends StatefulWidget {
   const YourTaskPage({super.key});
@@ -188,7 +192,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
       child: TaskTile(_filteredTaskList, itemIndex),
       previewBuilder: (context, animation, child) {
         // Preview only => isPreview = true
-        return ViewTaskPage(_filteredTaskList[itemIndex], true);
+        return ViewTaskPage(_task, true);
       },
     );
   }
@@ -383,7 +387,7 @@ class TaskTile extends StatelessWidget {
       context,
       MaterialPageRoute(
         // Not preview => isPreview = false
-        builder: (BuildContext context) => ViewTaskPage(taskTitle, false),
+        builder: (BuildContext context) => ViewTaskPage(_task, false),
       ),
     );
   }
