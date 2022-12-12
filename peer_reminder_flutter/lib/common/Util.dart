@@ -5,6 +5,8 @@ import 'package:basic_utils/basic_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
 
+import '../tasks/model/Task.dart';
+
 class Util {
   static Future<void> selectDateForTexFormField(BuildContext context,
       TextEditingController controller, DateTime selectedDate) async {
@@ -69,11 +71,27 @@ class Util {
     return widgetList;
   }
 
-  static SliverToBoxAdapter sliverToBoxAdapter(Widget widgetToConvert){
+  static SliverToBoxAdapter sliverToBoxAdapter(Widget widgetToConvert) {
     return SliverToBoxAdapter(child: widgetToConvert);
   }
 
   static String capitalizeEnumValue(String enumStr) {
     return StringUtils.capitalize(enumStr);
+  }
+
+  static Task initFakeData() {
+    Task task = Task(
+      "Test task ne 123",
+      "11-12-2022",
+      "17:34",
+      "11-12-2022",
+      "17:34",
+      "this is a noteeeee",
+      "anna-haro@mac.com",
+      "555-522-8243",
+      "Home",
+      "Todo",
+    );
+    return task;
   }
 }
