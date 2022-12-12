@@ -27,8 +27,12 @@ class ViewTaskPage extends StatefulWidget {
 class _ViewTaskState extends State<ViewTaskPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _createYourTaskSliverBody(),
+    // To round the corners
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8.0),
+      child: Scaffold(
+        body: _createYourTaskSliverBody(),
+      ),
     );
   }
 
@@ -48,12 +52,14 @@ class _ViewTaskState extends State<ViewTaskPage> {
 
   CupertinoSliverNavigationBar _createViewTaskSliverAppBar() {
     Widget? trailingWidget;
-    // Show Edit button only if this is not a Preview widget
+    // If in Preview mode, do not create Edit button
     if (!widget.isPreview) {
       trailingWidget = _createEditButton();
     }
 
     return CupertinoSliverNavigationBar(
+      // If in Preview mode, disable Leading back icon
+      automaticallyImplyLeading: !widget.isPreview,
       largeTitle: Center(child: Text(widget._task.taskName)),
       trailing: trailingWidget,
     );
