@@ -39,10 +39,15 @@ class _YourTaskPageState extends State<YourTaskPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+
     // Requesting Contact permission for the first time
     _requestPermission();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: const FloatingAction(),

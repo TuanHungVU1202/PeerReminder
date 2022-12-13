@@ -49,9 +49,15 @@ class _TaskFormState extends State<TaskFormPage> {
   Contact? _selectedPerson;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+
     // Set default values
     _setDefaultDateTime();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: _createTaskFormSliverBody(),
     );
