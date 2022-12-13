@@ -69,8 +69,6 @@ class _ViewTaskState extends State<ViewTaskPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _createListTileForSingleItem(
-            const Icon(Icons.task), "Task Name", widget._task.taskName),
         _createListTileForSingleItem(const Icon(Icons.calendar_month_outlined),
             "Start Date", widget._task.startDate),
         _createListTileForSingleItem(const Icon(Icons.access_time),
@@ -85,20 +83,47 @@ class _ViewTaskState extends State<ViewTaskPage> {
             const Icon(Icons.contact_mail), "Email", widget._task.email ?? ""),
         _createListTileForSingleItem(const Icon(Icons.contact_phone), "Phone",
             widget._task.phoneNo ?? ""),
-        _createListTileForSingleItem(const Icon(Icons.category),
-            "Task Category", widget._task.taskCategory),
-        _createListTileForSingleItem(const Icon(Icons.checklist), "Task Status",
-            widget._task.taskStatus),
+        _createListTileForSingleItem(
+            const Icon(Icons.category), "Category", widget._task.taskCategory),
+        _createListTileForSingleItem(
+            const Icon(Icons.checklist), "Status", widget._task.taskStatus),
       ],
     );
   }
 
-  ListTile _createListTileForSingleItem(
+  Container _createListTileForSingleItem(
       Icon leadingIcon, String title, String subTitle) {
-    return ListTile(
-        leading: leadingIcon,
-        title: Text(title, style: _titleFont),
-        trailing: Text(subTitle, style: _subTitleFont));
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            leadingIcon,
+            const SizedBox(width: 10),
+            SizedBox(
+              width: 110,
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Text(
+                  title,
+                  style: _titleFont,
+                  overflow: TextOverflow.fade,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                subTitle,
+                style: _subTitleFont,
+                overflow: TextOverflow.fade,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // --------------------------------------
