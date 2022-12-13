@@ -10,7 +10,7 @@ import 'package:peer_reminder_flutter/common/Util.dart';
 
 import 'model/Task.dart';
 
-const _titleFont = TextStyle(fontSize: constant.FONTSIZE_XXL);
+const _titleFont = TextStyle(fontSize: constant.FONTSIZE_XL);
 const _subTitleFont = TextStyle(fontSize: constant.FONTSIZE_XL);
 
 class ViewTaskPage extends StatefulWidget {
@@ -69,23 +69,34 @@ class _ViewTaskState extends State<ViewTaskPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _createListTileForSingleItem("Task Name", widget._task.taskName),
-        _createListTileForSingleItem("Start Date", widget._task.startDate),
-        _createListTileForSingleItem("Start Time", widget._task.startTime),
-        _createListTileForSingleItem("End Date", widget._task.endDate),
-        _createListTileForSingleItem("End Time", widget._task.endTime),
-        _createListTileForSingleItem("Note", widget._task.taskNote),
-        _createListTileForSingleItem("Email", widget._task.email ?? ""),
-        _createListTileForSingleItem("Phone", widget._task.phoneNo ?? ""),
         _createListTileForSingleItem(
+            const Icon(Icons.task), "Task Name", widget._task.taskName),
+        _createListTileForSingleItem(const Icon(Icons.calendar_month_outlined),
+            "Start Date", widget._task.startDate),
+        _createListTileForSingleItem(const Icon(Icons.access_time),
+            "Start Time", widget._task.startTime),
+        _createListTileForSingleItem(
+            const Icon(Icons.calendar_month), "End Date", widget._task.endDate),
+        _createListTileForSingleItem(const Icon(Icons.access_time_filled),
+            "End Time", widget._task.endTime),
+        _createListTileForSingleItem(
+            const Icon(Icons.note), "Note", widget._task.taskNote),
+        _createListTileForSingleItem(
+            const Icon(Icons.contact_mail), "Email", widget._task.email ?? ""),
+        _createListTileForSingleItem(const Icon(Icons.contact_phone), "Phone",
+            widget._task.phoneNo ?? ""),
+        _createListTileForSingleItem(const Icon(Icons.category),
             "Task Category", widget._task.taskCategory),
-        _createListTileForSingleItem("Task Status", widget._task.taskStatus),
+        _createListTileForSingleItem(const Icon(Icons.checklist), "Task Status",
+            widget._task.taskStatus),
       ],
     );
   }
 
-  ListTile _createListTileForSingleItem(String title, String subTitle) {
+  ListTile _createListTileForSingleItem(
+      Icon leadingIcon, String title, String subTitle) {
     return ListTile(
+        leading: leadingIcon,
         title: Text(title, style: _titleFont),
         trailing: Text(subTitle, style: _subTitleFont));
   }
