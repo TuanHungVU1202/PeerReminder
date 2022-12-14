@@ -361,14 +361,15 @@ class _YourTaskPageState extends State<YourTaskPage> {
   }
 
   Future<void> _launchEmail(String email) async {
-    String subject = "Request%20To%20Remind";
+    String subject = "Request to remind!";
 
     // FIXME: use a body template
     String body = "Test";
-    final emailUri = Uri(
-      scheme: "mailto",
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
       path: email,
-      query: "subject=$subject&body=$body",
+      query: Util.encodeQueryParameters(
+          <String, String>{"subject": subject, "body": body}),
     );
 
     if (await canLaunchUrl(emailUri)) {
