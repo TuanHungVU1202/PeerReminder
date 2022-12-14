@@ -6,12 +6,15 @@ PODS:
     - Flutter
   - permission_handler_apple (9.0.4):
     - Flutter
+  - url_launcher_ios (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - contacts_service (from `.symlinks/plugins/contacts_service/ios`)
   - Flutter (from `Flutter`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 EXTERNAL SOURCES:
   contacts_service:
@@ -22,12 +25,15 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
   contacts_service: 849e1f84281804c8bfbec1b4c3eedcb23c5d3eca
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
+  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 
 PODFILE CHECKSUM: 18796af258855cce8caa9e2a4817d60ec5bdf213
 
