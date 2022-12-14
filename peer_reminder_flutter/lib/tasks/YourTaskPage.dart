@@ -51,12 +51,18 @@ class _YourTaskPageState extends State<YourTaskPage> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: const FloatingAction(),
-      body: _createYourTaskSliverBody(),
+      body: _createRefreshableBody(),
     );
   }
 
   // -------------------------------------------------------------------
   // UI Components
+  RefreshIndicator _createRefreshableBody() {
+    return RefreshIndicator(
+        onRefresh: () => _swipeDownRefresh(),
+        child: _createYourTaskSliverBody());
+  }
+
   CustomScrollView _createYourTaskSliverBody() {
     return CustomScrollView(
       slivers: <Widget>[
@@ -245,6 +251,11 @@ class _YourTaskPageState extends State<YourTaskPage> {
 
   // -------------------------------------------------------------------
   // Components' callbacks
+  Future<void> _swipeDownRefresh() async {
+    // TODO: call get DB
+    print("Swiped down");
+  }
+
   void doNothing(BuildContext context) {
     print("abc");
   }
