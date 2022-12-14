@@ -43,6 +43,7 @@ dependencies:
   contacts_service: ^0.6.3
   flutter_slidable: ^2.0.0
   basic_utils: ^5.4.2
+  url_launcher: ^6.1.7
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Local imports
 import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
@@ -192,12 +193,22 @@ class _YourTaskPageState extends State<YourTaskPage> {
           trailingIcon: Icons.done,
           child: const Text('Mark as Done'),
         ),
+        // FIXME: check if email or phone valid/available/etc.
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
+            _launchDialer(_task.phoneNo);
           },
           trailingIcon: CupertinoIcons.phone,
           child: const Text('Call peer'),
+        ),
+        CupertinoContextMenuAction(
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            _launchEmail(_task.email);
+          },
+          trailingIcon: CupertinoIcons.mail,
+          child: const Text('Email peer'),
         ),
       ],
       child: TaskTile(_filteredTaskList, itemIndex),
@@ -337,6 +348,34 @@ class _YourTaskPageState extends State<YourTaskPage> {
 
     // To rebuild
     setState(() {});
+  }
+
+  // This should not work on simulator
+  Future<void> _launchDialer(String contactNumber) async {
+    final callUri = Uri.parse("tel:$contactNumber");
+    if (await canLaunchUrl(callUri)) {
+      await launchUrl(callUri);
+    } else {
+      throw 'Could not launch $callUri';
+    }
+  }
+
+  Future<void> _launchEmail(String email) async {
+    String subject = "Request%20To%20Remind";
+
+    // FIXME: use a body template
+    String body = "Test";
+    final emailUri = Uri(
+      scheme: "mailto",
+      path: email,
+      query: "subject=$subject&body=$body",
+    );
+
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri);
+    } else {
+      throw 'Could not launch $emailUri';
+    }
   }
 
   // -------------------------------------------------------------------

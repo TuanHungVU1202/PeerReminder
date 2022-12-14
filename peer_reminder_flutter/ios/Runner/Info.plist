@@ -54,5 +54,12 @@
     <string>contacts</string>
     <!-- END - Permission for permission_handler -->
 
+    <!-- Permission for url_launcher -->
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>sms</string>
+      <string>tel</string>
+    </array>
+    <!-- END - Permission for url_launcher -->
 </dict>
 </plist>
