@@ -1,7 +1,11 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
+import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -181,7 +185,10 @@ class _YourTaskPageState extends State<YourTaskPage> {
         ),
         CupertinoContextMenuAction(
           onPressed: () {
+            // FIXME: fix setState() called after dispose()
             Navigator.of(context, rootNavigator: true).pop();
+            _archiveTask(_task, itemIndex);
+            _removeTaskFromList(itemIndex);
           },
           trailingIcon: CupertinoIcons.archivebox,
           child: const Text('Archive'),
@@ -189,6 +196,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
+            _markAsDoneTask(_task);
           },
           trailingIcon: Icons.done,
           child: const Text('Mark as Done'),
@@ -321,9 +329,7 @@ class _YourTaskPageState extends State<YourTaskPage> {
 
   void _deleteTask(int itemIndex) {
     // TODO: Call DB
-    setState(() {
-      _filteredTaskList.removeAt(itemIndex);
-    });
+    _removeTaskFromList(itemIndex);
   }
 
   void _editTask(BuildContext context, String taskTitle) {
@@ -348,6 +354,24 @@ class _YourTaskPageState extends State<YourTaskPage> {
 
     // To rebuild
     setState(() {});
+  }
+
+  void _archiveTask(Task task, int itemIndex) {
+    task.taskStatus = TaskStatusEnum.archived.name;
+
+    // TODO: call DB to update status as archived
+    String taskJsonStr = jsonEncode(task.toJson());
+    print(taskJsonStr);
+
+    // TODO: after done, notify peer. Maybe cancel event as well?
+  }
+
+  void _markAsDoneTask(Task task) {
+    task.taskStatus = TaskStatusEnum.done.name;
+
+    // TODO: call DB to update status as done
+    String taskJsonStr = jsonEncode(task.toJson());
+    print(taskJsonStr);
   }
 
   // This should not work on simulator
@@ -406,6 +430,12 @@ class _YourTaskPageState extends State<YourTaskPage> {
               ));
     }
     return true;
+  }
+
+  void _removeTaskFromList(int itemIndex) {
+    setState(() {
+      _filteredTaskList.removeAt(itemIndex);
+    });
   }
 }
 
