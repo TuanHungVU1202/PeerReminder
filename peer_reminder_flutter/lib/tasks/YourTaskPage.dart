@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
 import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
@@ -22,14 +23,14 @@ const _biggerFont = TextStyle(fontSize: constant.FONTSIZE_XXL);
 // FIXME: using fake data now. Use object directly because the object should be received from YourTaskPage
 Task _task = Util.initFakeData();
 
-class YourTaskPage extends StatefulWidget {
-  const YourTaskPage({super.key});
+class YourTaskPage extends AbstractTaskList {
+  const YourTaskPage({Key? key}) : super(key: key);
 
   @override
-  State<YourTaskPage> createState() => _YourTaskPageState();
+  YourTaskPageState createState() => YourTaskPageState();
 }
 
-class _YourTaskPageState extends State<YourTaskPage> {
+class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   // Controllers
   final _searchBarController = TextEditingController();
 
