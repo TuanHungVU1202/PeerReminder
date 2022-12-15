@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/ITaskItemIcon.dart';
@@ -454,9 +456,9 @@ class _TaskFormState extends State<TaskFormPage> {
         _taskStatusController.text,
       );
 
-      var taskJson = task.toJson();
       // TODO: send parsed JSON to backend
-      print(taskJson);
+      String taskJsonStr = jsonEncode(task.toJson());
+      print(taskJsonStr);
     }
   }
 }
