@@ -7,13 +7,8 @@ import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
 import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 // Local imports
-import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
-import 'package:peer_reminder_flutter/common/Util.dart';
-
 import 'TaskTile.dart';
 import 'model/Task.dart';
 
@@ -27,22 +22,6 @@ class YourTaskPage extends AbstractTaskList {
 class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   @override
   String get largeTitle => "Your Tasks";
-
-  // To make sure things are mounted
-  @override
-  void setState(fn) {
-    if (mounted) {
-      super.setState(fn);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Requesting Contact permission for the first time
-    requestPermission();
-  }
 
   @override
   Widget build(BuildContext context) {
