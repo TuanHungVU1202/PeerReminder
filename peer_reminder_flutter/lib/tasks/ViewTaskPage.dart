@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 
 // Local imports
 import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
+import 'package:peer_reminder_flutter/common/UIConstant.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/common/Util.dart';
 
 import 'model/Task.dart';
-
-const _titleFont = TextStyle(fontSize: constant.FONTSIZE_XL);
-const _subTitleFont = TextStyle(fontSize: constant.FONTSIZE_XL);
 
 class ViewTaskPage extends StatefulWidget {
   final Task _task;
@@ -109,7 +107,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
                 padding: const EdgeInsets.all(5),
                 child: Text(
                   title,
-                  style: _titleFont,
+                  style: UIConstant.titleFont,
                   overflow: TextOverflow.fade,
                 ),
               ),
@@ -117,7 +115,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
             Expanded(
               child: Text(
                 subTitle,
-                style: _subTitleFont,
+                style: UIConstant.subTitleFont,
                 overflow: TextOverflow.fade,
               ),
             ),
