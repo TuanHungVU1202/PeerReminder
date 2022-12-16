@@ -8,20 +8,14 @@ import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
 import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Local imports
 import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
 import 'package:peer_reminder_flutter/common/Util.dart';
 
+import 'TaskTile.dart';
 import 'model/Task.dart';
-
-// FIXME: finalize this, query from DB
-final _originalTaskList = List<String>.generate(10000, (i) => 'Item $i');
-const _biggerFont = TextStyle(fontSize: constant.FONTSIZE_XXL);
-// FIXME: using fake data now. Use object directly because the object should be received from YourTaskPage
-Task _task = Util.initFakeData();
 
 class YourTaskPage extends AbstractTaskList {
   const YourTaskPage({Key? key}) : super(key: key);
@@ -31,10 +25,8 @@ class YourTaskPage extends AbstractTaskList {
 }
 
 class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
-  // Controllers
-  final _searchBarController = TextEditingController();
-
-  late List<String> _filteredTaskList = _originalTaskList;
+  @override
+  String get largeTitle => "Your Tasks";
 
   // To make sure things are mounted
   @override
@@ -49,136 +41,45 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
     super.initState();
 
     // Requesting Contact permission for the first time
-    _requestPermission();
+    requestPermission();
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> bodyWidgetList = createBodyWidgetList();
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: const FloatingAction(),
-      body: _createRefreshableBody(),
+      body: createRefreshableBody(bodyWidgetList),
     );
   }
 
   // -------------------------------------------------------------------
   // UI Components
-  RefreshIndicator _createRefreshableBody() {
-    return RefreshIndicator(
-        onRefresh: () => _swipeDownRefresh(),
-        child: _createYourTaskSliverBody());
-  }
-
-  CustomScrollView _createYourTaskSliverBody() {
-    return CustomScrollView(
-      slivers: <Widget>[
-        // Appbar
-        _createYourTasksSliverAppBar(),
-        // Search bar
-        _createSearchBar(),
-        // Tasks list
-        _createTaskSliverList(),
-      ],
-    );
-  }
-
-  CupertinoSliverNavigationBar _createYourTasksSliverAppBar() {
-    return const CupertinoSliverNavigationBar(
-      largeTitle: Text('Your Tasks'),
-    );
-  }
-
-  SliverToBoxAdapter _createSearchBar() {
-    return SliverToBoxAdapter(
-      child: FractionallySizedBox(
-        widthFactor: 0.9,
-        child: ClipRect(
-            child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: CupertinoSearchTextField(
-            controller: _searchBarController,
-            onChanged: (value) {
-              _updateSearchedTaskList(value);
-            },
-            onSubmitted: (value) {
-              _updateSearchedTaskList(value);
-            },
-            onSuffixTap: () {
-              _updateSearchedTaskList('');
-            },
-          ),
-        )),
-      ),
-    );
-  }
-
-  SliverList _createTaskSliverList() {
+  @override
+  SliverList createTaskSliverList() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           if (index.isOdd) return const Divider(height: 0, color: Colors.grey);
 
           int itemIndex = index ~/ 2;
-          return _createSlidableTask(itemIndex);
+          return createSlidableTask(itemIndex);
         },
       ),
     );
   }
 
-  Slidable _createSlidableTask(int itemIndex) {
-    return Slidable(
-      // Specify a key if the Slidable is dismissible.
-      key: UniqueKey(),
-
-      startActionPane: ActionPane(
-        motion: const DrawerMotion(),
-
-        dismissible: DismissiblePane(confirmDismiss: () async {
-          Future<bool> isConfirmed = _onConfirmDeleteTask();
-          return Future(() => isConfirmed);
-        }, onDismissed: () {
-          _deleteTask(itemIndex);
-        }),
-
-        // All actions are defined in the children parameter.
-        children: [
-          SlidableAction(
-            onPressed: (context) => _onPressedDelete(itemIndex),
-            backgroundColor: const Color(0xFFFE4A49),
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Delete',
-          ),
-        ],
-      ),
-
-      endActionPane: ActionPane(
-        motion: const DrawerMotion(),
-        children: [
-          SlidableAction(
-            onPressed: doNothing,
-            backgroundColor: const Color(0xFF7BC043),
-            foregroundColor: Colors.white,
-            icon: Icons.notifications_active_outlined,
-            label: 'Notify Peer',
-          ),
-        ],
-      ),
-
-      // The child of the Slidable is what the user sees when the
-      // component is not dragged.
-      child: _createTaskContextMenu(itemIndex),
-    );
-  }
-
   // TODO: create corresponding callbacks for each menu selection
-  CupertinoContextMenu _createTaskContextMenu(int itemIndex) {
+  @override
+  CupertinoContextMenu createTaskContextMenu(int itemIndex) {
     return CupertinoContextMenu(
       actions: <Widget>[
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            _editTask(context, _filteredTaskList[itemIndex]);
+            editTask(context, filteredTaskList[itemIndex]);
           },
           isDefaultAction: true,
           trailingIcon: Icons.edit,
@@ -188,8 +89,8 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
           onPressed: () {
             // FIXME: fix setState() called after dispose()
             Navigator.of(context, rootNavigator: true).pop();
-            _archiveTask(_task, itemIndex);
-            _removeTaskFromList(itemIndex);
+            _archiveTask(task, itemIndex);
+            removeTaskFromList(itemIndex);
           },
           trailingIcon: CupertinoIcons.archivebox,
           child: const Text('Archive'),
@@ -197,7 +98,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            _markAsDoneTask(_task);
+            _markAsDoneTask(task);
           },
           trailingIcon: Icons.done,
           child: const Text('Mark as Done'),
@@ -206,7 +107,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            _launchDialer(_task.phoneNo);
+            launchDialer(task.phoneNo);
           },
           trailingIcon: CupertinoIcons.phone,
           child: const Text('Call peer'),
@@ -214,147 +115,43 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            _launchEmail(_task.email);
+            launchEmail(task.email);
           },
           trailingIcon: CupertinoIcons.mail,
           child: const Text('Email peer'),
         ),
       ],
-      child: TaskTile(_filteredTaskList, itemIndex),
+      child: TaskTile(task: task, filteredTaskList, itemIndex),
       previewBuilder: (context, animation, child) {
         // Preview only => isPreview = true
-        return ViewTaskPage(_task, true);
+        return ViewTaskPage(task, true);
       },
-    );
-  }
-
-  InkWell _createConfirmCancelButton(double width, double height) {
-    return InkWell(
-      child: Container(
-        width: width,
-        padding: const EdgeInsets.all(15.0),
-        decoration: const BoxDecoration(
-            color: Colors.white70,
-            borderRadius: BorderRadius.all(Radius.circular(10.0))),
-        child: const Center(
-          child: Text(
-            'Cancel',
-            style: TextStyle(
-                fontSize: constant.FONTSIZE_XL, color: Colors.lightBlue),
-          ),
-        ),
-      ),
-      // false means this pop return value bool = false
-      onTap: () => Navigator.of(context, rootNavigator: true).pop(false),
-    );
-  }
-
-  InkWell _createConfirmDeleteButton(double width, double height) {
-    return InkWell(
-      child: Container(
-        width: width,
-        // height: height*0.3,
-        padding: const EdgeInsets.all(5.0),
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10.0))),
-        child: const Center(
-          child: Text(
-            'Delete',
-            style: TextStyle(fontSize: constant.FONTSIZE_XL, color: Colors.red),
-          ),
-        ),
-      ),
-      // true means this pop return value bool = true
-      onTap: () => Navigator.of(context, rootNavigator: true).pop(true),
     );
   }
 
   // -------------------------------------------------------------------
   // Components' callbacks
-  Future<void> _swipeDownRefresh() async {
+  @override
+  Future<void> swipeDownRefresh() async {
     // TODO: call get DB
     print("Swiped down");
   }
 
-  void doNothing(BuildContext context) {
-    print("abc");
-  }
-
-  Future<void> _onPressedDelete(int itemIndex) async {
-    Future<bool> isConfirmed = _onConfirmDeleteTask();
-
-    if (await isConfirmed) {
-      _deleteTask(itemIndex);
-    }
-  }
-
-  Future<bool> _onConfirmDeleteTask() async {
-    return await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        double width = MediaQuery.of(context).size.width;
-        double height = MediaQuery.of(context).size.height;
-        return AlertDialog(
-            backgroundColor: Colors.transparent,
-            contentPadding: EdgeInsets.zero,
-            elevation: 0.0,
-            content: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  width: width,
-                  padding: const EdgeInsets.all(15.0),
-                  decoration: const BoxDecoration(
-                      color: Colors.white70,
-                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  child: Column(
-                    children: [
-                      // Text information
-                      const Text("This task will be deleted"),
-                      const Divider(),
-                      // Delete button
-                      _createConfirmDeleteButton(width, height),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                // Cancel button
-                _createConfirmCancelButton(width, height),
-              ],
-            ));
-      },
-    );
-  }
-
-  void _deleteTask(int itemIndex) {
+  // TODO: DB callbacks
+  @override
+  void deleteTask(int itemIndex) {
     // TODO: Call DB
-    _removeTaskFromList(itemIndex);
+    removeTaskFromList(itemIndex);
   }
 
-  void _editTask(BuildContext context, String taskTitle) {
+  @override
+  void editTask(BuildContext context, String taskTitle) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => TaskFormPage(taskTitle),
       ),
     );
-  }
-
-  void _updateSearchedTaskList(String value) {
-    if (value.isNotEmpty) {
-      _filteredTaskList = _filteredTaskList
-          .where(
-              (element) => element.toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    } else {
-      _searchBarController.text = '';
-      _filteredTaskList = _originalTaskList;
-    }
-
-    // To rebuild
-    setState(() {});
   }
 
   void _archiveTask(Task task, int itemIndex) {
@@ -373,110 +170,6 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
     // TODO: call DB to update status as done
     String taskJsonStr = jsonEncode(task.toJson());
     print(taskJsonStr);
-  }
-
-  // This should not work on simulator
-  Future<void> _launchDialer(String contactNumber) async {
-    final callUri = Uri.parse("tel:$contactNumber");
-    if (await canLaunchUrl(callUri)) {
-      await launchUrl(callUri);
-    } else {
-      throw 'Could not launch $callUri';
-    }
-  }
-
-  Future<void> _launchEmail(String email) async {
-    String subject = "Request to remind!";
-
-    // FIXME: use a body template
-    String body = "Test";
-    final Uri emailUri = Uri(
-      scheme: 'mailto',
-      path: email,
-      query: Util.encodeQueryParameters(
-          <String, String>{"subject": subject, "body": body}),
-    );
-
-    if (await canLaunchUrl(emailUri)) {
-      await launchUrl(emailUri);
-    } else {
-      throw 'Could not launch $emailUri';
-    }
-  }
-
-  // -------------------------------------------------------------------
-  // Private Utils
-  Future<bool> _requestPermission() async {
-    var permission = Util.getContactPermission();
-
-    if (await permission.isGranted) {
-      return true;
-    } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => CupertinoAlertDialog(
-                title: const Text('Contacts Permission denied'),
-                content: const Text('Please enable contacts access '
-                    'permission in system settings to search for peer contacts'),
-                actions: <Widget>[
-                  CupertinoDialogAction(
-                    child: const Text('Maybe later'),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  CupertinoDialogAction(
-                    child: const Text('Open Settings'),
-                    onPressed: () => openAppSettings(),
-                  )
-                ],
-              ));
-    }
-    return true;
-  }
-
-  void _removeTaskFromList(int itemIndex) {
-    setState(() {
-      _filteredTaskList.removeAt(itemIndex);
-    });
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-class TaskTile extends StatelessWidget {
-  final int _taskIndex;
-  final List<String> _filteredTaskList;
-
-  const TaskTile(this._filteredTaskList, this._taskIndex, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.zero,
-        margin: const EdgeInsets.only(left: 10),
-        child: Material(
-          // Create Material widget for each ListTile
-          child: ListTile(
-            // TODO: pass JSON string here instead just String title
-            onTap: () => _viewTask(context, _filteredTaskList[_taskIndex]),
-            // selectedTileColor: Colors.lightBlue,
-            title: Text(
-              _filteredTaskList[_taskIndex],
-              style: _biggerFont,
-            ),
-            trailing: const Icon(Icons.home),
-          ),
-        ));
-  }
-
-  // -------------------------------------------------------------------
-  // Callbacks
-  void _viewTask(BuildContext context, String taskTitle) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        // Not preview => isPreview = false
-        builder: (BuildContext context) => ViewTaskPage(_task, false),
-      ),
-    );
   }
 }
 
