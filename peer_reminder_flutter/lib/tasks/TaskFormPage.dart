@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:peer_reminder_flutter/tasks/service/ITaskService.dart';
 import 'package:peer_reminder_flutter/tasks/service/ITaskItemIcon.dart';
 import 'package:peer_reminder_flutter/tasks/model/Task.dart';
 import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
+import 'package:peer_reminder_flutter/tasks/service/TaskServiceImpl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:simple_autocomplete_formfield/simple_autocomplete_formfield.dart';
@@ -50,12 +52,16 @@ class _TaskFormState extends State<TaskFormPage> {
   List<Contact> _contactsList = <Contact>[];
   Contact? _selectedPerson;
 
+  late ITaskService _taskService;
+
   @override
   void initState() {
     super.initState();
 
     // Set default values
     _setDefaultDateTime();
+
+    _taskService = TaskServiceImpl();
   }
 
   @override
@@ -434,7 +440,7 @@ class _TaskFormState extends State<TaskFormPage> {
   }
 
   // -------------------------------------------------------------------
-  void _saveTask() {
+  Future<void> _saveTask() async {
     // Validate returns true if the form is valid, or false otherwise.
     if (_formKey.currentState!.validate()) {
       // If the form is valid, display a snackbar. In the real world,
@@ -459,6 +465,8 @@ class _TaskFormState extends State<TaskFormPage> {
       // TODO: send parsed JSON to backend
       String taskJsonStr = jsonEncode(task.toJson());
       print(taskJsonStr);
+
+      _taskService.createTask(taskJsonStr);
     }
   }
 }
