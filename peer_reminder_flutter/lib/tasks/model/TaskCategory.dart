@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:peer_reminder_flutter/tasks/ITaskItemIcon.dart';
+import 'package:peer_reminder_flutter/tasks/service/ITaskItemIcon.dart';
 
 import '../../common/Util.dart';
 

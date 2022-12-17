@@ -282,6 +282,8 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     );
   }
 
+  // -----------------------------
+  // DB Ops
   void deleteTask(int itemIndex) {
     // TODO: Call DB
     removeTaskFromList(itemIndex);
@@ -294,6 +296,14 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
         builder: (BuildContext context) => TaskFormPage(taskTitle),
       ),
     );
+  }
+
+  void archiveTask(Task task, int itemIndex) {
+    throw UnimplementedError();
+  }
+
+  void markAsDoneTask(Task task) {
+    throw UnimplementedError();
   }
 
   void updateSearchedTaskList(String value) {

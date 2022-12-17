@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:peer_reminder_flutter/tasks/ITaskItemIcon.dart';
+import 'package:peer_reminder_flutter/tasks/service/ITaskItemIcon.dart';
 import 'package:peer_reminder_flutter/tasks/model/Task.dart';
 import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
 import 'package:permission_handler/permission_handler.dart';

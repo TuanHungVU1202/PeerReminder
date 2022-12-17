@@ -12,9 +12,14 @@ import 'package:peer_reminder_flutter/common/Util.dart';
 import 'model/Task.dart';
 
 class ViewTaskPage extends StatefulWidget {
-  final Task _task;
+  final Task task;
   final bool isPreview;
-  const ViewTaskPage(this._task, this.isPreview, {super.key});
+  final bool isEnableLeading;
+  const ViewTaskPage(
+      {super.key,
+      required this.task,
+      required this.isEnableLeading,
+      required this.isPreview});
 
   @override
   State<ViewTaskPage> createState() {
@@ -57,8 +62,8 @@ class _ViewTaskState extends State<ViewTaskPage> {
 
     return CupertinoSliverNavigationBar(
       // If in Preview mode, disable Leading back icon
-      automaticallyImplyLeading: !widget.isPreview,
-      largeTitle: Center(child: Text(widget._task.taskName)),
+      automaticallyImplyLeading: widget.isEnableLeading,
+      largeTitle: Center(child: Text(widget.task.taskName)),
       trailing: trailingWidget,
     );
   }
@@ -68,23 +73,23 @@ class _ViewTaskState extends State<ViewTaskPage> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _createListTileForSingleItem(const Icon(Icons.calendar_month_outlined),
-            "Start Date", widget._task.startDate),
-        _createListTileForSingleItem(const Icon(Icons.access_time),
-            "Start Time", widget._task.startTime),
+            "Start Date", widget.task.startDate),
         _createListTileForSingleItem(
-            const Icon(Icons.calendar_month), "End Date", widget._task.endDate),
+            const Icon(Icons.access_time), "Start Time", widget.task.startTime),
+        _createListTileForSingleItem(
+            const Icon(Icons.calendar_month), "End Date", widget.task.endDate),
         _createListTileForSingleItem(const Icon(Icons.access_time_filled),
-            "End Time", widget._task.endTime),
+            "End Time", widget.task.endTime),
         _createListTileForSingleItem(
-            const Icon(Icons.note), "Note", widget._task.taskNote),
+            const Icon(Icons.note), "Note", widget.task.taskNote),
         _createListTileForSingleItem(
-            const Icon(Icons.contact_mail), "Email", widget._task.email ?? ""),
+            const Icon(Icons.contact_mail), "Email", widget.task.email ?? ""),
         _createListTileForSingleItem(const Icon(Icons.contact_phone), "Phone",
-            widget._task.phoneNo ?? ""),
+            widget.task.phoneNo ?? ""),
         _createListTileForSingleItem(
-            const Icon(Icons.category), "Category", widget._task.taskCategory),
+            const Icon(Icons.category), "Category", widget.task.taskCategory),
         _createListTileForSingleItem(
-            const Icon(Icons.checklist), "Status", widget._task.taskStatus),
+            const Icon(Icons.checklist), "Status", widget.task.taskStatus),
         const SizedBox(height: 80),
       ],
     );
@@ -129,7 +134,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
   TextButton _createEditButton() {
     return TextButton(
       onPressed: () {
-        _editTask(context, widget._task.taskName);
+        _editTask(context, widget.task.taskName);
       },
       style: TextButton.styleFrom(
         foregroundColor: Colors.black,
