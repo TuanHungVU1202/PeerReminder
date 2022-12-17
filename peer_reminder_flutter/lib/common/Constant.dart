@@ -6,3 +6,6 @@ const double FONTSIZE_XXL = 25;
 
 const String DATE_FORMAT = "dd-MM-yyyy";
 const String DATETIME_FORMAT = "dd-MM-yyyy hh:mm";
+
+// API URLS
+const String TASK_LIST_BASE = "http://localhost:8080/task";
