@@ -106,11 +106,16 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         filteredTaskList,
         itemIndex,
         isEnableLeading: true,
+        isEnableContact: true,
       ),
       previewBuilder: (context, animation, child) {
         // Preview only => isPreview = true, isEnableLeading = false
         return ViewTaskPage(
-            task: task, isEnableLeading: false, isPreview: true);
+          task: task,
+          isEnableLeading: false,
+          isPreview: true,
+          isEnableContact: true,
+        );
       },
     );
   }
