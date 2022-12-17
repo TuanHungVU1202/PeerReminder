@@ -7,13 +7,8 @@ import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
 import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 // Local imports
-import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
-import 'package:peer_reminder_flutter/common/Util.dart';
-
 import 'TaskTile.dart';
 import 'model/Task.dart';
 
@@ -27,22 +22,6 @@ class YourTaskPage extends AbstractTaskList {
 class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   @override
   String get largeTitle => "Your Tasks";
-
-  // To make sure things are mounted
-  @override
-  void setState(fn) {
-    if (mounted) {
-      super.setState(fn);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Requesting Contact permission for the first time
-    requestPermission();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +68,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
           onPressed: () {
             // FIXME: fix setState() called after dispose()
             Navigator.of(context, rootNavigator: true).pop();
-            _archiveTask(task, itemIndex);
+            archiveTask(task, itemIndex);
             removeTaskFromList(itemIndex);
           },
           trailingIcon: CupertinoIcons.archivebox,
@@ -98,7 +77,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            _markAsDoneTask(task);
+            markAsDoneTask(task);
           },
           trailingIcon: Icons.done,
           child: const Text('Mark as Done'),
@@ -121,10 +100,17 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
           child: const Text('Email peer'),
         ),
       ],
-      child: TaskTile(task: task, filteredTaskList, itemIndex),
+      child: TaskTile(
+        task: task,
+        isPreviewTask: false,
+        filteredTaskList,
+        itemIndex,
+        isEnableLeading: true,
+      ),
       previewBuilder: (context, animation, child) {
-        // Preview only => isPreview = true
-        return ViewTaskPage(task, true);
+        // Preview only => isPreview = true, isEnableLeading = false
+        return ViewTaskPage(
+            task: task, isEnableLeading: false, isPreview: true);
       },
     );
   }
@@ -154,7 +140,8 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
     );
   }
 
-  void _archiveTask(Task task, int itemIndex) {
+  @override
+  void archiveTask(Task task, int itemIndex) {
     task.taskStatus = TaskStatusEnum.archived.name;
 
     // TODO: call DB to update status as archived
@@ -164,7 +151,8 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
     // TODO: after done, notify peer. Maybe cancel event as well?
   }
 
-  void _markAsDoneTask(Task task) {
+  @override
+  void markAsDoneTask(Task task) {
     task.taskStatus = TaskStatusEnum.done.name;
 
     // TODO: call DB to update status as done
