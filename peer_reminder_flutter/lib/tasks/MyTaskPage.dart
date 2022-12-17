@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
@@ -29,5 +30,79 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
     return Scaffold(
       body: createRefreshableBody(bodyWidgetList),
     );
+  }
+
+  // -------------------------------------------------------------------
+  // UI Components
+  @override
+  SliverList createTaskSliverList() {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          if (index.isOdd) return const Divider(height: 0, color: Colors.grey);
+
+          int itemIndex = index ~/ 2;
+          return createSlidableTask(itemIndex);
+        },
+      ),
+    );
+  }
+
+  // TODO: create corresponding callbacks for each menu selection
+  @override
+  CupertinoContextMenu createTaskContextMenu(int itemIndex) {
+    return CupertinoContextMenu(
+      actions: <Widget>[
+        CupertinoContextMenuAction(
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            markAsDoneTask(task);
+          },
+          trailingIcon: Icons.done,
+          child: const Text('Mark as Done'),
+        ),
+        // FIXME: check if email or phone valid/available/etc.
+        CupertinoContextMenuAction(
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            launchDialer(task.phoneNo);
+          },
+          trailingIcon: CupertinoIcons.phone,
+          child: const Text('Call peer'),
+        ),
+        CupertinoContextMenuAction(
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            launchEmail(task.email);
+          },
+          trailingIcon: CupertinoIcons.mail,
+          child: const Text('Email peer'),
+        ),
+      ],
+      child: TaskTile(
+        task: task,
+        isPreviewTask: true,
+        filteredTaskList,
+        itemIndex,
+        isEnableLeading: true,
+      ),
+      previewBuilder: (context, animation, child) {
+        // Preview only => isPreview = true, isEnableLeading = false
+        return ViewTaskPage(
+            task: task, isEnableLeading: false, isPreview: true);
+      },
+    );
+  }
+
+  // ---------------------------------------------------------
+  // Callbacks
+  @override
+  void markAsDoneTask(Task task) {
+    // TODO: Change status mark as done and notify peer
+    task.taskStatus = TaskStatusEnum.done.name;
+
+    // TODO: call DB to update status as done
+    String taskJsonStr = jsonEncode(task.toJson());
+    print(taskJsonStr);
   }
 }
