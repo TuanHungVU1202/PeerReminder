@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'peers/PeerPage.dart';
+import 'package:peer_reminder_flutter/tasks/MyTaskPage.dart';
 import 'tasks/YourTaskPage.dart';
 
 void main() {
@@ -158,15 +158,11 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
   // -------------------------------------------------------------------
   // UI components
   CupertinoTabView _createMyTasksTabView() {
-    return CupertinoTabView(builder: (context) {
-      return const CustomScrollView(
-        slivers: <Widget>[
-          CupertinoSliverNavigationBar(
-            largeTitle: Text('My Tasks'),
-          ),
-        ],
-      );
-    });
+    return CupertinoTabView(
+      builder: (context) {
+        return const MyTaskPage();
+      },
+    );
   }
 
   CupertinoTabView _createYourTasksTabView() {
