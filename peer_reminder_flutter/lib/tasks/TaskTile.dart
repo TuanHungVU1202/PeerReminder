@@ -10,12 +10,14 @@ class TaskTile extends StatelessWidget {
   final Task task;
   final bool isPreviewTask;
   final bool isEnableLeading;
+  final bool isEnableContact;
 
   const TaskTile(this._filteredTaskList, this.taskIndex,
       {super.key,
       required this.task,
       required this.isPreviewTask,
-      required this.isEnableLeading});
+      required this.isEnableLeading,
+      required this.isEnableContact});
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +47,11 @@ class TaskTile extends StatelessWidget {
       MaterialPageRoute(
         // Not preview => isPreview = false
         builder: (BuildContext context) => ViewTaskPage(
-            task: task,
-            isEnableLeading: isEnableLeading,
-            isPreview: isPreviewTask),
+          task: task,
+          isEnableLeading: isEnableLeading,
+          isPreview: isPreviewTask,
+          isEnableContact: isEnableContact,
+        ),
       ),
     );
   }

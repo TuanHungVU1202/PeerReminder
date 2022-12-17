@@ -15,11 +15,13 @@ class ViewTaskPage extends StatefulWidget {
   final Task task;
   final bool isPreview;
   final bool isEnableLeading;
+  final bool isEnableContact;
   const ViewTaskPage(
       {super.key,
       required this.task,
       required this.isEnableLeading,
-      required this.isPreview});
+      required this.isPreview,
+      required this.isEnableContact});
 
   @override
   State<ViewTaskPage> createState() {
@@ -46,7 +48,12 @@ class _ViewTaskState extends State<ViewTaskPage> {
 
     // Adding widgets
     widgetList.add(_createViewTaskSliverAppBar());
-    widgetList.add(Util.sliverToBoxAdapter(_createDataBody()));
+
+    if (widget.isEnableContact) {
+      widgetList.add(Util.sliverToBoxAdapter(_createDataBodyWithContact()));
+    } else {
+      widgetList.add(Util.sliverToBoxAdapter(_createDataBodyWithOutContact()));
+    }
 
     return CustomScrollView(
       slivers: widgetList,
@@ -68,7 +75,30 @@ class _ViewTaskState extends State<ViewTaskPage> {
     );
   }
 
-  Column _createDataBody() {
+  Column _createDataBodyWithOutContact() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _createListTileForSingleItem(const Icon(Icons.calendar_month_outlined),
+            "Start Date", widget.task.startDate),
+        _createListTileForSingleItem(
+            const Icon(Icons.access_time), "Start Time", widget.task.startTime),
+        _createListTileForSingleItem(
+            const Icon(Icons.calendar_month), "End Date", widget.task.endDate),
+        _createListTileForSingleItem(const Icon(Icons.access_time_filled),
+            "End Time", widget.task.endTime),
+        _createListTileForSingleItem(
+            const Icon(Icons.note), "Note", widget.task.taskNote),
+        _createListTileForSingleItem(
+            const Icon(Icons.category), "Category", widget.task.taskCategory),
+        _createListTileForSingleItem(
+            const Icon(Icons.checklist), "Status", widget.task.taskStatus),
+        const SizedBox(height: 80),
+      ],
+    );
+  }
+
+  Column _createDataBodyWithContact() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
