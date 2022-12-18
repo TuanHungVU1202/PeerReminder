@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Local imports
-import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
+import 'package:peer_reminder_flutter/common/Constant.dart';
 import 'package:peer_reminder_flutter/common/UIConstant.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/common/Util.dart';
@@ -171,7 +171,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
       ),
       child: const Text(
         'Edit',
-        style: TextStyle(fontSize: constant.FONTSIZE_XL),
+        style: TextStyle(fontSize: Constant.FONTSIZE_XL),
       ),
     );
   }
@@ -182,7 +182,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => TaskFormPage(taskTitle),
+        builder: (BuildContext context) => TaskFormPage(taskTitle, isCreate: false),
       ),
     );
   }

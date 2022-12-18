@@ -45,5 +45,16 @@ public class TaskListController {
     }
     // ------------------------------------------------------
     // PUT
-
+    @PutMapping(value = "/{id}", headers = "Accept=application/json")
+    public ResponseEntity<?> updateTask(@PathVariable long id, @Valid @RequestBody TaskDTO taskDTO) throws Exception {
+        String returnStr;
+        try {
+            Task task = taskService.updateTask(taskDTO, id);
+            return new ResponseEntity<>(task, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("TaskListController::updateTask() error: ", e);
+            return ResponseEntity.status(HttpStatus.GONE)
+                    .body(e.getMessage());
+        }
+    }
 }
