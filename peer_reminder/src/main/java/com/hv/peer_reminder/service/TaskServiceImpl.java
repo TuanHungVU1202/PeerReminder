@@ -69,6 +69,7 @@ public class TaskServiceImpl implements  ITaskService{
         Date[] startEndDateTime = null;
         Task newTask = new Task();
 
+        // Receive taskDTO with init id from Flutter but do not parse from the beginning
         newTask.setTaskName(taskDTO.getTaskName());
 
         try {
@@ -94,8 +95,31 @@ public class TaskServiceImpl implements  ITaskService{
 
     @Transactional
     @Override
-    public List<Task> addTasks(List<TaskDTO> taskDTOList) {
-        return null;
+    // TODO: partially update only?
+    public Task updateTask(TaskDTO taskDTO, long id) {
+        Task task = taskRepository.getOne(id);
+
+        task.setTaskName(taskDTO.getTaskName());
+
+        Date[] startEndDateTime = null;
+        try {
+            startEndDateTime = getStartAndEndDate(taskDTO);
+        } catch (ParseException pe) {
+            logger.error("TaskServiceImpl::updateTask() error: ", pe);
+        }
+
+        assert startEndDateTime != null;
+        task.setStartDateTime(startEndDateTime[0]);
+        task.setEndDateTime(startEndDateTime[1]);
+
+        task.setTaskNote(taskDTO.getTaskNote());
+        task.setEmail(taskDTO.getEmail());
+        task.setPhoneNo(taskDTO.getPhoneNo());
+        task.setTaskCategory(taskDTO.getTaskCategory());
+        task.setTaskStatus(taskDTO.getTaskStatus());
+
+        taskRepository.save(task);
+        return task;
     }
 
     @Override

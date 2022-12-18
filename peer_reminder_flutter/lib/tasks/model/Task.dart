@@ -2,6 +2,7 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 
 class Task {
+  late int id;
   late String taskName;
   late String startDate;
   late String startTime;
@@ -14,6 +15,7 @@ class Task {
   late String taskStatus;
 
   Task(
+      this.id,
       this.taskName,
       this.startDate,
       this.startTime,
@@ -26,7 +28,8 @@ class Task {
       this.taskStatus);
 
   Task.fromJson(Map<String, dynamic> json)
-      : taskName = json['taskName'],
+      : id = json['id'],
+        taskName = json['taskName'],
         startDate = json['startDate'],
         startTime = json['startTime'],
         endDate = json['endDate'],
@@ -38,6 +41,7 @@ class Task {
         taskStatus = json['taskStatus'];
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'taskName': taskName,
         'startDate': startDate,
         'startTime': startTime,
