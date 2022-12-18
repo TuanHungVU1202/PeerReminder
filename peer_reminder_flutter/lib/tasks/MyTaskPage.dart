@@ -101,13 +101,4 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
 
   // ---------------------------------------------------------
   // Callbacks
-  @override
-  void markAsDoneTask(Task task) {
-    // TODO: Change status mark as done and notify peer
-    task.taskStatus = TaskStatusEnum.done.name;
-
-    // TODO: call DB to update status as done
-    String taskJsonStr = jsonEncode(task.toJson());
-    print(taskJsonStr);
-  }
 }

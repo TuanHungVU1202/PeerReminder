@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
+import 'package:peer_reminder_flutter/common/Constant.dart';
 
 import '../tasks/model/Task.dart';
 
@@ -58,7 +58,7 @@ class Util {
   }
 
   static String formatDate(DateTime date) {
-    String formattedDate = DateFormat(constant.DATE_FORMAT).format(date);
+    String formattedDate = DateFormat(Constant.DATE_FORMAT).format(date);
     return formattedDate;
   }
 
@@ -80,6 +80,7 @@ class Util {
 
   static Task initFakeData() {
     Task task = Task(
+      3,
       "Test task ne 123",
       "11-12-2022",
       "17:34",

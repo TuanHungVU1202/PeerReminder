@@ -140,29 +140,16 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => TaskFormPage(taskTitle),
+        builder: (BuildContext context) =>
+            TaskFormPage(taskTitle, isCreate: false),
       ),
     );
   }
 
   @override
   void archiveTask(Task task, int itemIndex) {
-    task.taskStatus = TaskStatusEnum.archived.name;
-
-    // TODO: call DB to update status as archived
-    String taskJsonStr = jsonEncode(task.toJson());
-    print(taskJsonStr);
-
+    super.archiveTask(task, itemIndex);
     // TODO: after done, notify peer. Maybe cancel event as well?
-  }
-
-  @override
-  void markAsDoneTask(Task task) {
-    task.taskStatus = TaskStatusEnum.done.name;
-
-    // TODO: call DB to update status as done
-    String taskJsonStr = jsonEncode(task.toJson());
-    print(taskJsonStr);
   }
 }
 
@@ -195,7 +182,8 @@ class FloatingAction extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => const TaskFormPage("New Task"),
+        builder: (BuildContext context) =>
+            const TaskFormPage("New Task", isCreate: true),
       ),
     );
   }
