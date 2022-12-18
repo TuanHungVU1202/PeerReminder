@@ -30,8 +30,8 @@ class Util {
         initialEntryMode: TimePickerEntryMode.input);
 
     if (newTime == null) return;
-    final hour = Util.getHourFromTimeOfDay(newTime);
-    final minute = Util.getMinuteFromTimeOfDay(newTime);
+    final hour = getHourFromTimeOfDay(newTime);
+    final minute = getMinuteFromTimeOfDay(newTime);
     //assign the chosen date to the controller
     controller.text = '$hour:$minute';
   }

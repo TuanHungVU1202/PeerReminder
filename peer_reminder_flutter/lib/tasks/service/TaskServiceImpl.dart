@@ -21,13 +21,28 @@ class TaskServiceImpl implements ITaskService {
   }
 
   @override
-  List<Task> getTaskList(int noOfTask) {
+  Future<List<Task>> getAllTaskList() async {
+    final response = await http.get(Uri.parse(Constant.TASK_LIST_BASE));
+
+    Iterable taskList = json.decode(response.body);
+    print(taskList);
+    List<Task> tasks =
+        List<Task>.from(taskList.map((model) => Task.fromJson(model)));
+
+    // FIXME: parse null fields from BE Task object
+    // startDateTime, endDateTime
+
+    return tasks;
+  }
+
+  @override
+  Future<List<Task>> getTaskList(int noOfTask) async {
     // TODO: implement getTaskList
     throw UnimplementedError();
   }
 
   @override
-  Future<http.Response> createTask(Task task) {
+  Future<http.Response> createTask(Task task) async {
     String bodyJson = jsonEncode(task.toJson());
     return http.post(
       Uri.parse(Constant.TASK_LIST_BASE),
@@ -39,7 +54,7 @@ class TaskServiceImpl implements ITaskService {
   }
 
   @override
-  Future<http.Response> updateTask(Task task) {
+  Future<http.Response> updateTask(Task task) async {
     int id = task.id;
     String bodyJson = jsonEncode(task.toJson());
     return http.put(

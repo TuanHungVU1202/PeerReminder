@@ -30,6 +30,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   final String largeTitle = "Task List";
   late List<String> originalTaskList;
   late List<String> filteredTaskList;
+  late Future<List<Task>> tasks;
   late Task task;
   late ITaskService taskService;
 
@@ -53,6 +54,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     task = Util.initFakeData();
 
     taskService = TaskServiceImpl();
+    tasks = fetchAllTask();
 
     // Requesting Contact permission for the first time
     requestPermission();
@@ -370,6 +372,12 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
 
   // -------------------------------------------------------------------
   // Private Utils
+  Future<List<Task>> fetchAllTask() async {
+    List<Task> tasks = await taskService.getAllTaskList();
+    print(tasks);
+    return tasks;
+  }
+
   Future<bool> requestPermission() async {
     var permission = Util.getContactPermission();
 
