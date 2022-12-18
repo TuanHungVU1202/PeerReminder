@@ -1,14 +1,20 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 // Local imports
-import 'package:peer_reminder_flutter/common/Constant.dart' as constant;
+import 'package:peer_reminder_flutter/common/Constant.dart';
 import 'package:peer_reminder_flutter/common/Util.dart';
+import 'package:peer_reminder_flutter/tasks/service/ITaskService.dart';
+import 'package:peer_reminder_flutter/tasks/service/TaskServiceImpl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'TaskFormPage.dart';
 import 'model/Task.dart';
+import 'model/TaskStatus.dart';
 
 class AbstractTaskList extends StatefulWidget {
   const AbstractTaskList({Key? key}) : super(key: key);
@@ -25,6 +31,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   late List<String> originalTaskList;
   late List<String> filteredTaskList;
   late Task task;
+  late ITaskService taskService;
 
   // To make sure things are mounted
   @override
@@ -44,6 +51,8 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
 
     // FIXME: using fake data now. Use object directly because the object should be received from YourTaskPage
     task = Util.initFakeData();
+
+    taskService = TaskServiceImpl();
 
     // Requesting Contact permission for the first time
     requestPermission();
@@ -183,7 +192,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
           child: Text(
             'Cancel',
             style: TextStyle(
-                fontSize: constant.FONTSIZE_XL, color: Colors.lightBlue),
+                fontSize: Constant.FONTSIZE_XL, color: Colors.lightBlue),
           ),
         ),
       ),
@@ -203,7 +212,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
         child: const Center(
           child: Text(
             'Delete',
-            style: TextStyle(fontSize: constant.FONTSIZE_XL, color: Colors.red),
+            style: TextStyle(fontSize: Constant.FONTSIZE_XL, color: Colors.red),
           ),
         ),
       ),
@@ -293,17 +302,26 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => TaskFormPage(taskTitle),
+        builder: (BuildContext context) =>
+            TaskFormPage(taskTitle, isCreate: false),
       ),
     );
   }
 
   void archiveTask(Task task, int itemIndex) {
-    throw UnimplementedError();
+    task.taskStatus = TaskStatusEnum.archived.name;
+
+    // Call DB
+    updateTask(task);
+
+    // TODO: after done, notify peer. Maybe cancel event as well?
   }
 
   void markAsDoneTask(Task task) {
-    throw UnimplementedError();
+    task.taskStatus = TaskStatusEnum.done.name;
+
+    // Call DB
+    updateTask(task);
   }
 
   void updateSearchedTaskList(String value) {
@@ -383,5 +401,20 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     setState(() {
       filteredTaskList.removeAt(itemIndex);
     });
+  }
+
+  Future<void> updateTask(Task task) async {
+    // TODO: Handle response carefully
+    // The response is Date from java with startDateTime, endDateTime instead of String
+    final response = await taskService.updateTask(task);
+
+    if (response.statusCode == HttpStatus.ok) {
+      var responseJson = jsonDecode(response.body);
+      // task = Task.fromJson(responseJson);
+      print("Updating task: ");
+      print(responseJson);
+    } else {
+      throw Exception('TaskList::_saveTask(): Failed to update Task');
+    }
   }
 }

@@ -22,7 +22,9 @@ public interface ITaskService {
 
     // Add
     Task addTask(TaskDTO taskDTO);
-    List<Task> addTasks(List<TaskDTO> taskDTOList);
+
+    // Update
+    Task updateTask(TaskDTO taskDTO, long id);
 
     // Exists
     boolean isTaskNameExist(String taskName);
