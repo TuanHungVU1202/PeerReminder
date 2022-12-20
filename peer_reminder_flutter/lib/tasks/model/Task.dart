@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 
@@ -30,13 +32,13 @@ class Task {
   Task.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         taskName = json['taskName'],
-        startDate = json['startDate'],
-        startTime = json['startTime'],
-        endDate = json['endDate'],
-        endTime = json['endTime'],
+        startDate = json['startDate'] ?? "",
+        startTime = json['startTime'] ?? "",
+        endDate = json['endDate'] ?? "",
+        endTime = json['endTime'] ?? "",
         taskNote = json['taskNote'],
         email = json['email'],
-        phoneNo = json['phoneNo'],
+        phoneNo = json['phoneNo'] ?? "",
         taskCategory = json['taskCategory'],
         taskStatus = json['taskStatus'];
 
