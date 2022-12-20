@@ -30,8 +30,8 @@ class Util {
         initialEntryMode: TimePickerEntryMode.input);
 
     if (newTime == null) return;
-    final hour = Util.getHourFromTimeOfDay(newTime);
-    final minute = Util.getMinuteFromTimeOfDay(newTime);
+    final hour = getHourFromTimeOfDay(newTime);
+    final minute = getMinuteFromTimeOfDay(newTime);
     //assign the chosen date to the controller
     controller.text = '$hour:$minute';
   }
@@ -100,5 +100,17 @@ class Util {
         .map((MapEntry<String, String> e) =>
             '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
         .join('&');
+  }
+
+  // Convert BE Date object to date and time separately
+  static List<String> dateBeToDateTimeStr(String beDateStr) {
+    DateTime parseDate =
+        DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(beDateStr);
+    var inputDate = DateTime.parse(parseDate.toString());
+
+    var outputFormat = DateFormat('dd-MM-yyyy hh:mm');
+    var outputDate = outputFormat.format(inputDate);
+
+    return outputDate.split(" ");
   }
 }
