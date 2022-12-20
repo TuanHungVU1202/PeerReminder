@@ -6,13 +6,13 @@ import 'package:peer_reminder_flutter/common/UIConstant.dart';
 
 class TaskTile extends StatelessWidget {
   final int taskIndex;
-  final List<String> _filteredTaskList;
+  // final List<String> _filteredTaskList;
   final Task task;
   final bool isPreviewTask;
   final bool isEnableLeading;
   final bool isEnableContact;
 
-  const TaskTile(this._filteredTaskList, this.taskIndex,
+  const TaskTile(this.taskIndex,
       {super.key,
       required this.task,
       required this.isPreviewTask,
@@ -28,10 +28,10 @@ class TaskTile extends StatelessWidget {
           // Create Material widget for each ListTile
           child: ListTile(
             // TODO: pass JSON string here instead just String title
-            onTap: () => _viewTask(context, _filteredTaskList[taskIndex]),
+            onTap: () => _viewTask(context, task.taskName),
             // selectedTileColor: Colors.lightBlue,
             title: Text(
-              _filteredTaskList[taskIndex],
+              task.taskName,
               style: UIConstant.biggerFont,
             ),
             trailing: const Icon(Icons.home),
