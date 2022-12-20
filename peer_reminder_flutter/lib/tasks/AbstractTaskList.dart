@@ -28,10 +28,9 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   final searchBarController = TextEditingController();
 
   final String largeTitle = "Task List";
-  late List<String> originalTaskList;
-  late List<String> filteredTaskList;
-  late Future<List<Task>> tasks;
-  late Task task;
+  List<Task> originalTaskList = [];
+  List<Task> filteredTaskList = [];
+  late Future<List<Task>> fetchedTaskList;
   late ITaskService taskService;
 
   // To make sure things are mounted
@@ -46,15 +45,11 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   void initState() {
     super.initState();
 
-    // FIXME: finalize this, query from DB
-    originalTaskList = List<String>.generate(10000, (i) => 'Item $i');
-    filteredTaskList = originalTaskList;
-
-    // FIXME: using fake data now. Use object directly because the object should be received from YourTaskPage
-    task = Util.initFakeData();
-
     taskService = TaskServiceImpl();
-    tasks = fetchAllTask();
+    fetchedTaskList = fetchAllTask();
+
+    // Assign fetchedTaskList to originalTaskList and filteredTaskList
+    getTaskLists();
 
     // Requesting Contact permission for the first time
     requestPermission();
@@ -71,6 +66,17 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     return RefreshIndicator(
         onRefresh: () => swipeDownRefresh(),
         child: createYourTaskSliverBody(bodyWidgetList));
+  }
+
+  List<Widget> createBodyWidgetList() {
+    return <Widget>[
+      // Appbar
+      createYourTasksSliverAppBar(),
+      // Search bar
+      createSearchBar(),
+      // Tasks list
+      createTaskSliverList(),
+    ];
   }
 
   CustomScrollView createYourTaskSliverBody(List<Widget> bodyWidgetList) {
@@ -110,6 +116,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   SliverList createTaskSliverList() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
+        childCount: originalTaskList.length * 2 - 1,
         (context, index) {
           if (index.isOdd) return const Divider(height: 0, color: Colors.grey);
 
@@ -225,17 +232,6 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
 
   // -------------------------------------------------------------------
   // Components' callbacks
-  List<Widget> createBodyWidgetList() {
-    return <Widget>[
-      // Appbar
-      createYourTasksSliverAppBar(),
-      // Search bar
-      createSearchBar(),
-      // Tasks list
-      createTaskSliverList(),
-    ];
-  }
-
   Future<void> swipeDownRefresh() async {
     // TODO: call get DB
     print("Swiped down");
@@ -310,7 +306,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     );
   }
 
-  void archiveTask(Task task, int itemIndex) {
+  void archiveTask(Task task) {
     task.taskStatus = TaskStatusEnum.archived.name;
 
     // Call DB
@@ -329,8 +325,8 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   void updateSearchedTaskList(String value) {
     if (value.isNotEmpty) {
       filteredTaskList = filteredTaskList
-          .where(
-              (element) => element.toLowerCase().contains(value.toLowerCase()))
+          .where((element) =>
+              element.taskName.toLowerCase().contains(value.toLowerCase()))
           .toList();
     } else {
       searchBarController.text = '';
@@ -374,7 +370,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   // Private Utils
   Future<List<Task>> fetchAllTask() async {
     List<Task> tasks = await taskService.getAllTaskList();
-    print(tasks);
+
     return tasks;
   }
 
@@ -424,5 +420,15 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     } else {
       throw Exception('TaskList::_saveTask(): Failed to update Task');
     }
+  }
+
+  void getTaskLists() {
+    fetchedTaskList.then((taskList) {
+      for (var task in taskList) {
+        originalTaskList.add(task);
+      }
+
+      setState(() {});
+    });
   }
 }

@@ -37,28 +37,13 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   // -------------------------------------------------------------------
   // UI Components
   @override
-  SliverList createTaskSliverList() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          if (index.isOdd) return const Divider(height: 0, color: Colors.grey);
-
-          int itemIndex = index ~/ 2;
-          return createSlidableTask(itemIndex);
-        },
-      ),
-    );
-  }
-
-  // TODO: create corresponding callbacks for each menu selection
-  @override
   CupertinoContextMenu createTaskContextMenu(int itemIndex) {
     return CupertinoContextMenu(
       actions: <Widget>[
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            editTask(context, filteredTaskList[itemIndex]);
+            editTask(context, originalTaskList[itemIndex].taskName);
           },
           isDefaultAction: true,
           trailingIcon: Icons.edit,
@@ -68,7 +53,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
           onPressed: () {
             // FIXME: fix setState() called after dispose()
             Navigator.of(context, rootNavigator: true).pop();
-            archiveTask(task, itemIndex);
+            archiveTask(originalTaskList[itemIndex]);
             removeTaskFromList(itemIndex);
           },
           trailingIcon: CupertinoIcons.archivebox,
@@ -77,7 +62,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            markAsDoneTask(task);
+            markAsDoneTask(originalTaskList[itemIndex]);
           },
           trailingIcon: Icons.done,
           child: const Text('Mark as Done'),
@@ -86,7 +71,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            launchDialer(task.phoneNo);
+            launchDialer(originalTaskList[itemIndex].phoneNo);
           },
           trailingIcon: CupertinoIcons.phone,
           child: const Text('Call peer'),
@@ -94,16 +79,15 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            launchEmail(task.email);
+            launchEmail(originalTaskList[itemIndex].email);
           },
           trailingIcon: CupertinoIcons.mail,
           child: const Text('Email peer'),
         ),
       ],
       child: TaskTile(
-        task: task,
+        task: originalTaskList[itemIndex],
         isPreviewTask: false,
-        filteredTaskList,
         itemIndex,
         isEnableLeading: true,
         isEnableContact: true,
@@ -111,7 +95,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
       previewBuilder: (context, animation, child) {
         // Preview only => isPreview = true, isEnableLeading = false
         return ViewTaskPage(
-          task: task,
+          task: originalTaskList[itemIndex],
           isEnableLeading: false,
           isPreview: true,
           isEnableContact: true,
@@ -126,6 +110,13 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   Future<void> swipeDownRefresh() async {
     // TODO: call get DB
     print("Swiped down");
+
+    // FIXME: change to partially load ? paging maybe
+    List<Task> taskList = await taskService.getAllTaskList();
+
+    for (var element in taskList) {
+      print(element.toJson());
+    }
   }
 
   // TODO: DB callbacks
@@ -147,8 +138,8 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   }
 
   @override
-  void archiveTask(Task task, int itemIndex) {
-    super.archiveTask(task, itemIndex);
+  void archiveTask(Task task) {
+    super.archiveTask(task);
     // TODO: after done, notify peer. Maybe cancel event as well?
   }
 }
