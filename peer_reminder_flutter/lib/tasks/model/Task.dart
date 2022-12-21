@@ -29,6 +29,8 @@ class Task {
       this.taskCategory,
       this.taskStatus);
 
+  Task.createNew(this.taskName);
+
   Task.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         taskName = json['taskName'],

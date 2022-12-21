@@ -300,12 +300,12 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     removeTaskFromList(itemIndex);
   }
 
-  void editTask(BuildContext context, String taskTitle) {
+  void editTask(BuildContext context, Task task) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) =>
-            TaskFormPage(taskTitle, isCreate: false),
+            TaskFormPage(task: task, isCreate: false),
       ),
     );
   }

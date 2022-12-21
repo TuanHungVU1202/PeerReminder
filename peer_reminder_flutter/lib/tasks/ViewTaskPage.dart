@@ -165,7 +165,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
   TextButton _createEditButton() {
     return TextButton(
       onPressed: () {
-        _editTask(context, widget.task.taskName);
+        _editTask(context, widget.task);
       },
       style: TextButton.styleFrom(
         foregroundColor: Colors.black,
@@ -179,12 +179,12 @@ class _ViewTaskState extends State<ViewTaskPage> {
 
   // -------------------------------------------------------------------
   // Callbacks
-  void _editTask(BuildContext context, String taskTitle) {
+  void _editTask(BuildContext context, Task task) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) =>
-            TaskFormPage(taskTitle, isCreate: false),
+            TaskFormPage(task: task, isCreate: false),
       ),
     );
   }
