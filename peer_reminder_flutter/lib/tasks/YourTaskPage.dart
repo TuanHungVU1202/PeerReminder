@@ -106,19 +106,6 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
 
   // -------------------------------------------------------------------
   // Components' callbacks
-  @override
-  Future<void> swipeDownRefresh() async {
-    // TODO: call get DB
-    print("Swiped down");
-
-    // FIXME: change to partially load ? paging maybe
-    List<Task> taskList = await taskService.getAllTaskList();
-
-    for (var element in taskList) {
-      print(element.toJson());
-    }
-  }
-
   // TODO: DB callbacks
   @override
   void deleteTask(int itemIndex) {
