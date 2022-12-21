@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/service/ITaskService.dart';
@@ -20,9 +21,9 @@ import 'package:peer_reminder_flutter/common/Util.dart';
 import 'model/TaskCategory.dart';
 
 class TaskFormPage extends StatefulWidget {
-  final String taskFormTitle;
+  final Task task;
   final bool isCreate;
-  const TaskFormPage(this.taskFormTitle, {super.key, required this.isCreate});
+  const TaskFormPage({super.key, required this.task, required this.isCreate});
 
   @override
   State<TaskFormPage> createState() {
@@ -40,16 +41,15 @@ class _TaskFormState extends State<TaskFormPage> {
   final TimeOfDay _selectedTime = TimeOfDay.now();
 
   // Controllers
-  final _taskNameController = TextEditingController();
-  final _startDateController = TextEditingController();
-  final _startTimeController = TextEditingController();
-  final _endDateController = TextEditingController();
-  final _endTimeController = TextEditingController();
-  final _taskNoteController = TextEditingController();
-  final _taskCategoryController = TextEditingController(
-      text: Util.capitalizeEnumValue(TaskCategoryEnum.home.name));
-  final _taskStatusController = TextEditingController(
-      text: Util.capitalizeEnumValue(TaskStatusEnum.todo.name));
+  late TextEditingController _taskNameController;
+  late TextEditingController _startDateController;
+  late TextEditingController _startTimeController;
+  late TextEditingController _endDateController;
+  late TextEditingController _endTimeController;
+  late TextEditingController _taskNoteController;
+  late TextEditingController _taskCategoryController;
+  late TextEditingController _taskStatusController;
+  late TextEditingController _taskEmailOrPhoneController;
 
   List<Contact> _contactsList = <Contact>[];
   Contact? _selectedPerson;
@@ -60,10 +60,18 @@ class _TaskFormState extends State<TaskFormPage> {
   void initState() {
     super.initState();
 
-    // Set default values
-    _setDefaultDateTime();
-
     _taskService = TaskServiceImpl();
+
+    // Show current task fields
+    if (!widget.isCreate) {
+      _loadExistingTask(widget.task);
+    }
+    // Create form for New Task with empty Fields
+    else {
+      _initControllers();
+      // Set default values
+      _setDefaultDateTime();
+    }
   }
 
   @override
@@ -76,7 +84,7 @@ class _TaskFormState extends State<TaskFormPage> {
   CustomScrollView _createTaskFormSliverBody() {
     return CustomScrollView(
       slivers: <Widget>[
-        _createTaskFormSliverAppBar(widget.taskFormTitle),
+        _createTaskFormSliverAppBar(widget.task.taskName),
         // Real body
         Util.sliverToBoxAdapter(_createBodyForm()),
       ],
@@ -125,7 +133,7 @@ class _TaskFormState extends State<TaskFormPage> {
   TextButton _createSaveButton() {
     return TextButton(
       onPressed: () {
-        _saveTask(widget.isCreate);
+        _saveTask(widget.task, widget.isCreate);
       },
       style: TextButton.styleFrom(
         foregroundColor: Colors.black,
@@ -242,6 +250,7 @@ class _TaskFormState extends State<TaskFormPage> {
   // --------------------------------------
   SimpleAutocompleteFormField<Contact> _createTaskPeerField() {
     return SimpleAutocompleteFormField<Contact>(
+      controller: _taskEmailOrPhoneController,
       decoration: const InputDecoration(
           icon: Icon(Icons.assignment_ind_outlined),
           hintText: 'Enter your reminder email or contact',
@@ -342,6 +351,37 @@ class _TaskFormState extends State<TaskFormPage> {
 
   // -------------------------------------------------------------------
   // Private Utils
+
+  void _initControllers() {
+    _taskNameController = TextEditingController();
+    _startDateController = TextEditingController();
+    _startTimeController = TextEditingController();
+    _endDateController = TextEditingController();
+    _endTimeController = TextEditingController();
+    _taskNoteController = TextEditingController();
+    _taskCategoryController = TextEditingController(
+        text: Util.capitalizeEnumValue(TaskCategoryEnum.home.name));
+    _taskStatusController = TextEditingController(
+        text: Util.capitalizeEnumValue(TaskStatusEnum.todo.name));
+    _taskEmailOrPhoneController = TextEditingController();
+  }
+
+  void _loadExistingTask(Task task) {
+    _taskNameController = TextEditingController(text: task.taskName);
+    _startDateController = TextEditingController(text: task.startDate);
+    _startTimeController = TextEditingController(text: task.startTime);
+    _endDateController = TextEditingController(text: task.endDate);
+    _endTimeController = TextEditingController(text: task.endTime);
+    _taskNoteController = TextEditingController(text: task.taskNote);
+    _taskCategoryController = TextEditingController(text: task.taskCategory);
+    _taskStatusController =
+        TextEditingController(text: StringUtils.capitalize(task.taskStatus));
+    _taskEmailOrPhoneController = TextEditingController(
+        text: StringUtils.isNotNullOrEmpty(task.email)
+            ? task.email
+            : task.phoneNo);
+  }
+
   void _setDefaultDateTime() {
     String hour = Util.getHourFromTimeOfDay(_selectedTime);
     String minute = Util.getMinuteFromTimeOfDay(_selectedTime);
@@ -442,7 +482,7 @@ class _TaskFormState extends State<TaskFormPage> {
   }
 
   // -------------------------------------------------------------------
-  Future<void> _saveTask(bool isCreate) async {
+  Future<void> _saveTask(Task task, bool isCreate) async {
     // Validate returns true if the form is valid, or false otherwise.
     if (_formKey.currentState!.validate()) {
       // If the form is valid, display a snackbar. In the real world,
@@ -451,27 +491,30 @@ class _TaskFormState extends State<TaskFormPage> {
       //   const SnackBar(content: Text('Adding task...')),
       // );
 
-      // Id initialized -1 because this will be generated by backend and received via response
-      Task task = Task(
-        2,
-        _taskNameController.text,
-        _startDateController.text,
-        _startTimeController.text,
-        _endDateController.text,
-        _endTimeController.text,
-        _taskNoteController.text,
-        _selectedPerson!.emails![0].value!,
-        _selectedPerson!.phones![0].value!,
-        _taskCategoryController.text,
-        _taskStatusController.text,
-      );
-
       if (isCreate) {
+        task = _createTaskObject();
         await _createTask(task);
       } else {
         _updateTask(task);
       }
     }
+  }
+
+  Task _createTaskObject() {
+    // Id initialized -1 because this will be generated by backend and received via response
+    return Task(
+      -1,
+      _taskNameController.text,
+      _startDateController.text,
+      _startTimeController.text,
+      _endDateController.text,
+      _endTimeController.text,
+      _taskNoteController.text,
+      _selectedPerson!.emails![0].value!,
+      _selectedPerson!.phones![0].value!,
+      _taskCategoryController.text,
+      _taskStatusController.text,
+    );
   }
 
   Future<void> _createTask(Task task) async {

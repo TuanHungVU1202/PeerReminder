@@ -43,7 +43,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            editTask(context, filteredTaskList[itemIndex].taskName);
+            editTask(context, filteredTaskList[itemIndex]);
           },
           isDefaultAction: true,
           trailingIcon: Icons.edit,
@@ -113,12 +113,12 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   }
 
   @override
-  void editTask(BuildContext context, String taskTitle) {
+  void editTask(BuildContext context, Task task) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) =>
-            TaskFormPage(taskTitle, isCreate: false),
+            TaskFormPage(task: task, isCreate: false),
       ),
     );
   }
@@ -160,7 +160,7 @@ class FloatingAction extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (BuildContext context) =>
-            const TaskFormPage("New Task", isCreate: true),
+            TaskFormPage(task: Task.createNew("New Task"), isCreate: true),
       ),
     );
   }
