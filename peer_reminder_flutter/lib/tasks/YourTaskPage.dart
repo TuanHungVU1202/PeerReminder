@@ -43,7 +43,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            editTask(context, originalTaskList[itemIndex].taskName);
+            editTask(context, filteredTaskList[itemIndex].taskName);
           },
           isDefaultAction: true,
           trailingIcon: Icons.edit,
@@ -53,7 +53,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
           onPressed: () {
             // FIXME: fix setState() called after dispose()
             Navigator.of(context, rootNavigator: true).pop();
-            archiveTask(originalTaskList[itemIndex]);
+            archiveTask(filteredTaskList[itemIndex]);
             removeTaskFromList(itemIndex);
           },
           trailingIcon: CupertinoIcons.archivebox,
@@ -62,7 +62,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            markAsDoneTask(originalTaskList[itemIndex]);
+            markAsDoneTask(filteredTaskList[itemIndex]);
           },
           trailingIcon: Icons.done,
           child: const Text('Mark as Done'),
@@ -71,7 +71,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            launchDialer(originalTaskList[itemIndex].phoneNo);
+            launchDialer(filteredTaskList[itemIndex].phoneNo);
           },
           trailingIcon: CupertinoIcons.phone,
           child: const Text('Call peer'),
@@ -79,14 +79,14 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            launchEmail(originalTaskList[itemIndex].email);
+            launchEmail(filteredTaskList[itemIndex].email);
           },
           trailingIcon: CupertinoIcons.mail,
           child: const Text('Email peer'),
         ),
       ],
       child: TaskTile(
-        task: originalTaskList[itemIndex],
+        task: filteredTaskList[itemIndex],
         isPreviewTask: false,
         itemIndex,
         isEnableLeading: true,
@@ -95,7 +95,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
       previewBuilder: (context, animation, child) {
         // Preview only => isPreview = true, isEnableLeading = false
         return ViewTaskPage(
-          task: originalTaskList[itemIndex],
+          task: filteredTaskList[itemIndex],
           isEnableLeading: false,
           isPreview: true,
           isEnableContact: true,
@@ -106,7 +106,6 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
 
   // -------------------------------------------------------------------
   // Components' callbacks
-  // TODO: DB callbacks
   @override
   void deleteTask(int itemIndex) {
     // TODO: Call DB
