@@ -116,7 +116,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   SliverList createTaskSliverList() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        childCount: originalTaskList.length * 2 - 1,
+        childCount: filteredTaskList.length * 2 - 1,
         (context, index) {
           if (index.isOdd) return const Divider(height: 0, color: Colors.grey);
 
@@ -233,13 +233,11 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   // -------------------------------------------------------------------
   // Components' callbacks
   Future<void> swipeDownRefresh() async {
-    // TODO: call get DB
-    print("Swiped down");
-
     // FIXME: change to partially load ? paging maybe
     List<Task> taskList = await taskService.getAllTaskList();
 
     originalTaskList = taskList;
+    filteredTaskList = originalTaskList;
     setState(() {});
   }
 
@@ -434,6 +432,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
         originalTaskList.add(task);
       }
 
+      filteredTaskList = originalTaskList;
       setState(() {});
     });
   }

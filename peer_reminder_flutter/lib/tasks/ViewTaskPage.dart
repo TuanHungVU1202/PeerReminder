@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -118,8 +119,8 @@ class _ViewTaskState extends State<ViewTaskPage> {
             widget.task.phoneNo ?? ""),
         _createListTileForSingleItem(
             const Icon(Icons.category), "Category", widget.task.taskCategory),
-        _createListTileForSingleItem(
-            const Icon(Icons.checklist), "Status", widget.task.taskStatus),
+        _createListTileForSingleItem(const Icon(Icons.checklist), "Status",
+            StringUtils.capitalize(widget.task.taskStatus)),
         const SizedBox(height: 80),
       ],
     );
@@ -182,7 +183,8 @@ class _ViewTaskState extends State<ViewTaskPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => TaskFormPage(taskTitle, isCreate: false),
+        builder: (BuildContext context) =>
+            TaskFormPage(taskTitle, isCreate: false),
       ),
     );
   }
