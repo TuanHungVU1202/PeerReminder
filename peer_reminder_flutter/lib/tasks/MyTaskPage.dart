@@ -42,7 +42,7 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            markAsDoneTask(originalTaskList[itemIndex]);
+            markAsDoneTask(filteredTaskList[itemIndex]);
           },
           trailingIcon: Icons.done,
           child: const Text('Mark as Done'),
@@ -51,7 +51,7 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            launchDialer(originalTaskList[itemIndex].phoneNo);
+            launchDialer(filteredTaskList[itemIndex].phoneNo);
           },
           trailingIcon: CupertinoIcons.phone,
           child: const Text('Call peer'),
@@ -59,14 +59,14 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            launchEmail(originalTaskList[itemIndex].email);
+            launchEmail(filteredTaskList[itemIndex].email);
           },
           trailingIcon: CupertinoIcons.mail,
           child: const Text('Email peer'),
         ),
       ],
       child: TaskTile(
-        task: originalTaskList[itemIndex],
+        task: filteredTaskList[itemIndex],
         isPreviewTask: true,
         itemIndex,
         isEnableLeading: true,
@@ -75,7 +75,7 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
       previewBuilder: (context, animation, child) {
         // Preview only => isPreview = true, isEnableLeading = false
         return ViewTaskPage(
-          task: originalTaskList[itemIndex],
+          task: filteredTaskList[itemIndex],
           isEnableLeading: false,
           isPreview: true,
           isEnableContact: false,
