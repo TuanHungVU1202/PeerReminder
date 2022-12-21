@@ -235,6 +235,12 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   Future<void> swipeDownRefresh() async {
     // TODO: call get DB
     print("Swiped down");
+
+    // FIXME: change to partially load ? paging maybe
+    List<Task> taskList = await taskService.getAllTaskList();
+
+    originalTaskList = taskList;
+    setState(() {});
   }
 
   void doNothing(BuildContext context) {
