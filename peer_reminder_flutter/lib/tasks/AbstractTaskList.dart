@@ -295,9 +295,16 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
 
   // -----------------------------
   // DB Ops
-  void deleteTask(int itemIndex) {
-    // TODO: Call DB
-    removeTaskFromList(itemIndex);
+  Future<void> deleteTask(int itemIndex) async {
+    final response = await taskService.deleteTask(filteredTaskList[itemIndex]);
+
+    if (response.statusCode == HttpStatus.ok) {
+      // TODO: change to better log
+      print("Deleted taskId: ${response.body}");
+      removeTaskFromList(itemIndex);
+    } else {
+      throw Exception('TaskList::deleteTask(): Failed to delete Task');
+    }
   }
 
   void editTask(BuildContext context, Task task) {
@@ -412,7 +419,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   }
 
   Future<void> updateTask(Task task) async {
-    // TODO: Handle response carefully
+    // TODO: Handle update response carefully
     // The response is Date from java with startDateTime, endDateTime instead of String
     final response = await taskService.updateTask(task);
 

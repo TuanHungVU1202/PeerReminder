@@ -99,8 +99,10 @@ class TaskServiceImpl implements ITaskService {
   }
 
   @override
-  void deleteTask(Task task) {
-    // TODO: implement deleteTask
+  Future<http.Response> deleteTask(Task task) {
+    int id = task.id;
+    // Return 1 is deleted. 0 is not found?
+    return http.delete(Uri.parse("${Constant.TASK_LIST_BASE}/$id"));
   }
 
   // -------------------------------------------------------------------
