@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:peer_reminder_flutter/tasks/model/TaskCategory.dart';
 
 import 'ViewTaskPage.dart';
 import 'model/Task.dart';
@@ -6,13 +7,13 @@ import 'package:peer_reminder_flutter/common/UIConstant.dart';
 
 class TaskTile extends StatelessWidget {
   final int taskIndex;
-  // final List<String> _filteredTaskList;
   final Task task;
   final bool isPreviewTask;
   final bool isEnableLeading;
   final bool isEnableContact;
+  final TaskCategory taskCategory = TaskCategory();
 
-  const TaskTile(this.taskIndex,
+  TaskTile(this.taskIndex,
       {super.key,
       required this.task,
       required this.isPreviewTask,
@@ -33,7 +34,7 @@ class TaskTile extends StatelessWidget {
               task.taskName,
               style: UIConstant.biggerFont,
             ),
-            trailing: const Icon(Icons.home),
+            trailing: Icon(taskCategory.getItemIcon(task.taskCategory)),
           ),
         ));
   }
