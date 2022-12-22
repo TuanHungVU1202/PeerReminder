@@ -92,8 +92,8 @@ class _ViewTaskState extends State<ViewTaskPage> {
             const Icon(Icons.note), "Note", widget.task.taskNote),
         _createListTileForSingleItem(
             const Icon(Icons.category), "Category", widget.task.taskCategory),
-        _createListTileForSingleItem(
-            const Icon(Icons.checklist), "Status", widget.task.taskStatus),
+        _createListTileForSingleItem(const Icon(Icons.checklist), "Status",
+            StringUtils.capitalize(widget.task.taskStatus)),
         const SizedBox(height: 80),
       ],
     );
