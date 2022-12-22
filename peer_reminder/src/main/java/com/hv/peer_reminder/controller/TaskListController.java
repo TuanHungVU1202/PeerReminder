@@ -29,6 +29,24 @@ public class TaskListController {
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{id}", headers = "Accept=application/json")
+    public ResponseEntity<?> getTaskById(@PathVariable long id) throws Exception {
+        try {
+            Task task = taskService.findTaskById(id);
+
+            if (null != task) {
+                return new ResponseEntity<>(task, HttpStatus.FOUND);
+            }
+
+            logger.info("TaskListController::getTaskById(): NOT_FOUND");
+            // FIXME: replace by custom json message indicating error
+            return new ResponseEntity<>(-1, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            logger.error("TaskListController::getTaskById() error: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
+    }
     // ------------------------------------------------------
     // POST
     @PostMapping(headers = "Accept=application/json")
@@ -38,7 +56,7 @@ public class TaskListController {
             return new ResponseEntity<>(task, HttpStatus.CREATED);
         } catch (Exception e) {
             logger.error("TaskListController::addTask() error: ", e);
-            return ResponseEntity.status(HttpStatus.GONE)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());
         }
     }
@@ -52,7 +70,7 @@ public class TaskListController {
             return new ResponseEntity<>(task, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("TaskListController::updateTask() error: ", e);
-            return ResponseEntity.status(HttpStatus.GONE)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());
         }
     }
@@ -62,12 +80,17 @@ public class TaskListController {
     @DeleteMapping(value = "/{id}", headers = "Accept=application/json")
     public ResponseEntity<?> deleteTask(@PathVariable long id) throws Exception {
         try {
-            long taskId = taskService.removeById(id);
-            System.out.println(taskId);
-            return new ResponseEntity<>(taskId, HttpStatus.OK);
+            long res = taskService.removeById(id);
+
+            if (res == 1){
+                return new ResponseEntity<>(res, HttpStatus.OK);
+            }
+            // FIXME: replace by custom json message indicating error
+            logger.info("TaskListController::deleteTask(): NOT_MODIFIED");
+            return new ResponseEntity<>(res, HttpStatus.NOT_MODIFIED);
         } catch (Exception e) {
             logger.error("TaskListController::deleteTask() error: ", e);
-            return ResponseEntity.status(HttpStatus.GONE)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());
         }
     }
