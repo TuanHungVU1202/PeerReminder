@@ -27,7 +27,6 @@ class TaskTile extends StatelessWidget {
         child: Material(
           // Create Material widget for each ListTile
           child: ListTile(
-            // TODO: pass JSON string here instead just String title
             onTap: () => _viewTask(context, task.taskName),
             // selectedTileColor: Colors.lightBlue,
             title: Text(

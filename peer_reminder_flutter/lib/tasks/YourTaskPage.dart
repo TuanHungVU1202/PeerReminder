@@ -107,12 +107,6 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   // -------------------------------------------------------------------
   // Components' callbacks
   @override
-  void deleteTask(int itemIndex) {
-    // TODO: Call DB
-    removeTaskFromList(itemIndex);
-  }
-
-  @override
   void editTask(BuildContext context, Task task) {
     Navigator.push(
       context,
