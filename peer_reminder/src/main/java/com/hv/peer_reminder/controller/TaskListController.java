@@ -33,7 +33,6 @@ public class TaskListController {
     // POST
     @PostMapping(headers = "Accept=application/json")
     public ResponseEntity<?> addTask(@Valid @RequestBody TaskDTO taskDTO) throws Exception {
-        String returnStr;
         try {
             Task task = taskService.addTask(taskDTO);
             return new ResponseEntity<>(task, HttpStatus.CREATED);
@@ -43,16 +42,31 @@ public class TaskListController {
                     .body(e.getMessage());
         }
     }
+
     // ------------------------------------------------------
     // PUT
     @PutMapping(value = "/{id}", headers = "Accept=application/json")
     public ResponseEntity<?> updateTask(@PathVariable long id, @Valid @RequestBody TaskDTO taskDTO) throws Exception {
-        String returnStr;
         try {
             Task task = taskService.updateTask(taskDTO, id);
             return new ResponseEntity<>(task, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("TaskListController::updateTask() error: ", e);
+            return ResponseEntity.status(HttpStatus.GONE)
+                    .body(e.getMessage());
+        }
+    }
+
+    // ------------------------------------------------------
+    // DELETE
+    @DeleteMapping(value = "/{id}", headers = "Accept=application/json")
+    public ResponseEntity<?> deleteTask(@PathVariable long id) throws Exception {
+        try {
+            long taskId = taskService.removeById(id);
+            System.out.println(taskId);
+            return new ResponseEntity<>(taskId, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("TaskListController::deleteTask() error: ", e);
             return ResponseEntity.status(HttpStatus.GONE)
                     .body(e.getMessage());
         }
