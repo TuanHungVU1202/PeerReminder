@@ -86,6 +86,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   CupertinoSliverNavigationBar createYourTasksSliverAppBar() {
     return CupertinoSliverNavigationBar(
       largeTitle: Text(largeTitle),
+      automaticallyImplyLeading: false,
     );
   }
 

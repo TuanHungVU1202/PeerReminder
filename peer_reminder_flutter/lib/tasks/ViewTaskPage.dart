@@ -9,7 +9,9 @@ import 'package:peer_reminder_flutter/common/Constant.dart';
 import 'package:peer_reminder_flutter/common/UIConstant.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/common/Util.dart';
+import 'package:peer_reminder_flutter/tasks/YourTaskPage.dart';
 
+import 'AbstractTaskList.dart';
 import 'model/Task.dart';
 
 class ViewTaskPage extends StatefulWidget {
@@ -17,8 +19,12 @@ class ViewTaskPage extends StatefulWidget {
   final bool isPreview;
   final bool isEnableLeading;
   final bool isEnableContact;
+  final AbstractTaskList pageToNavigate;
+
   const ViewTaskPage(
       {super.key,
+      // Optional
+      this.pageToNavigate = const AbstractTaskList(),
       required this.task,
       required this.isEnableLeading,
       required this.isPreview,
@@ -33,13 +39,26 @@ class ViewTaskPage extends StatefulWidget {
 class _ViewTaskState extends State<ViewTaskPage> {
   @override
   Widget build(BuildContext context) {
-    // To round the corners
-    return ClipRRect(
+    ClipRRect bodyViewTaskPage = ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
       child: Scaffold(
         body: _createYourTaskSliverBody(),
       ),
     );
+
+    // Normal cases like view task only.
+    // Leading icon is need to navigate back to TaskList
+    if (widget.isEnableLeading) {
+      return bodyViewTaskPage;
+    }
+
+    return WillPopScope(
+        onWillPop: () async {
+          // No leading button means no going back to previous page
+          return widget.isEnableLeading;
+        },
+        // To round the corners
+        child: bodyViewTaskPage);
   }
 
   // -------------------------------------------------------------------
@@ -61,21 +80,61 @@ class _ViewTaskState extends State<ViewTaskPage> {
     );
   }
 
+  // --------------------------------------
+  // App Bar components
   CupertinoSliverNavigationBar _createViewTaskSliverAppBar() {
+    Widget? leadingWidget;
     Widget? trailingWidget;
     // If in Preview mode, do not create Edit button
     if (!widget.isPreview) {
       trailingWidget = _createEditButton();
     }
 
+    if (!widget.isEnableLeading && !widget.isPreview) {
+      trailingWidget = _createNavigateToTaskListButton();
+    }
+
     return CupertinoSliverNavigationBar(
       // If in Preview mode, disable Leading back icon
       automaticallyImplyLeading: widget.isEnableLeading,
+      leading: leadingWidget,
       largeTitle: Center(child: Text(widget.task.taskName)),
       trailing: trailingWidget,
     );
   }
 
+  GestureDetector _createNavigateToTaskListButton() {
+    return GestureDetector(
+      onTap: () => _navigateToPage(context, widget.pageToNavigate),
+      child: Row(
+        children: const [
+          Icon(CupertinoIcons.back),
+          Text(
+            'Task List',
+            style: TextStyle(
+                fontSize: Constant.FONTSIZE_XL, color: Colors.blueAccent),
+          ),
+        ],
+      ),
+    );
+  }
+
+  TextButton _createEditButton() {
+    return TextButton(
+      onPressed: () {
+        _editTask(context, widget.task);
+      },
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.black,
+      ),
+      child: const Text(
+        'Edit',
+        style: TextStyle(fontSize: Constant.FONTSIZE_XL),
+      ),
+    );
+  }
+
+  // --------------------------------------
   Column _createDataBodyWithOutContact() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -161,22 +220,6 @@ class _ViewTaskState extends State<ViewTaskPage> {
     );
   }
 
-  // --------------------------------------
-  TextButton _createEditButton() {
-    return TextButton(
-      onPressed: () {
-        _editTask(context, widget.task);
-      },
-      style: TextButton.styleFrom(
-        foregroundColor: Colors.black,
-      ),
-      child: const Text(
-        'Edit',
-        style: TextStyle(fontSize: Constant.FONTSIZE_XL),
-      ),
-    );
-  }
-
   // -------------------------------------------------------------------
   // Callbacks
   void _editTask(BuildContext context, Task task) {
@@ -185,6 +228,15 @@ class _ViewTaskState extends State<ViewTaskPage> {
       MaterialPageRoute(
         builder: (BuildContext context) =>
             TaskFormPage(task: task, isCreate: false),
+      ),
+    );
+  }
+
+  void _navigateToPage(BuildContext context, AbstractTaskList pageToNavigate) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => pageToNavigate,
       ),
     );
   }
