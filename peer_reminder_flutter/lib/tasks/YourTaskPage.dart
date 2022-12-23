@@ -26,12 +26,18 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> bodyWidgetList = createBodyWidgetList();
-
-    return Scaffold(
+    Scaffold mainScaffold = Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: const FloatingAction(),
       body: createRefreshableBody(bodyWidgetList),
     );
+
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        // To round the corners
+        child: mainScaffold);
   }
 
   // -------------------------------------------------------------------
@@ -110,8 +116,11 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) =>
-            TaskFormPage(task: task, isCreate: false),
+        builder: (BuildContext context) => TaskFormPage(
+          task: task,
+          isCreate: false,
+          rootTaskList: const YourTaskPage(),
+        ),
       ),
     );
   }
@@ -152,8 +161,11 @@ class FloatingAction extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) =>
-            TaskFormPage(task: Task.createNew("New Task"), isCreate: true),
+        builder: (BuildContext context) => TaskFormPage(
+          task: Task.createNew("New Task"),
+          isCreate: true,
+          rootTaskList: const YourTaskPage(),
+        ),
       ),
     );
   }

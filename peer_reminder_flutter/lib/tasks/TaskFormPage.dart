@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
+import 'package:peer_reminder_flutter/tasks/YourTaskPage.dart';
 import 'package:peer_reminder_flutter/tasks/service/ITaskService.dart';
 import 'package:peer_reminder_flutter/tasks/service/ITaskItemIcon.dart';
 import 'package:peer_reminder_flutter/tasks/model/Task.dart';
@@ -24,7 +26,12 @@ import 'model/TaskCategory.dart';
 class TaskFormPage extends StatefulWidget {
   final Task task;
   final bool isCreate;
-  const TaskFormPage({super.key, required this.task, required this.isCreate});
+  final AbstractTaskList? rootTaskList;
+  const TaskFormPage(
+      {super.key,
+      this.rootTaskList,
+      required this.task,
+      required this.isCreate});
 
   @override
   State<TaskFormPage> createState() {
@@ -488,6 +495,7 @@ class _TaskFormState extends State<TaskFormPage> {
       isEnableLeading: false,
       isPreview: false,
       isEnableContact: true,
+      pageToNavigate: widget.rootTaskList ?? const AbstractTaskList(),
     );
     Navigator.of(context).push(ViewTaskPageRoute(viewTaskPage));
   }
