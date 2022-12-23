@@ -76,6 +76,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
       createSearchBar(),
       // Tasks list
       createTaskSliverList(),
+      Util.sliverToBoxAdapter(const SizedBox(height: 100))
     ];
   }
 
