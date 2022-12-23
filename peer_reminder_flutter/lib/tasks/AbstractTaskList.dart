@@ -413,8 +413,10 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   }
 
   void removeTaskFromList(int itemIndex) {
-    setState(() {
-      filteredTaskList.removeAt(itemIndex);
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {
+        // Here you can write your code for open new view
+      });
     });
   }
 
