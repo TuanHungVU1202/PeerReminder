@@ -189,3 +189,18 @@ class _ViewTaskState extends State<ViewTaskPage> {
     );
   }
 }
+
+/////////////////////////////////////////////////////////////////////////////
+class ViewTaskPageRoute extends CupertinoPageRoute {
+  final ViewTaskPage _viewTaskPage;
+
+  ViewTaskPageRoute(this._viewTaskPage)
+      : super(builder: (BuildContext context) => _viewTaskPage);
+
+  // OPTIONAL IF YOU WISH TO HAVE SOME EXTRA ANIMATION WHILE ROUTING
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return FadeTransition(opacity: animation, child: _viewTaskPage);
+  }
+}

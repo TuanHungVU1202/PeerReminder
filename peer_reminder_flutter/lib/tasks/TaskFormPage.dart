@@ -18,6 +18,7 @@ import 'package:intl/intl.dart';
 import 'package:peer_reminder_flutter/common/Constant.dart';
 import 'package:peer_reminder_flutter/common/Util.dart';
 
+import 'ViewTaskPage.dart';
 import 'model/TaskCategory.dart';
 
 class TaskFormPage extends StatefulWidget {
@@ -481,6 +482,16 @@ class _TaskFormState extends State<TaskFormPage> {
     );
   }
 
+  void showViewTaskPage(Task task) {
+    ViewTaskPage viewTaskPage = ViewTaskPage(
+      task: task,
+      isEnableLeading: false,
+      isPreview: false,
+      isEnableContact: true,
+    );
+    Navigator.of(context).push(ViewTaskPageRoute(viewTaskPage));
+  }
+
   // -------------------------------------------------------------------
   Future<void> _saveTask(Task task, bool isCreate) async {
     // Validate returns true if the form is valid, or false otherwise.
@@ -502,6 +513,9 @@ class _TaskFormState extends State<TaskFormPage> {
         await _updateTask(task);
       }
     }
+
+    // After done creating or updating, show ViewTask Page
+    showViewTaskPage(task);
   }
 
   Task _createTaskObject(int taskId) {
