@@ -51,7 +51,6 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         ),
         CupertinoContextMenuAction(
           onPressed: () {
-            // FIXME: fix setState() called after dispose()
             Navigator.of(context, rootNavigator: true).pop();
             archiveTask(filteredTaskList[itemIndex]);
             removeTaskFromList(itemIndex);
