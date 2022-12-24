@@ -20,12 +20,14 @@ class ViewTaskPage extends StatefulWidget {
   final bool isEnableLeading;
   final bool isEnableContact;
   final AbstractTaskList pageToNavigate;
+  final String pageToNavigateTitle;
   final bool shouldPop;
 
   const ViewTaskPage(
       {super.key,
       // Optional
       this.pageToNavigate = const AbstractTaskList(),
+      this.pageToNavigateTitle = "Back",
       this.shouldPop = true,
       required this.task,
       required this.isEnableLeading,
@@ -95,7 +97,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
     }
 
     if (!widget.isEnableLeading && !widget.isPreview) {
-      trailingWidget = _createNavigateToTaskListButton();
+      leadingWidget = _createNavigateToTaskListButton();
     }
 
     return CupertinoSliverNavigationBar(
@@ -111,11 +113,11 @@ class _ViewTaskState extends State<ViewTaskPage> {
     return GestureDetector(
       onTap: () => _navigateToPage(context, widget.pageToNavigate),
       child: Row(
-        children: const [
-          Icon(CupertinoIcons.back),
+        children: [
+          const Icon(CupertinoIcons.back),
           Text(
-            'Task List',
-            style: TextStyle(
+            widget.pageToNavigateTitle,
+            style: const TextStyle(
                 fontSize: Constant.FONTSIZE_XL, color: Colors.blueAccent),
           ),
         ],
