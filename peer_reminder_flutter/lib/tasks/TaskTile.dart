@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/model/TaskCategory.dart';
+import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
 
 import 'AbstractTaskList.dart';
 import 'ViewTaskPage.dart';
@@ -15,6 +16,7 @@ class TaskTile extends StatelessWidget {
   final AbstractTaskList? rootTaskList;
   final String rootTaskListTitle;
   final TaskCategory taskCategory = TaskCategory();
+  final TaskStatus taskStatus = TaskStatus();
 
   TaskTile(this.taskIndex,
       {super.key,
@@ -28,20 +30,44 @@ class TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.zero,
-        margin: const EdgeInsets.only(left: 10),
-        child: Material(
-          // Create Material widget for each ListTile
-          child: ListTile(
-            onTap: () => _viewTask(context, task.taskName),
-            // selectedTileColor: Colors.lightBlue,
-            title: Text(
-              task.taskName,
-              style: UIConstant.biggerFont,
-            ),
-            trailing: Icon(taskCategory.getItemIcon(task.taskCategory)),
+      color: Colors.white,
+      child: Material(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: ListTile(
+                  onTap: () => _viewTask(context, task.taskName),
+                  // selectedTileColor: Colors.lightBlue,
+                  title: Text(
+                    task.taskName,
+                    style: UIConstant.biggerFont,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+              ),
+              // Icon(taskCategory.getItemIcon(task.taskCategory)),
+              SizedBox(
+                width: 25,
+                child: Padding(
+                  padding: EdgeInsets.zero,
+                  child: Icon(taskCategory.getItemIcon(task.taskCategory)),
+                ),
+              ),
+              SizedBox(
+                width: 80,
+                child: Padding(
+                  padding: EdgeInsets.zero,
+                  child: Icon(taskStatus.getItemIcon(task.taskStatus)),
+                ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   // -------------------------------------------------------------------
