@@ -496,6 +496,7 @@ class _TaskFormState extends State<TaskFormPage> {
       isPreview: false,
       isEnableContact: true,
       pageToNavigate: widget.rootTaskList ?? const AbstractTaskList(),
+      shouldPop: false,
     );
     Navigator.of(context).push(ViewTaskPageRoute(viewTaskPage));
   }

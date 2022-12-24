@@ -20,11 +20,13 @@ class ViewTaskPage extends StatefulWidget {
   final bool isEnableLeading;
   final bool isEnableContact;
   final AbstractTaskList pageToNavigate;
+  final bool shouldPop;
 
   const ViewTaskPage(
       {super.key,
       // Optional
       this.pageToNavigate = const AbstractTaskList(),
+      this.shouldPop = true,
       required this.task,
       required this.isEnableLeading,
       required this.isPreview,
@@ -54,8 +56,10 @@ class _ViewTaskState extends State<ViewTaskPage> {
 
     return WillPopScope(
         onWillPop: () async {
-          // No leading button means no going back to previous page
-          return widget.isEnableLeading;
+          // Prevent pop when shouldPop == false
+          // Only prevent after saveTask or updateTask.
+          // Thus, use with showViewTaskPage in TaskFormPage
+          return widget.shouldPop;
         },
         // To round the corners
         child: bodyViewTaskPage);
