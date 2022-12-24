@@ -13,7 +13,8 @@ import 'TaskTile.dart';
 import 'model/Task.dart';
 
 class YourTaskPage extends AbstractTaskList {
-  const YourTaskPage({Key? key}) : super(key: key);
+  YourTaskPage({Key? key, required shouldRefresh})
+      : super(key: key, shouldRefresh: shouldRefresh);
 
   @override
   YourTaskPageState createState() => YourTaskPageState();
@@ -25,7 +26,14 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("Rebuilding...");
     List<Widget> bodyWidgetList = createBodyWidgetList();
+
+    if (widget.shouldRefresh) {
+      refreshTaskList();
+      widget.shouldRefresh = false;
+    }
+
     Scaffold mainScaffold = Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingAction(rootTaskListTitle: largeTitle),
@@ -96,6 +104,8 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         itemIndex,
         isEnableLeading: true,
         isEnableContact: true,
+        rootTaskList: YourTaskPage(shouldRefresh: true),
+        rootTaskListTitle: largeTitle,
       ),
       previewBuilder: (context, animation, child) {
         // Preview only => isPreview = true, isEnableLeading = false
@@ -111,6 +121,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
 
   // -------------------------------------------------------------------
   // Components' callbacks
+  // FIXME: pass bool for YourTaskPage here to see if it should refresh page
   @override
   void editTask(BuildContext context, Task task) {
     Navigator.push(
@@ -119,7 +130,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         builder: (BuildContext context) => TaskFormPage(
           task: task,
           isCreate: false,
-          rootTaskList: const YourTaskPage(),
+          rootTaskList: YourTaskPage(shouldRefresh: true),
           rootTaskListTitle: largeTitle,
         ),
       ),
@@ -167,7 +178,7 @@ class FloatingAction extends StatelessWidget {
         builder: (BuildContext context) => TaskFormPage(
           task: Task.createNew("New Task"),
           isCreate: true,
-          rootTaskList: const YourTaskPage(),
+          rootTaskList: YourTaskPage(shouldRefresh: true),
           rootTaskListTitle: rootTaskListTitle,
         ),
       ),

@@ -160,7 +160,7 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
   CupertinoTabView _createMyTasksTabView() {
     return CupertinoTabView(
       builder: (context) {
-        return const MyTaskPage();
+        return MyTaskPage(shouldRefresh: false);
       },
     );
   }
@@ -168,7 +168,7 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
   CupertinoTabView _createYourTasksTabView() {
     return CupertinoTabView(
       builder: (context) {
-        return const YourTaskPage();
+        return YourTaskPage(shouldRefresh: false);
       },
     );
   }
