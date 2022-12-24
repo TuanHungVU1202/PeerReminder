@@ -13,7 +13,8 @@ import 'TaskTile.dart';
 import 'model/Task.dart';
 
 class MyTaskPage extends AbstractTaskList {
-  const MyTaskPage({Key? key}) : super(key: key);
+  MyTaskPage({Key? key, required shouldRefresh})
+      : super(key: key, shouldRefresh: shouldRefresh);
 
   @override
   MyTaskPageState createState() => MyTaskPageState();

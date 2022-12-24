@@ -497,7 +497,8 @@ class _TaskFormState extends State<TaskFormPage> {
       isEnableLeading: false,
       isPreview: false,
       isEnableContact: true,
-      pageToNavigate: widget.rootTaskList ?? const AbstractTaskList(),
+      pageToNavigate:
+          widget.rootTaskList ?? AbstractTaskList(shouldRefresh: true),
       pageToNavigateTitle: widget.rootTaskListTitle ?? "Task List",
       shouldPop: false,
     );

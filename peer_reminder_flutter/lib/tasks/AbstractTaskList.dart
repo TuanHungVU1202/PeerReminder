@@ -17,7 +17,10 @@ import 'model/Task.dart';
 import 'model/TaskStatus.dart';
 
 class AbstractTaskList extends StatefulWidget {
-  const AbstractTaskList({Key? key}) : super(key: key);
+  AbstractTaskList({Key? key, required this.shouldRefresh}) : super(key: key);
+
+  // To check if it should be rebuild
+  bool shouldRefresh;
 
   @override
   AbstractTaskListState createState() => AbstractTaskListState();
@@ -31,6 +34,8 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   List<Task> originalTaskList = [];
   List<Task> filteredTaskList = [];
   late Future<List<Task>> fetchedTaskList;
+
+  // Inject service interface
   late ITaskService taskService;
 
   // To make sure things are mounted
@@ -64,7 +69,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   // UI Components
   RefreshIndicator createRefreshableBody(List<Widget> bodyWidgetList) {
     return RefreshIndicator(
-        onRefresh: () => swipeDownRefresh(),
+        onRefresh: () => refreshTaskList(),
         child: createYourTaskSliverBody(bodyWidgetList));
   }
 
@@ -234,7 +239,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
 
   // -------------------------------------------------------------------
   // Components' callbacks
-  Future<void> swipeDownRefresh() async {
+  Future<void> refreshTaskList() async {
     // FIXME: change to partially load ? paging maybe
     List<Task> taskList = await taskService.getAllTaskList();
 

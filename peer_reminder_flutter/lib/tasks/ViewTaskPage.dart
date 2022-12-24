@@ -19,14 +19,14 @@ class ViewTaskPage extends StatefulWidget {
   final bool isPreview;
   final bool isEnableLeading;
   final bool isEnableContact;
-  final AbstractTaskList pageToNavigate;
+  final AbstractTaskList? pageToNavigate;
   final String pageToNavigateTitle;
   final bool shouldPop;
 
   const ViewTaskPage(
       {super.key,
       // Optional
-      this.pageToNavigate = const AbstractTaskList(),
+      this.pageToNavigate,
       this.pageToNavigateTitle = "Back",
       this.shouldPop = true,
       required this.task,
@@ -109,9 +109,10 @@ class _ViewTaskState extends State<ViewTaskPage> {
     );
   }
 
+  // To navigate back directly to Root Page (YourTasks, MyTasks)
   GestureDetector _createNavigateToTaskListButton() {
     return GestureDetector(
-      onTap: () => _navigateToPage(context, widget.pageToNavigate),
+      onTap: () => _navigateToPage(context, widget.pageToNavigate!),
       child: Row(
         children: [
           const Icon(CupertinoIcons.back),
@@ -228,12 +229,26 @@ class _ViewTaskState extends State<ViewTaskPage> {
 
   // -------------------------------------------------------------------
   // Callbacks
+  // void _editTask(BuildContext context, Task task) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (BuildContext context) =>
+  //           TaskFormPage(task: task, isCreate: false),
+  //     ),
+  //   );
+  // }
+
   void _editTask(BuildContext context, Task task) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) =>
-            TaskFormPage(task: task, isCreate: false),
+        builder: (BuildContext context) => TaskFormPage(
+          task: task,
+          isCreate: false,
+          rootTaskList: widget.pageToNavigate,
+          rootTaskListTitle: widget.pageToNavigateTitle,
+        ),
       ),
     );
   }
