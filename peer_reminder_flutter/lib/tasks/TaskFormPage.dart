@@ -27,9 +27,11 @@ class TaskFormPage extends StatefulWidget {
   final Task task;
   final bool isCreate;
   final AbstractTaskList? rootTaskList;
+  final String? rootTaskListTitle;
   const TaskFormPage(
       {super.key,
       this.rootTaskList,
+      this.rootTaskListTitle,
       required this.task,
       required this.isCreate});
 
@@ -496,6 +498,7 @@ class _TaskFormState extends State<TaskFormPage> {
       isPreview: false,
       isEnableContact: true,
       pageToNavigate: widget.rootTaskList ?? const AbstractTaskList(),
+      pageToNavigateTitle: widget.rootTaskListTitle ?? "Task List",
       shouldPop: false,
     );
     Navigator.of(context).push(ViewTaskPageRoute(viewTaskPage));

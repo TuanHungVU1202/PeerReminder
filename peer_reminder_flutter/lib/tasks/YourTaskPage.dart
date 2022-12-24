@@ -28,7 +28,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
     List<Widget> bodyWidgetList = createBodyWidgetList();
     Scaffold mainScaffold = Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: const FloatingAction(),
+      floatingActionButton: FloatingAction(rootTaskListTitle: largeTitle),
       body: createRefreshableBody(bodyWidgetList),
     );
 
@@ -120,6 +120,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
           task: task,
           isCreate: false,
           rootTaskList: const YourTaskPage(),
+          rootTaskListTitle: largeTitle,
         ),
       ),
     );
@@ -134,7 +135,9 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
 
 ////////////////////////////////////////////////////////////////////////////////
 class FloatingAction extends StatelessWidget {
-  const FloatingAction({super.key});
+  const FloatingAction({super.key, required this.rootTaskListTitle});
+
+  final String rootTaskListTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +168,7 @@ class FloatingAction extends StatelessWidget {
           task: Task.createNew("New Task"),
           isCreate: true,
           rootTaskList: const YourTaskPage(),
+          rootTaskListTitle: rootTaskListTitle,
         ),
       ),
     );
