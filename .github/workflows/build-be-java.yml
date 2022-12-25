@@ -22,7 +22,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./peer_reminder
+        working-directory: peer_reminder
 
     steps:
     - run: pwd # will respect working-directory
