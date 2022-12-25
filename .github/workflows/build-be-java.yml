@@ -20,7 +20,13 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+  defaults:
+    run:
+      working-directory: ./peer_reminder
+
     steps:
+    - run: pwd # will respect working-directory
+
     - uses: actions/checkout@v3
 
     - name: Set up JDK 17
@@ -31,24 +37,18 @@ jobs:
         cache: maven
 
     - name: Build with Maven
-      run: mvn package -B -Dmaven.test.skip --file ./peer_reminder/pom.xml
+      run: mvn package -B -Dmaven.test.skip
 
     # Ignore error so report can be created later
     - name: Test
-#      run: mvn test -B -Dmaven.test.failure.ignore=true --file ./peer_reminder/pom.xml
-      run: mvn test -B --fail-at-end --file ./peer_reminder/pom.xml
-
-    - name: Publish Test Report
-      if: ${{ always() }}
-      uses: scacap/action-surefire-report@v1
-      fail_if_no_tests: false
+      run: mvn test -B -Dmaven.test.failure.ignore=true
 
     # Processing test report. Fail workflow if a test was failed
-#    - name: Report
-#      uses: dorny/test-reporter@v1
-#      if: always()
-#      with:
-#        name: Maven Tests
-#        path: target/surefire-reports/*.xml
-#        reporter: java-junit
-#        fail-on-error: true
+    - name: Report
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Maven Tests
+        path: target/surefire-reports/*.xml
+        reporter: java-junit
+        fail-on-error: true
