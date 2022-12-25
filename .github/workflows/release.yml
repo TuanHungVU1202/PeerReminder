@@ -18,6 +18,18 @@ jobs:
         uses: actions/checkout@v3
 
       -
+        # Setup and package war before build by docker
+        name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn package -B -Dmaven.test.skip -f peer_reminder/pom.xml
+
+      -
         # Setting up Docker Buildx with docker-container driver is required
         # at the moment to be able to use a subdirectory with Git context
         name: Set up Docker Buildx
