@@ -25,7 +25,8 @@ jobs:
         working-directory: peer_reminder
 
     steps:
-    - run: pwd # will respect working-directory
+    - name: Check directory
+      run: pwd # will respect working-directory
 
     - uses: actions/checkout@v3
 
