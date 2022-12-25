@@ -33,9 +33,11 @@ jobs:
     - name: Build with Maven
       run: mvn package -B -Dmaven.test.skip --file ./peer_reminder/pom.xml
 
+    # Ignore error so report can be created later
     - name: Test
-      run: mvn test -B -Dmaven.test.failure.ignore=true
+      run: mvn test -B -Dmaven.test.failure.ignore=true --file ./peer_reminder/pom.xml
 
+    # Processing test report. Fail workflow if a test was failed
     - name: Report
       uses: dorny/test-reporter@v1
       if: always()
