@@ -3,7 +3,7 @@ name: Tag
 on:
   workflow_run:
     workflows: ["Build and Test Java BE"]
-    branches: [ci]
+    branches: [master]
     types:
       - completed
 
