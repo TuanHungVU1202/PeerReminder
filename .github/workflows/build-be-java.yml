@@ -20,9 +20,9 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-  defaults:
-    run:
-      working-directory: ./peer_reminder
+    defaults:
+      run:
+        working-directory: ./peer_reminder
 
     steps:
     - run: pwd # will respect working-directory
