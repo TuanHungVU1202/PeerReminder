@@ -25,9 +25,6 @@ jobs:
         working-directory: peer_reminder
 
     steps:
-    - name: Check directory
-      run: pwd # will respect working-directory
-
     - uses: actions/checkout@v3
 
     - name: Set up JDK 17
