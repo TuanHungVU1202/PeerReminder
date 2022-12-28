@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:peer_reminder_flutter/auth/SignInPage.dart';
 import 'package:peer_reminder_flutter/tasks/MyTaskPage.dart';
 import 'tasks/YourTaskPage.dart';
 
@@ -135,6 +136,9 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
               icon: Icon(CupertinoIcons.tray_arrow_up), label: 'Your Tasks'),
           BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.settings), label: 'Settings'),
+          // FIXME: Temporary for debugging signin page
+          BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.nosign), label: 'SignIn'),
         ],
       ),
       tabBuilder: (context, index) {
@@ -148,6 +152,9 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
             break;
           case 2:
             returnValue = _createSettingsTabView();
+            break;
+          case 3:
+            returnValue = _createSignInTabView();
             break;
         }
         return returnValue;
@@ -183,5 +190,14 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
         ],
       );
     });
+  }
+
+  // FIXME: Temporary for debugging signin page
+  CupertinoTabView _createSignInTabView() {
+    return CupertinoTabView(
+      builder: (context) {
+        return const SignInPage();
+      },
+    );
   }
 }

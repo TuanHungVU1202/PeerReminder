@@ -9,7 +9,7 @@ import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
 import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
 
 // Local imports
-import 'TaskTile.dart';
+import 'component/TaskTile.dart';
 import 'model/Task.dart';
 
 class YourTaskPage extends AbstractTaskList {
