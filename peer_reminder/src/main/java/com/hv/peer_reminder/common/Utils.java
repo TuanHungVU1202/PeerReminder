@@ -81,4 +81,8 @@ public class Utils {
         Date resultDate = formatter.parse(dateTimeStr);
         return resultDate;
     }
+
+    public static String capitalizeStr (String strToCapitalize){
+        return strToCapitalize.substring(0, 1).toUpperCase() + strToCapitalize.substring(1);
+    }
 }

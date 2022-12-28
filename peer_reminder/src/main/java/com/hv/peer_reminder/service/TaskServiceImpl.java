@@ -85,8 +85,8 @@ public class TaskServiceImpl implements  ITaskService{
         newTask.setTaskNote(taskDTO.getTaskNote());
         newTask.setEmail(taskDTO.getEmail());
         newTask.setPhoneNo(taskDTO.getPhoneNo());
-        newTask.setTaskCategory(taskDTO.getTaskCategory());
-        newTask.setTaskStatus(taskDTO.getTaskStatus());
+        newTask.setTaskCategory(Utils.capitalizeStr(taskDTO.getTaskCategory()));
+        newTask.setTaskStatus(Utils.capitalizeStr(taskDTO.getTaskStatus()));
 
         // saving new task
         taskRepository.save(newTask);
@@ -115,8 +115,8 @@ public class TaskServiceImpl implements  ITaskService{
         task.setTaskNote(taskDTO.getTaskNote());
         task.setEmail(taskDTO.getEmail());
         task.setPhoneNo(taskDTO.getPhoneNo());
-        task.setTaskCategory(taskDTO.getTaskCategory());
-        task.setTaskStatus(taskDTO.getTaskStatus());
+        task.setTaskCategory(Utils.capitalizeStr(taskDTO.getTaskCategory()));
+        task.setTaskStatus(Utils.capitalizeStr(taskDTO.getTaskStatus()));
 
         taskRepository.save(task);
         return task;
