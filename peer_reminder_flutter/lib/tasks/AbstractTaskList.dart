@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -325,7 +326,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   }
 
   void archiveTask(Task task) {
-    task.taskStatus = TaskStatusEnum.archived.name;
+    task.taskStatus = StringUtils.capitalize(TaskStatusEnum.archived.name);
 
     // Call DB
     updateTask(task);
@@ -334,7 +335,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   }
 
   void markAsDoneTask(Task task) {
-    task.taskStatus = TaskStatusEnum.done.name;
+    task.taskStatus = StringUtils.capitalize(TaskStatusEnum.done.name);
 
     // Call DB
     updateTask(task);
