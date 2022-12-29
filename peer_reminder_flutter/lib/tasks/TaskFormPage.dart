@@ -150,7 +150,7 @@ class _TaskFormState extends State<TaskFormPage> {
       ),
       child: const Text(
         'Save',
-        style: TextStyle(fontSize: Constant.FONTSIZE_XL),
+        style: TextStyle(fontSize: Constant.kFontSizeXL),
       ),
     );
   }
@@ -428,9 +428,9 @@ class _TaskFormState extends State<TaskFormPage> {
 
   // Not Before means Equals or After
   bool _isEndTimeBeforeStartTime(String endDateStr) {
-    DateTime endDateTime = DateFormat(Constant.DATETIME_FORMAT)
+    DateTime endDateTime = DateFormat(Constant.kDateTimeFormat)
         .parse("$endDateStr ${_endTimeController.text}");
-    DateTime startDateTime = DateFormat(Constant.DATETIME_FORMAT)
+    DateTime startDateTime = DateFormat(Constant.kDateTimeFormat)
         .parse("${_startDateController.text} ${_startTimeController.text}");
 
     if (endDateTime.isBefore(startDateTime)) {

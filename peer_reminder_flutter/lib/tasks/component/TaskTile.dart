@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/model/TaskCategory.dart';
 import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
 
-import 'AbstractTaskList.dart';
-import 'ViewTaskPage.dart';
-import 'model/Task.dart';
+import '../AbstractTaskList.dart';
+import '../ViewTaskPage.dart';
+import '../model/Task.dart';
 import 'package:peer_reminder_flutter/common/UIConstant.dart';
 
 class TaskTile extends StatelessWidget {
@@ -43,7 +43,7 @@ class TaskTile extends StatelessWidget {
                   // selectedTileColor: Colors.lightBlue,
                   title: Text(
                     task.taskName,
-                    style: UIConstant.biggerFont,
+                    style: UIConstant.kBiggerFont,
                     overflow: TextOverflow.fade,
                   ),
                 ),
