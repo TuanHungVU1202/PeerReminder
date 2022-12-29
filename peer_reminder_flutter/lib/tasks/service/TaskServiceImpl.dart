@@ -24,7 +24,7 @@ class TaskServiceImpl implements ITaskService {
 
   @override
   Future<List<Task>> getAllTaskList() async {
-    final response = await http.get(Uri.parse(Constant.TASK_LIST_BASE));
+    final response = await http.get(Uri.parse(Constant.kTaskListBase));
 
     List<List<String>> startDateTimeList = [];
     List<List<String>> endDateTimeList = [];
@@ -77,7 +77,7 @@ class TaskServiceImpl implements ITaskService {
   Future<http.Response> createTask(Task task) async {
     String bodyJson = jsonEncode(task.toJson());
     return http.post(
-      Uri.parse(Constant.TASK_LIST_BASE),
+      Uri.parse(Constant.kTaskListBase),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -90,7 +90,7 @@ class TaskServiceImpl implements ITaskService {
     int id = task.id;
     String bodyJson = jsonEncode(task.toJson());
     return http.put(
-      Uri.parse("${Constant.TASK_LIST_BASE}/$id"),
+      Uri.parse("${Constant.kTaskListBase}/$id"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -102,7 +102,7 @@ class TaskServiceImpl implements ITaskService {
   Future<http.Response> deleteTask(Task task) {
     int id = task.id;
     // Return 1 is deleted. 0 is not found?
-    return http.delete(Uri.parse("${Constant.TASK_LIST_BASE}/$id"));
+    return http.delete(Uri.parse("${Constant.kTaskListBase}/$id"));
   }
 
   // -------------------------------------------------------------------

@@ -58,7 +58,7 @@ class Util {
   }
 
   static String formatDate(DateTime date) {
-    String formattedDate = DateFormat(Constant.DATE_FORMAT).format(date);
+    String formattedDate = DateFormat(Constant.kDateFormat).format(date);
     return formattedDate;
   }
 
@@ -112,5 +112,18 @@ class Util {
     var outputDate = outputFormat.format(inputDate);
 
     return outputDate.split(" ");
+  }
+
+  static Widget wrapWithAnimatedBuilder({
+    required Animation<Offset> animation,
+    required Widget child,
+  }) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (_, __) => FractionalTranslation(
+        translation: animation.value,
+        child: child,
+      ),
+    );
   }
 }

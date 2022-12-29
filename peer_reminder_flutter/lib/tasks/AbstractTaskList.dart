@@ -209,7 +209,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
           child: Text(
             'Cancel',
             style: TextStyle(
-                fontSize: Constant.FONTSIZE_XL, color: Colors.lightBlue),
+                fontSize: Constant.kFontSizeXL, color: Colors.lightBlue),
           ),
         ),
       ),
@@ -229,7 +229,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
         child: const Center(
           child: Text(
             'Delete',
-            style: TextStyle(fontSize: Constant.FONTSIZE_XL, color: Colors.red),
+            style: TextStyle(fontSize: Constant.kFontSizeXL, color: Colors.red),
           ),
         ),
       ),

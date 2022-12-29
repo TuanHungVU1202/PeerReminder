@@ -119,7 +119,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
           Text(
             widget.pageToNavigateTitle,
             style: const TextStyle(
-                fontSize: Constant.FONTSIZE_XL, color: Colors.blueAccent),
+                fontSize: Constant.kFontSizeXL, color: Colors.blueAccent),
           ),
         ],
       ),
@@ -136,7 +136,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
       ),
       child: const Text(
         'Edit',
-        style: TextStyle(fontSize: Constant.FONTSIZE_XL),
+        style: TextStyle(fontSize: Constant.kFontSizeXL),
       ),
     );
   }
@@ -209,7 +209,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
                 padding: const EdgeInsets.all(5),
                 child: Text(
                   title,
-                  style: UIConstant.titleFont,
+                  style: UIConstant.kTitleFont,
                   overflow: TextOverflow.fade,
                 ),
               ),
@@ -217,7 +217,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
             Expanded(
               child: Text(
                 subTitle,
-                style: UIConstant.subTitleFont,
+                style: UIConstant.kSubTitleFont,
                 overflow: TextOverflow.fade,
               ),
             ),
