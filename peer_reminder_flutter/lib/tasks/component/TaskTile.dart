@@ -43,7 +43,7 @@ class TaskTile extends StatelessWidget {
                   // selectedTileColor: Colors.lightBlue,
                   title: Text(
                     task.taskName,
-                    style: UIConstant.biggerFont,
+                    style: UIConstant.kBiggerFont,
                     overflow: TextOverflow.fade,
                   ),
                 ),

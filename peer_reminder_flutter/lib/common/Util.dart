@@ -58,7 +58,7 @@ class Util {
   }
 
   static String formatDate(DateTime date) {
-    String formattedDate = DateFormat(Constant.DATE_FORMAT).format(date);
+    String formattedDate = DateFormat(Constant.kDateFormat).format(date);
     return formattedDate;
   }
 
