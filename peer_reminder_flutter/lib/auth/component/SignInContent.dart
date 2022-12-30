@@ -32,6 +32,9 @@ class _SignInContentState extends State<SignInContent>
   final TextEditingController _passwordController = TextEditingController();
   late final IAuthService auth;
 
+  final String _kSignUp = "Sign Up";
+  final String _kSignIn = "Sign In";
+
   // -------------------------------------------------------------------------
   // UI Components
   Widget _createInputField(
@@ -65,12 +68,16 @@ class _SignInContentState extends State<SignInContent>
   }
 
   // FIXME: add onPressed here
-  Widget _createLoginButton(String title) {
+  Widget _createSignInSignUpButton(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 135, vertical: 16),
       child: ElevatedButton(
         onPressed: () {
-          _signIn();
+          if (title == _kSignIn) {
+            _signIn();
+          } else {
+            _signUp();
+          }
         },
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -175,6 +182,16 @@ class _SignInContentState extends State<SignInContent>
     );
   }
 
+  void _signUp() {
+    // FIXME: Create new account to DB
+    // For now always push to new page
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const CupertinoHomePage()),
+      (Route<dynamic> route) => false,
+    );
+  }
+
   // -------------------------------------------------------------------------
   @override
   void initState() {
@@ -183,7 +200,7 @@ class _SignInContentState extends State<SignInContent>
       _createInputField('Email', Ionicons.mail_outline, _emailController),
       _createInputField(
           'Password', Ionicons.lock_closed_outline, _passwordController),
-      _createLoginButton('Sign Up'),
+      _createSignInSignUpButton(_kSignUp),
       _createOrDivider(),
       _createSingleSignOnOptions(),
     ];
@@ -192,7 +209,7 @@ class _SignInContentState extends State<SignInContent>
       _createInputField('Email', Ionicons.mail_outline, _emailController),
       _createInputField(
           'Password', Ionicons.lock_closed_outline, _passwordController),
-      _createLoginButton('Log In'),
+      _createSignInSignUpButton(_kSignIn),
       createForgotPasswordButton(),
     ];
 
