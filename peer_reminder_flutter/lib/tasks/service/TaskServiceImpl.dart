@@ -34,13 +34,13 @@ class TaskServiceImpl implements ITaskService {
     // Parsing and adding startDate, startTime to intermediate list
     for (var element in taskList) {
       String startDateTimeBE = element['startDateTime'];
-      startDateTimeList.add(_parseStartDateTime(startDateTimeBE));
+      startDateTimeList.add(_parseDateTime(startDateTimeBE));
     }
 
     // Parsing and adding endDate, endTime to intermediate list
     for (var element in taskList) {
       String endDateTimeBE = element['endDateTime'];
-      endDateTimeList.add(_parseStartDateTime(endDateTimeBE));
+      endDateTimeList.add(_parseDateTime(endDateTimeBE));
     }
 
     List<Task> tasks =
@@ -107,11 +107,7 @@ class TaskServiceImpl implements ITaskService {
 
   // -------------------------------------------------------------------
   // Private utils
-  List<String> _parseStartDateTime(String startDateTimeBE) {
+  List<String> _parseDateTime(String startDateTimeBE) {
     return Util.dateBeToDateTimeStr(startDateTimeBE);
-  }
-
-  List<String> _parseEndDateTime(String endDateTimeBE) {
-    return Util.dateBeToDateTimeStr(endDateTimeBE);
   }
 }

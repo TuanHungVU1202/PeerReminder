@@ -3,12 +3,14 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
-import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
-import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
-import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
+import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 // Local imports
+import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
+import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
+import '../common/UIUtil.dart';
+import '../common/Util.dart';
 import 'component/TaskTile.dart';
 import 'model/Task.dart';
 
@@ -85,6 +87,58 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
     );
   }
 
+  @override
+  Slidable createSlidableTask(int itemIndex) {
+    return Slidable(
+      // Specify a key if the Slidable is dismissible.
+      key: UniqueKey(),
+
+      startActionPane: ActionPane(
+        motion: const DrawerMotion(),
+
+        dismissible: DismissiblePane(confirmDismiss: () async {
+          Future<bool> isConfirmed = onConfirmDeleteTask();
+          return Future(() => isConfirmed);
+        }, onDismissed: () {
+          deleteTask(itemIndex);
+        }),
+
+        // All actions are defined in the children parameter.
+        children: [
+          SlidableAction(
+            onPressed: (context) => onPressedDelete(itemIndex),
+            backgroundColor: const Color(0xFFFE4A49),
+            foregroundColor: Colors.white,
+            icon: Icons.delete,
+            label: 'Delete',
+          ),
+        ],
+      ),
+
+      endActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (context) => _addToCalendar(filteredTaskList[itemIndex]),
+            backgroundColor: const Color(0xFF7BC043),
+            foregroundColor: Colors.white,
+            icon: Icons.calendar_month,
+            label: 'Add to Calendar',
+          ),
+        ],
+      ),
+
+      // The child of the Slidable is what the user sees when the
+      // component is not dragged.
+      child: createTaskContextMenu(itemIndex),
+    );
+  }
+
   // ---------------------------------------------------------
   // Callbacks
+  void _addToCalendar(Task task) {
+    Add2Calendar.addEvent2Cal(
+      UIUtil.buildEventFromTask(task),
+    );
+  }
 }

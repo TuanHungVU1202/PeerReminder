@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Local imports
-import 'package:peer_reminder_flutter/common/Util.dart';
+import 'package:peer_reminder_flutter/common/UIUtil.dart';
 import '../SwitchPageAnimation.dart';
 import 'package:peer_reminder_flutter/common/UIConstant.dart';
 import 'SignInContent.dart';
@@ -27,7 +27,7 @@ class _BottomTextState extends State<BottomText> {
 
   @override
   Widget build(BuildContext context) {
-    return Util.wrapWithAnimatedBuilder(
+    return UIUtil.wrapWithAnimatedBuilder(
       animation: SwitchPageAnimation.bottomTextAnimation,
       child: GestureDetector(
         onTap: () {

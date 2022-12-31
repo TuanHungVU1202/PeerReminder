@@ -102,28 +102,23 @@ class Util {
         .join('&');
   }
 
+  // https://stackoverflow.com/questions/51042621/unable-to-convert-string-date-in-format-yyyymmddhhmmss-to-datetime-dart
   // Convert BE Date object to date and time separately
   static List<String> dateBeToDateTimeStr(String beDateStr) {
     DateTime parseDate =
         DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(beDateStr);
     var inputDate = DateTime.parse(parseDate.toString());
 
-    var outputFormat = DateFormat('dd-MM-yyyy hh:mm');
+    var outputFormat = DateFormat(Constant.kDateTimeFormat);
     var outputDate = outputFormat.format(inputDate);
 
     return outputDate.split(" ");
   }
 
-  static Widget wrapWithAnimatedBuilder({
-    required Animation<Offset> animation,
-    required Widget child,
-  }) {
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (_, __) => FractionalTranslation(
-        translation: animation.value,
-        child: child,
-      ),
-    );
+  static DateTime combineDateTime(String date, String time) {
+    String combinedDateTimeStr = "$date $time";
+    DateFormat outputFormat = DateFormat(Constant.kDateTimeFormat);
+    DateTime outputDateTime = outputFormat.parse(combinedDateTimeStr);
+    return outputDateTime;
   }
 }

@@ -5,7 +5,7 @@ import 'package:peer_reminder_flutter/auth/service/IAuthService.dart';
 
 // Local imports
 import 'package:peer_reminder_flutter/common/UIConstant.dart';
-import '../../common/Util.dart';
+import '../../common/UIUtil.dart';
 import '../../home/CupertinoHomePage.dart';
 import '../SwitchPageAnimation.dart';
 import 'BottomText.dart';
@@ -220,14 +220,14 @@ class _SignInContentState extends State<SignInContent>
     );
 
     for (var i = 0; i < createAccountContent.length; i++) {
-      createAccountContent[i] = Util.wrapWithAnimatedBuilder(
+      createAccountContent[i] = UIUtil.wrapWithAnimatedBuilder(
         animation: SwitchPageAnimation.createAccountAnimations[i],
         child: createAccountContent[i],
       );
     }
 
     for (var i = 0; i < loginContent.length; i++) {
-      loginContent[i] = Util.wrapWithAnimatedBuilder(
+      loginContent[i] = UIUtil.wrapWithAnimatedBuilder(
         animation: SwitchPageAnimation.loginAnimations[i],
         child: loginContent[i],
       );
