@@ -96,21 +96,22 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
       startActionPane: ActionPane(
         motion: const DrawerMotion(),
 
-        dismissible: DismissiblePane(confirmDismiss: () async {
-          Future<bool> isConfirmed = onConfirmDeleteTask();
-          return Future(() => isConfirmed);
-        }, onDismissed: () {
-          deleteTask(itemIndex);
-        }),
-
         // All actions are defined in the children parameter.
         children: [
           SlidableAction(
-            onPressed: (context) => onPressedDelete(itemIndex),
-            backgroundColor: const Color(0xFFFE4A49),
+            onPressed: (context) =>
+                launchDialer(filteredTaskList[itemIndex].phoneNo),
+            backgroundColor: Colors.blue,
             foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Delete',
+            icon: Icons.call,
+            label: 'Call Peer',
+          ),
+          SlidableAction(
+            onPressed: doNothing,
+            backgroundColor: Colors.grey,
+            foregroundColor: Colors.white,
+            icon: Icons.menu,
+            label: 'More',
           ),
         ],
       ),
