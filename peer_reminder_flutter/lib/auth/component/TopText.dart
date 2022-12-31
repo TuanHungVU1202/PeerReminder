@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../common/Util.dart';
+import '../../common/UIUtil.dart';
 import '../SwitchPageAnimation.dart';
 import 'SignInContent.dart';
 
@@ -25,7 +25,7 @@ class _TopTextState extends State<TopText> {
 
   @override
   Widget build(BuildContext context) {
-    return Util.wrapWithAnimatedBuilder(
+    return UIUtil.wrapWithAnimatedBuilder(
       animation: SwitchPageAnimation.topTextAnimation,
       child: Text(
         SwitchPageAnimation.currentScreen == Screens.createAccount
