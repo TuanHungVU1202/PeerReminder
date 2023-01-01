@@ -44,6 +44,7 @@ class _ViewTaskState extends State<ViewTaskPage> {
   @override
   Widget build(BuildContext context) {
     ClipRRect bodyViewTaskPage = ClipRRect(
+      // To round the corners
       borderRadius: BorderRadius.circular(8.0),
       child: Scaffold(
         body: _createYourTaskSliverBody(),
@@ -63,7 +64,6 @@ class _ViewTaskState extends State<ViewTaskPage> {
           // Thus, use with showViewTaskPage in TaskFormPage
           return widget.shouldPop;
         },
-        // To round the corners
         child: bodyViewTaskPage);
   }
 
@@ -229,16 +229,6 @@ class _ViewTaskState extends State<ViewTaskPage> {
 
   // -------------------------------------------------------------------
   // Callbacks
-  // void _editTask(BuildContext context, Task task) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (BuildContext context) =>
-  //           TaskFormPage(task: task, isCreate: false),
-  //     ),
-  //   );
-  // }
-
   void _editTask(BuildContext context, Task task) {
     Navigator.push(
       context,

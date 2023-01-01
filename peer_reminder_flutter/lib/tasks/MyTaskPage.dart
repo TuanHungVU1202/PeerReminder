@@ -107,7 +107,7 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
             label: 'Call Peer',
           ),
           SlidableAction(
-            onPressed: doNothing,
+            onPressed: (context) => _showMoreActionSheet(context),
             backgroundColor: Colors.grey,
             foregroundColor: Colors.white,
             icon: Icons.menu,
@@ -132,6 +132,36 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
       // The child of the Slidable is what the user sees when the
       // component is not dragged.
       child: createTaskContextMenu(itemIndex),
+    );
+  }
+
+  void _showMoreActionSheet(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('More Contact Options'),
+        message: const Text('Choose from the following contact options'),
+        actions: <Widget>[
+          CupertinoActionSheetAction(
+            child: const Text('Email'),
+            onPressed: () {
+              Navigator.pop(context, 'Email');
+            },
+          ),
+          CupertinoActionSheetAction(
+            child: const Text('Sms'),
+            onPressed: () {
+              Navigator.pop(context, 'Sms');
+            },
+          ),
+          CupertinoActionSheetAction(
+            child: const Text('Others'),
+            onPressed: () {
+              Navigator.pop(context, 'Others');
+            },
+          )
+        ],
+      ),
     );
   }
 
