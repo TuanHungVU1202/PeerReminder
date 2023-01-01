@@ -420,6 +420,8 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     return true;
   }
 
+  // Wait before remove task from task list
+  // Avoid error setState() called after dispose()
   void removeTaskFromList(int itemIndex) {
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
