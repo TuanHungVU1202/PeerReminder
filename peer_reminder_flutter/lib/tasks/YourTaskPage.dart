@@ -27,7 +27,6 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   @override
   Widget build(BuildContext context) {
     print("Rebuilding...");
-    List<Widget> bodyWidgetList = createBodyWidgetList();
 
     if (widget.shouldRefresh) {
       refreshTaskList();
@@ -67,7 +66,8 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
             archiveTask(filteredTaskList[itemIndex]);
-            removeTaskFromList(itemIndex);
+            // FIXME: remove when archive task, and rebuild widget
+            // removeTaskFromList(itemIndex);
           },
           trailingIcon: CupertinoIcons.archivebox,
           child: const Text('Archive'),
@@ -75,6 +75,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
+            // FIXME: rebuild to show latest trailing icon
             markAsDoneTask(filteredTaskList[itemIndex]);
           },
           trailingIcon: Icons.done,
