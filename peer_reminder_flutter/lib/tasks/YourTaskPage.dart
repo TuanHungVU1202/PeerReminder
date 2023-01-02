@@ -119,6 +119,31 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
     );
   }
 
+  @override
+  Future<bool> onConfirmDeleteTask() async {
+    return await showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+          title: const Text('Delete Confirmation'),
+          message: const Text('This task will be deleted. Continue?'),
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
+            child: const Text('Cancel'),
+          )),
+    );
+  }
+
   // -------------------------------------------------------------------
   // Components' callbacks
   // FIXME: pass bool for YourTaskPage here to see if it should refresh page
