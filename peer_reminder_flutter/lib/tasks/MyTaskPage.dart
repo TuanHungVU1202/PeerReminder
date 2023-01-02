@@ -28,8 +28,6 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> bodyWidgetList = createBodyWidgetList();
-
     return Scaffold(
       body: createRefreshableBody(bodyWidgetList),
     );
@@ -45,6 +43,7 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
+            // FIXME: rebuild to show latest trailing icon
             markAsDoneTask(filteredTaskList[itemIndex]);
           },
           trailingIcon: Icons.done,

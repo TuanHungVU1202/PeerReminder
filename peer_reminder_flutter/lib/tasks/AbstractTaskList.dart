@@ -35,6 +35,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   List<Task> originalTaskList = [];
   List<Task> filteredTaskList = [];
   late Future<List<Task>> fetchedTaskList;
+  List<Widget> bodyWidgetList = [];
 
   // Inject service interface
   late ITaskService taskService;
@@ -420,14 +421,10 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     return true;
   }
 
-  // Wait before remove task from task list
-  // Avoid error setState() called after dispose()
   void removeTaskFromList(int itemIndex) {
-    Future.delayed(const Duration(milliseconds: 500), () {
-      setState(() {
-        // Here you can write your code for open new view
-      });
-    });
+    originalTaskList.removeAt(itemIndex);
+    filteredTaskList = originalTaskList;
+    setState(() {});
   }
 
   Future<void> updateTask(Task task) async {
@@ -445,6 +442,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     }
   }
 
+  // Get very first task list from DB
   void getTaskLists() {
     fetchedTaskList.then((taskList) {
       for (var task in taskList) {
@@ -452,7 +450,13 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
       }
 
       filteredTaskList = originalTaskList;
-      setState(() {});
+
+      // TODO: find better way to fetch Task List in the beginning
+      Future.delayed(const Duration(milliseconds: 20), () {
+        setState(() {
+          bodyWidgetList = createBodyWidgetList();
+        });
+      });
     });
   }
 }
