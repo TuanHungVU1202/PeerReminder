@@ -125,12 +125,14 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   SliverList createTaskSliverList() {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        childCount: filteredTaskList.length * 2 - 1,
+        childCount: filteredTaskList.length,
         (context, index) {
-          if (index.isOdd) return const Divider(height: 0, color: Colors.grey);
-
-          int itemIndex = index ~/ 2;
-          return createSlidableTask(itemIndex);
+          return Column(
+            children: <Widget>[
+              createSlidableTask(index),
+              const Divider(height: 1)
+            ],
+          );
         },
       ),
     );
