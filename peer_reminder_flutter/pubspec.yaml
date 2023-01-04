@@ -46,6 +46,7 @@ dependencies:
   url_launcher: ^6.1.7
   ionicons: ^0.2.1
   add_2_calendar: ^2.2.3
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:

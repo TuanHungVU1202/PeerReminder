@@ -9,9 +9,12 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 // Local imports
 import 'package:peer_reminder_flutter/common/Constant.dart';
 import 'package:peer_reminder_flutter/common/Util.dart';
+import 'package:peer_reminder_flutter/tasks/component/BodyTaskList.dart';
+import 'package:peer_reminder_flutter/tasks/provider/BodyTaskListStateProvider.dart';
 import 'package:peer_reminder_flutter/tasks/service/ITaskService.dart';
 import 'package:peer_reminder_flutter/tasks/service/TaskServiceImpl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'TaskFormPage.dart';
 import 'model/Task.dart';
@@ -32,13 +35,13 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   final searchBarController = TextEditingController();
 
   final String largeTitle = "Task List";
-  List<Task> originalTaskList = [];
-  List<Task> filteredTaskList = [];
-  late Future<List<Task>> fetchedTaskList;
-  List<Widget> bodyWidgetList = [];
+  // List<Task> originalTaskList = [];
+  // List<Task> filteredTaskList = [];
+  // late Future<List<Task>> fetchedTaskList;
+  // List<Widget> bodyWidgetList = [];
 
   // Inject service interface
-  late ITaskService taskService;
+  // late ITaskService taskService;
 
   // To make sure things are mounted
   @override
@@ -52,11 +55,11 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   void initState() {
     super.initState();
 
-    taskService = TaskServiceImpl();
-    fetchedTaskList = fetchAllTask();
+    // taskService = TaskServiceImpl();
+    // fetchedTaskList = fetchAllTask();
 
     // Assign fetchedTaskList to originalTaskList and filteredTaskList
-    getTaskLists();
+    // getTaskLists();
 
     // Requesting Contact permission for the first time
     requestPermission();
@@ -122,20 +125,24 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     );
   }
 
-  SliverList createTaskSliverList() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        childCount: filteredTaskList.length,
-        (context, index) {
-          return Column(
-            children: <Widget>[
-              createSlidableTask(index),
-              const Divider(height: 1)
-            ],
-          );
-        },
-      ),
-    );
+  // SliverList createTaskSliverList() {
+  //   return SliverList(
+  //     delegate: SliverChildBuilderDelegate(
+  //       childCount: filteredTaskList.length,
+  //       (context, index) {
+  //         return Column(
+  //           children: <Widget>[
+  //             createSlidableTask(index),
+  //             const Divider(height: 1)
+  //           ],
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
+
+  BodyTaskList createTaskSliverList() {
+    return const BodyTaskList();
   }
 
   Slidable createSlidableTask(int itemIndex) {
@@ -243,14 +250,14 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
 
   // -------------------------------------------------------------------
   // Components' callbacks
-  Future<void> refreshTaskList() async {
-    // FIXME: change to partially load ? paging maybe
-    List<Task> taskList = await taskService.getAllTaskList();
-
-    originalTaskList = taskList;
-    filteredTaskList = originalTaskList;
-    setState(() {});
-  }
+  // Future<void> refreshTaskList() async {
+  //   // FIXME: change to partially load ? paging maybe
+  //   List<Task> taskList = await taskService.getAllTaskList();
+  //
+  //   originalTaskList = taskList;
+  //   filteredTaskList = originalTaskList;
+  //   setState(() {});
+  // }
 
   void doNothing(BuildContext context) {
     print("abc");
@@ -306,17 +313,17 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
 
   // -----------------------------
   // DB Ops
-  Future<void> deleteTask(int itemIndex) async {
-    final response = await taskService.deleteTask(filteredTaskList[itemIndex]);
-
-    if (response.statusCode == HttpStatus.ok) {
-      // TODO: change to better log
-      print("Deleted taskId: ${response.body}");
-      removeTaskFromList(itemIndex);
-    } else {
-      throw Exception('TaskList::deleteTask(): Failed to delete Task');
-    }
-  }
+  // Future<void> deleteTask(int itemIndex) async {
+  //   final response = await taskService.deleteTask(filteredTaskList[itemIndex]);
+  //
+  //   if (response.statusCode == HttpStatus.ok) {
+  //     // TODO: change to better log
+  //     print("Deleted taskId: ${response.body}");
+  //     removeTaskFromList(itemIndex);
+  //   } else {
+  //     throw Exception('TaskList::deleteTask(): Failed to delete Task');
+  //   }
+  // }
 
   void editTask(BuildContext context, Task task) {
     Navigator.push(
@@ -328,36 +335,36 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     );
   }
 
-  void archiveTask(Task task) {
-    task.taskStatus = StringUtils.capitalize(TaskStatusEnum.archived.name);
+  // void archiveTask(Task task) {
+  //   task.taskStatus = StringUtils.capitalize(TaskStatusEnum.archived.name);
+  //
+  //   // Call DB
+  //   updateTask(task);
+  //
+  //   // TODO: after done, notify peer. Maybe cancel event as well?
+  // }
+  //
+  // void markAsDoneTask(Task task) {
+  //   task.taskStatus = StringUtils.capitalize(TaskStatusEnum.done.name);
+  //
+  //   // Call DB
+  //   updateTask(task);
+  // }
 
-    // Call DB
-    updateTask(task);
-
-    // TODO: after done, notify peer. Maybe cancel event as well?
-  }
-
-  void markAsDoneTask(Task task) {
-    task.taskStatus = StringUtils.capitalize(TaskStatusEnum.done.name);
-
-    // Call DB
-    updateTask(task);
-  }
-
-  void updateSearchedTaskList(String value) {
-    if (value.isNotEmpty) {
-      filteredTaskList = filteredTaskList
-          .where((element) =>
-              element.taskName.toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    } else {
-      searchBarController.text = '';
-      filteredTaskList = originalTaskList;
-    }
-
-    // To rebuild
-    setState(() {});
-  }
+  // void updateSearchedTaskList(String value) {
+  //   if (value.isNotEmpty) {
+  //     filteredTaskList = filteredTaskList
+  //         .where((element) =>
+  //             element.taskName.toLowerCase().contains(value.toLowerCase()))
+  //         .toList();
+  //   } else {
+  //     searchBarController.text = '';
+  //     filteredTaskList = originalTaskList;
+  //   }
+  //
+  //   // To rebuild
+  //   setState(() {});
+  // }
 
   // This should not work on simulator
   Future<void> launchDialer(String contactNumber) async {
@@ -390,11 +397,11 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
 
   // -------------------------------------------------------------------
   // Private Utils
-  Future<List<Task>> fetchAllTask() async {
-    List<Task> tasks = await taskService.getAllTaskList();
-
-    return tasks;
-  }
+  // Future<List<Task>> fetchAllTask() async {
+  //   List<Task> tasks = await taskService.getAllTaskList();
+  //
+  //   return tasks;
+  // }
 
   Future<bool> requestPermission() async {
     var permission = Util.getContactPermission();
@@ -423,42 +430,42 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     return true;
   }
 
-  void removeTaskFromList(int itemIndex) {
-    originalTaskList.removeAt(itemIndex);
-    filteredTaskList = originalTaskList;
-    setState(() {});
-  }
+  // void removeTaskFromList(int itemIndex) {
+  //   originalTaskList.removeAt(itemIndex);
+  //   filteredTaskList = originalTaskList;
+  //   setState(() {});
+  // }
 
-  Future<void> updateTask(Task task) async {
-    // TODO: Handle update response carefully
-    // The response is Date from java with startDateTime, endDateTime instead of String
-    final response = await taskService.updateTask(task);
-
-    if (response.statusCode == HttpStatus.ok) {
-      var responseJson = jsonDecode(response.body);
-      // task = Task.fromJson(responseJson);
-      print("Updating task: ");
-      print(responseJson);
-    } else {
-      throw Exception('TaskList::_saveTask(): Failed to update Task');
-    }
-  }
+  // Future<void> updateTask(Task task) async {
+  //   // TODO: Handle update response carefully
+  //   // The response is Date from java with startDateTime, endDateTime instead of String
+  //   final response = await taskService.updateTask(task);
+  //
+  //   if (response.statusCode == HttpStatus.ok) {
+  //     var responseJson = jsonDecode(response.body);
+  //     // task = Task.fromJson(responseJson);
+  //     print("Updating task: ");
+  //     print(responseJson);
+  //   } else {
+  //     throw Exception('TaskList::_saveTask(): Failed to update Task');
+  //   }
+  // }
 
   // Get very first task list from DB
-  void getTaskLists() {
-    fetchedTaskList.then((taskList) {
-      for (var task in taskList) {
-        originalTaskList.add(task);
-      }
-
-      filteredTaskList = originalTaskList;
-
-      // TODO: find better way to fetch Task List in the beginning
-      Future.delayed(const Duration(milliseconds: 20), () {
-        setState(() {
-          bodyWidgetList = createBodyWidgetList();
-        });
-      });
-    });
-  }
+  // void getTaskLists() {
+  //   fetchedTaskList.then((taskList) {
+  //     for (var task in taskList) {
+  //       originalTaskList.add(task);
+  //     }
+  //
+  //     filteredTaskList = originalTaskList;
+  //
+  //     // TODO: find better way to fetch Task List in the beginning
+  //     Future.delayed(const Duration(milliseconds: 20), () {
+  //       setState(() {
+  //         bodyWidgetList = createBodyWidgetList();
+  //       });
+  //     });
+  //   });
+  // }
 }
