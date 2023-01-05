@@ -9,6 +9,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 // Local imports
 import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
 import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
+import 'package:peer_reminder_flutter/tasks/provider/BodyTaskListStateProvider.dart';
+import 'package:provider/provider.dart';
 import '../common/UIUtil.dart';
 import '../common/Util.dart';
 import 'component/TaskTile.dart';
@@ -29,22 +31,33 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: createRefreshableBody(bodyWidgetList),
+      body: createRefreshableBody(),
     );
   }
 
+  RefreshIndicator createRefreshableBody() {
+    BodyTaskListStateProvider bodyTaskListState =
+    Provider.of<BodyTaskListStateProvider>(context, listen: true);
+    return RefreshIndicator(
+        onRefresh: () => bodyTaskListState.fetchBodyTaskList(),
+        child: createYourTaskSliverBody());
+  }
   // -------------------------------------------------------------------
   // UI Components
 
-  @override
   CupertinoContextMenu createTaskContextMenu(int itemIndex) {
+    BodyTaskListStateProvider bodyTaskListState =
+        Provider.of<BodyTaskListStateProvider>(context, listen: true);
+
+    List<Task> filteredTaskList = bodyTaskListState.getFilteredTaskList;
+
     return CupertinoContextMenu(
       actions: <Widget>[
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
             // FIXME: rebuild to show latest trailing icon
-            markAsDoneTask(filteredTaskList[itemIndex]);
+            bodyTaskListState.markAsDoneTask(filteredTaskList[itemIndex]);
           },
           trailingIcon: Icons.done,
           child: const Text('Mark as Done'),
@@ -86,8 +99,12 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
     );
   }
 
-  @override
   Slidable createSlidableTask(int itemIndex) {
+    BodyTaskListStateProvider bodyTaskListState =
+        Provider.of<BodyTaskListStateProvider>(context, listen: true);
+
+    List<Task> filteredTaskList = bodyTaskListState.getFilteredTaskList;
+
     return Slidable(
       // Specify a key if the Slidable is dismissible.
       key: UniqueKey(),

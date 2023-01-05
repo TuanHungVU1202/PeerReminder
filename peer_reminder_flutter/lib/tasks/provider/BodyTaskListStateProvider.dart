@@ -18,19 +18,19 @@ class BodyTaskListStateProvider with ChangeNotifier {
   // Inject dependency
   late ITaskService taskService;
 
-  late List<Task> _originalTaskList;
-  late List<Task> _filteredTaskList;
+  final List<Task> _originalTaskList = [];
+  late List<Task> _filteredTaskList = [];
 
   List<Task> get getOriginalTaskList => _originalTaskList;
   List<Task> get getFilteredTaskList => _filteredTaskList;
 
-  void fetchBodyTaskList() async {
+  Future<void> fetchBodyTaskList() async {
     taskService = TaskServiceImpl();
-    _originalTaskList = await taskService.getAllTaskList();
+    List<Task> tasks = await taskService.getAllTaskList();
 
-    // for (var task in tasks) {
-    //   _originalTaskList.add(task);
-    // }
+    for (var task in tasks) {
+      _originalTaskList.add(task);
+    }
 
     _filteredTaskList = _originalTaskList;
 
@@ -67,6 +67,14 @@ class BodyTaskListStateProvider with ChangeNotifier {
       print(responseJson);
     } else {
       throw Exception('TaskList::_saveTask(): Failed to update Task');
+    }
+  }
+
+  void onPressedDelete(int itemIndex, Future<bool> isConfirmed) async {
+    // Future<bool> isConfirmed = onConfirmDeleteTask();
+
+    if (await isConfirmed) {
+      deleteTask(itemIndex);
     }
   }
 

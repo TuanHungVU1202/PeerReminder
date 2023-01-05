@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 import '../tasks/MyTaskPage.dart';
 import '../tasks/YourTaskPage.dart';
+import '../tasks/provider/BodyTaskListStateProvider.dart';
 
 class CupertinoHomePage extends StatefulWidget {
   const CupertinoHomePage({Key? key}) : super(key: key);
@@ -45,18 +47,46 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
 
   // -------------------------------------------------------------------
   // UI components
+  // CupertinoTabView _createMyTasksTabView() {
+  //   return CupertinoTabView(
+  //     builder: (context) {
+  //       return MyTaskPage(shouldRefresh: false);
+  //     },
+  //   );
+  // }
+
   CupertinoTabView _createMyTasksTabView() {
     return CupertinoTabView(
       builder: (context) {
-        return MyTaskPage(shouldRefresh: false);
+        return Provider<BodyTaskListStateProvider>(
+            create: (_) => BodyTaskListStateProvider(),
+            // we use `builder` to obtain a new `BuildContext` that has access to the provider
+            builder: (context, child) {
+              // No longer throws
+              return MyTaskPage(shouldRefresh: false);
+            });
       },
     );
   }
 
+  // CupertinoTabView _createYourTasksTabView() {
+  //   return CupertinoTabView(
+  //     builder: (context) {
+  //       return YourTaskPage(shouldRefresh: false);
+  //     },
+  //   );
+  // }
+
   CupertinoTabView _createYourTasksTabView() {
     return CupertinoTabView(
       builder: (context) {
-        return YourTaskPage(shouldRefresh: false);
+        return Provider<BodyTaskListStateProvider>(
+            create: (_) => BodyTaskListStateProvider(),
+            // we use `builder` to obtain a new `BuildContext` that has access to the provider
+            builder: (context, child) {
+              // No longer throws
+              return YourTaskPage(shouldRefresh: false);
+            });
       },
     );
   }
