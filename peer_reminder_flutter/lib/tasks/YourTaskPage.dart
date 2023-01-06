@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
@@ -51,7 +50,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
 
   RefreshIndicator createRefreshableBody() {
     BodyTaskListStateProvider bodyTaskListState =
-    Provider.of<BodyTaskListStateProvider>(context, listen: true);
+        Provider.of<BodyTaskListStateProvider>(context, listen: true);
     return RefreshIndicator(
         onRefresh: () => bodyTaskListState.fetchBodyTaskList(),
         child: createYourTaskSliverBody());

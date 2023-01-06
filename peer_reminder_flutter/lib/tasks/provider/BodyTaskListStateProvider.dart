@@ -18,7 +18,7 @@ class BodyTaskListStateProvider with ChangeNotifier {
   // Inject dependency
   late ITaskService taskService;
 
-  final List<Task> _originalTaskList = [];
+  late List<Task> _originalTaskList = [];
   late List<Task> _filteredTaskList = [];
 
   List<Task> get getOriginalTaskList => _originalTaskList;
@@ -28,10 +28,7 @@ class BodyTaskListStateProvider with ChangeNotifier {
     taskService = TaskServiceImpl();
     List<Task> tasks = await taskService.getAllTaskList();
 
-    for (var task in tasks) {
-      _originalTaskList.add(task);
-    }
-
+    _originalTaskList = tasks;
     _filteredTaskList = _originalTaskList;
 
     notifyListeners();

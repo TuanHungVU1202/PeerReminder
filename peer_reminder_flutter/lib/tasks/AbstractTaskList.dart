@@ -133,11 +133,15 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     );
   }
 
-  ChangeNotifierProvider createBodyTaskList() {
-    return ChangeNotifierProvider<BodyTaskListStateProvider>(
-      create: (_) => BodyTaskListStateProvider(),
-      child: const BodyTaskList(),
-    );
+  // ChangeNotifierProvider createBodyTaskList() {
+  //   return ChangeNotifierProvider<BodyTaskListStateProvider>(
+  //     create: (_) => BodyTaskListStateProvider(),
+  //     child: const BodyTaskList(),
+  //   );
+  // }
+
+  BodyTaskList createBodyTaskList(){
+    return const BodyTaskList();
   }
 
   // SliverList createTaskSliverList() {

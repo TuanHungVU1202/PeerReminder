@@ -17,9 +17,6 @@ class BodyTaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     BodyTaskListStateProvider bodyTaskListState =
         Provider.of<BodyTaskListStateProvider>(context, listen: true);
-    // return ChangeNotifierProvider<BodyTaskListStateProvider>(
-    //   create: (_) => BodyTaskListStateProvider(),
-    // );
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(

@@ -77,16 +77,27 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
   //   );
   // }
 
+  // CupertinoTabView _createYourTasksTabView() {
+  //   return CupertinoTabView(
+  //     builder: (context) {
+  //       return Provider<BodyTaskListStateProvider>(
+  //           create: (_) => BodyTaskListStateProvider(),
+  //           // we use `builder` to obtain a new `BuildContext` that has access to the provider
+  //           builder: (context, child) {
+  //             // No longer throws
+  //             return YourTaskPage(shouldRefresh: false);
+  //           });
+  //     },
+  //   );
+  // }
+
   CupertinoTabView _createYourTasksTabView() {
     return CupertinoTabView(
       builder: (context) {
-        return Provider<BodyTaskListStateProvider>(
+          return ChangeNotifierProvider<BodyTaskListStateProvider>(
             create: (_) => BodyTaskListStateProvider(),
-            // we use `builder` to obtain a new `BuildContext` that has access to the provider
-            builder: (context, child) {
-              // No longer throws
-              return YourTaskPage(shouldRefresh: false);
-            });
+            child: YourTaskPage(shouldRefresh: false)
+          );
       },
     );
   }
