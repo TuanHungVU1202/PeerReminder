@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../tasks/MyTaskPage.dart';
 import '../tasks/YourTaskPage.dart';
-import '../tasks/provider/BodyTaskListStateProvider.dart';
+import '../tasks/provider/BodyTaskListProvider.dart';
 
 class CupertinoHomePage extends StatefulWidget {
   const CupertinoHomePage({Key? key}) : super(key: key);
@@ -58,8 +58,8 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
   CupertinoTabView _createMyTasksTabView() {
     return CupertinoTabView(
       builder: (context) {
-        return Provider<BodyTaskListStateProvider>(
-            create: (_) => BodyTaskListStateProvider(),
+        return Provider<BodyTaskListProvider>(
+            create: (_) => BodyTaskListProvider(),
             // we use `builder` to obtain a new `BuildContext` that has access to the provider
             builder: (context, child) {
               // No longer throws
@@ -94,8 +94,8 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
   CupertinoTabView _createYourTasksTabView() {
     return CupertinoTabView(
       builder: (context) {
-          return ChangeNotifierProvider<BodyTaskListStateProvider>(
-            create: (_) => BodyTaskListStateProvider(),
+          return ChangeNotifierProvider<BodyTaskListProvider>(
+            create: (_) => BodyTaskListProvider(),
             child: YourTaskPage(shouldRefresh: false)
           );
       },

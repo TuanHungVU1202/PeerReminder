@@ -9,7 +9,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 // Local imports
 import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
 import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
-import 'package:peer_reminder_flutter/tasks/provider/BodyTaskListStateProvider.dart';
+import 'package:peer_reminder_flutter/tasks/provider/BodyTaskListProvider.dart';
 import 'package:provider/provider.dart';
 import '../common/UIUtil.dart';
 import '../common/Util.dart';
@@ -36,20 +36,20 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
   }
 
   RefreshIndicator createRefreshableBody() {
-    BodyTaskListStateProvider bodyTaskListState =
-    Provider.of<BodyTaskListStateProvider>(context, listen: true);
+    BodyTaskListProvider bodyTaskListProvider =
+        Provider.of<BodyTaskListProvider>(context, listen: true);
     return RefreshIndicator(
-        onRefresh: () => bodyTaskListState.fetchBodyTaskList(),
+        onRefresh: () => bodyTaskListProvider.fetchBodyTaskList(),
         child: createYourTaskSliverBody());
   }
   // -------------------------------------------------------------------
   // UI Components
 
   CupertinoContextMenu createTaskContextMenu(int itemIndex) {
-    BodyTaskListStateProvider bodyTaskListState =
-        Provider.of<BodyTaskListStateProvider>(context, listen: true);
+    BodyTaskListProvider bodyTaskListProvider =
+        Provider.of<BodyTaskListProvider>(context, listen: true);
 
-    List<Task> filteredTaskList = bodyTaskListState.getFilteredTaskList;
+    List<Task> filteredTaskList = bodyTaskListProvider.getFilteredTaskList;
 
     return CupertinoContextMenu(
       actions: <Widget>[
@@ -57,7 +57,7 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
             // FIXME: rebuild to show latest trailing icon
-            bodyTaskListState.markAsDoneTask(filteredTaskList[itemIndex]);
+            bodyTaskListProvider.markAsDoneTask(filteredTaskList[itemIndex]);
           },
           trailingIcon: Icons.done,
           child: const Text('Mark as Done'),
@@ -66,7 +66,8 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            launchDialer(filteredTaskList[itemIndex].phoneNo);
+            bodyTaskListProvider
+                .launchDialer(filteredTaskList[itemIndex].phoneNo);
           },
           trailingIcon: CupertinoIcons.phone,
           child: const Text('Call peer'),
@@ -74,7 +75,7 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
         CupertinoContextMenuAction(
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-            launchEmail(filteredTaskList[itemIndex].email);
+            bodyTaskListProvider.launchEmail(filteredTaskList[itemIndex].email);
           },
           trailingIcon: CupertinoIcons.mail,
           child: const Text('Email peer'),
@@ -100,10 +101,10 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
   }
 
   Slidable createSlidableTask(int itemIndex) {
-    BodyTaskListStateProvider bodyTaskListState =
-        Provider.of<BodyTaskListStateProvider>(context, listen: true);
+    BodyTaskListProvider bodyTaskListProvider =
+        Provider.of<BodyTaskListProvider>(context, listen: true);
 
-    List<Task> filteredTaskList = bodyTaskListState.getFilteredTaskList;
+    List<Task> filteredTaskList = bodyTaskListProvider.getFilteredTaskList;
 
     return Slidable(
       // Specify a key if the Slidable is dismissible.
@@ -115,8 +116,8 @@ class MyTaskPageState extends AbstractTaskListState<MyTaskPage> {
         // All actions are defined in the children parameter.
         children: [
           SlidableAction(
-            onPressed: (context) =>
-                launchDialer(filteredTaskList[itemIndex].phoneNo),
+            onPressed: (context) => bodyTaskListProvider
+                .launchDialer(filteredTaskList[itemIndex].phoneNo),
             backgroundColor: Colors.blue,
             foregroundColor: Colors.white,
             icon: Icons.call,

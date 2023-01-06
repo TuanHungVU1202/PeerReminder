@@ -10,7 +10,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:peer_reminder_flutter/common/Constant.dart';
 import 'package:peer_reminder_flutter/common/Util.dart';
 import 'package:peer_reminder_flutter/tasks/component/BodyTaskList.dart';
-import 'package:peer_reminder_flutter/tasks/provider/BodyTaskListStateProvider.dart';
+import 'package:peer_reminder_flutter/tasks/provider/BodyTaskListProvider.dart';
 import 'package:peer_reminder_flutter/tasks/service/ITaskService.dart';
 import 'package:peer_reminder_flutter/tasks/service/TaskServiceImpl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -106,8 +106,8 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   }
 
   SliverToBoxAdapter createSearchBar() {
-    BodyTaskListStateProvider bodyTaskListState =
-        Provider.of<BodyTaskListStateProvider>(context, listen: true);
+    BodyTaskListProvider bodyTaskListState =
+        Provider.of<BodyTaskListProvider>(context, listen: true);
     return SliverToBoxAdapter(
       child: FractionallySizedBox(
         widthFactor: 0.9,
@@ -385,33 +385,33 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   // }
 
   // This should not work on simulator
-  Future<void> launchDialer(String contactNumber) async {
-    final callUri = Uri.parse("tel:$contactNumber");
-    if (await canLaunchUrl(callUri)) {
-      await launchUrl(callUri);
-    } else {
-      throw 'Could not launch $callUri';
-    }
-  }
-
-  Future<void> launchEmail(String email) async {
-    String subject = "Request to remind!";
-
-    // FIXME: use a body template
-    String body = "Test";
-    final Uri emailUri = Uri(
-      scheme: 'mailto',
-      path: email,
-      query: Util.encodeQueryParameters(
-          <String, String>{"subject": subject, "body": body}),
-    );
-
-    if (await canLaunchUrl(emailUri)) {
-      await launchUrl(emailUri);
-    } else {
-      throw 'Could not launch $emailUri';
-    }
-  }
+  // Future<void> launchDialer(String contactNumber) async {
+  //   final callUri = Uri.parse("tel:$contactNumber");
+  //   if (await canLaunchUrl(callUri)) {
+  //     await launchUrl(callUri);
+  //   } else {
+  //     throw 'Could not launch $callUri';
+  //   }
+  // }
+  //
+  // Future<void> launchEmail(String email) async {
+  //   String subject = "Request to remind!";
+  //
+  //   // FIXME: use a body template
+  //   String body = "Test";
+  //   final Uri emailUri = Uri(
+  //     scheme: 'mailto',
+  //     path: email,
+  //     query: Util.encodeQueryParameters(
+  //         <String, String>{"subject": subject, "body": body}),
+  //   );
+  //
+  //   if (await canLaunchUrl(emailUri)) {
+  //     await launchUrl(emailUri);
+  //   } else {
+  //     throw 'Could not launch $emailUri';
+  //   }
+  // }
 
   // -------------------------------------------------------------------
   // Private Utils

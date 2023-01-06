@@ -2,16 +2,18 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Local imports
+import '../../common/Util.dart';
 import '../model/Task.dart';
 import '../model/TaskStatus.dart';
 import '../service/ITaskService.dart';
 import '../service/TaskServiceImpl.dart';
 
-class BodyTaskListStateProvider with ChangeNotifier {
+class BodyTaskListProvider with ChangeNotifier {
   // Constructor, fetch data at the beginning
-  BodyTaskListStateProvider() {
+  BodyTaskListProvider() {
     fetchBodyTaskList();
   }
 
@@ -108,6 +110,35 @@ class BodyTaskListStateProvider with ChangeNotifier {
       searchBarController.text = '';
       _filteredTaskList = _originalTaskList;
       notifyListeners();
+    }
+  }
+
+  // This should not work on simulator
+  Future<void> launchDialer(String contactNumber) async {
+    final callUri = Uri.parse("tel:$contactNumber");
+    if (await canLaunchUrl(callUri)) {
+      await launchUrl(callUri);
+    } else {
+      throw 'Could not launch $callUri';
+    }
+  }
+
+  Future<void> launchEmail(String email) async {
+    String subject = "Request to remind!";
+
+    // FIXME: use a body template
+    String body = "Test";
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: email,
+      query: Util.encodeQueryParameters(
+          <String, String>{"subject": subject, "body": body}),
+    );
+
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(emailUri);
+    } else {
+      throw 'Could not launch $emailUri';
     }
   }
 }

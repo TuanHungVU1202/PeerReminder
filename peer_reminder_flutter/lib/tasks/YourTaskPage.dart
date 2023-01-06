@@ -6,7 +6,7 @@ import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
 import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
-import 'package:peer_reminder_flutter/tasks/provider/BodyTaskListStateProvider.dart';
+import 'package:peer_reminder_flutter/tasks/provider/BodyTaskListProvider.dart';
 import 'package:provider/provider.dart';
 
 // Local imports
@@ -49,20 +49,20 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   }
 
   RefreshIndicator createRefreshableBody() {
-    BodyTaskListStateProvider bodyTaskListState =
-        Provider.of<BodyTaskListStateProvider>(context, listen: true);
+    BodyTaskListProvider bodyTaskListProvider =
+        Provider.of<BodyTaskListProvider>(context, listen: true);
     return RefreshIndicator(
-        onRefresh: () => bodyTaskListState.fetchBodyTaskList(),
+        onRefresh: () => bodyTaskListProvider.fetchBodyTaskList(),
         child: createYourTaskSliverBody());
   }
 
   // -------------------------------------------------------------------
   // UI Components
   // CupertinoContextMenu createTaskContextMenu(int itemIndex) {
-  //   BodyTaskListStateProvider bodyTaskListState =
-  //       Provider.of<BodyTaskListStateProvider>(context, listen: true);
+  //   bodyTaskListProviderProvider bodyTaskListProvider =
+  //       Provider.of<bodyTaskListProviderProvider>(context, listen: true);
   //
-  //   List<Task> filteredTaskList = bodyTaskListState.getFilteredTaskList;
+  //   List<Task> filteredTaskList = bodyTaskListProvider.getFilteredTaskList;
   //
   //   return CupertinoContextMenu(
   //     actions: <Widget>[
@@ -78,7 +78,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   //       CupertinoContextMenuAction(
   //         onPressed: () {
   //           Navigator.of(context, rootNavigator: true).pop();
-  //           bodyTaskListState.archiveTask(
+  //           bodyTaskListProvider.archiveTask(
   //               filteredTaskList[itemIndex], itemIndex);
   //           // FIXME: remove when archive task, and rebuild widget
   //           // removeTaskFromList(itemIndex);
@@ -90,7 +90,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   //         onPressed: () {
   //           Navigator.of(context, rootNavigator: true).pop();
   //           // FIXME: rebuild to show latest trailing icon
-  //           bodyTaskListState.markAsDoneTask(filteredTaskList[itemIndex]);
+  //           bodyTaskListProvider.markAsDoneTask(filteredTaskList[itemIndex]);
   //         },
   //         trailingIcon: Icons.done,
   //         child: const Text('Mark as Done'),
@@ -161,20 +161,20 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
   // -------------------------------------------------------------------
   // Components' callbacks
   // FIXME: pass bool for YourTaskPage here to see if it should refresh page
-  @override
-  void editTask(BuildContext context, Task task) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => TaskFormPage(
-          task: task,
-          isCreate: false,
-          rootTaskList: YourTaskPage(shouldRefresh: true),
-          rootTaskListTitle: largeTitle,
-        ),
-      ),
-    );
-  }
+  // @override
+  // void editTask(BuildContext context, Task task) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (BuildContext context) => TaskFormPage(
+  //         task: task,
+  //         isCreate: false,
+  //         rootTaskList: YourTaskPage(shouldRefresh: true),
+  //         rootTaskListTitle: largeTitle,
+  //       ),
+  //     ),
+  //   );
+  // }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
