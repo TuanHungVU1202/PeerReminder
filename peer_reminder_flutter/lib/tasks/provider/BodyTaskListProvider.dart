@@ -65,7 +65,7 @@ class BodyTaskListProvider with ChangeNotifier {
       print("Updating task: ");
       print(responseJson);
     } else {
-      throw Exception('TaskList::_saveTask(): Failed to update Task');
+      throw Exception('BodyTaskListProvider::_saveTask(): Failed to update Task');
     }
   }
 

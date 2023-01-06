@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:peer_reminder_flutter/tasks/component/IBodyTaskList.dart';
 import 'package:provider/provider.dart';
 
 // Local imports
@@ -13,13 +14,9 @@ import 'TaskTile.dart';
 
 String largeTitle = "Your Tasks";
 
-class BodyTaskList extends StatelessWidget {
-  const BodyTaskList({super.key});
+class BodyTaskListYourTasks extends StatelessWidget implements IBodyTaskList {
+  const BodyTaskListYourTasks({super.key});
 
-  // FIXME: return SliverList here
-  // https://medium.com/flutter-community/flutter-statemanagement-with-provider-ee251bbc5ac1
-  // https://stackoverflow.com/questions/56691331/how-to-use-flutter-provider-in-a-statefulwidget
-  // https://stackoverflow.com/questions/66619564/flutter-provider-initializing-a-state-with-a-constructor
   @override
   Widget build(BuildContext context) {
     BodyTaskListProvider bodyTaskListProvider =
@@ -40,6 +37,9 @@ class BodyTaskList extends StatelessWidget {
     );
   }
 
+  // -------------------------------------------------------------------
+  // UI Components
+  @override
   Slidable createSlidableTask(int itemIndex, BuildContext context) {
     BodyTaskListProvider bodyTaskListProvider =
         Provider.of<BodyTaskListProvider>(context, listen: true);
@@ -89,47 +89,7 @@ class BodyTaskList extends StatelessWidget {
     );
   }
 
-  Future<bool> onConfirmDeleteTask(BuildContext context) async {
-    return await showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-          title: const Text('Delete Confirmation'),
-          message: const Text('This task will be deleted. Continue?'),
-          actions: <Widget>[
-            CupertinoActionSheetAction(
-              child: const Text('Delete', style: TextStyle(color: Colors.red)),
-              onPressed: () {
-                Navigator.pop(context, true);
-              },
-            ),
-          ],
-          cancelButton: CupertinoActionSheetAction(
-            isDefaultAction: true,
-            onPressed: () {
-              Navigator.pop(context, false);
-            },
-            child: const Text('Cancel'),
-          )),
-    );
-  }
-
-  // CupertinoContextMenu createTaskContextMenu(
-  //     int itemIndex, BuildContext context) {
-  //   return CupertinoContextMenu(
-  //     actions: <Widget>[
-  //       CupertinoContextMenuAction(
-  //         onPressed: () {
-  //           Navigator.of(context, rootNavigator: true).pop();
-  //         },
-  //         isDefaultAction: true,
-  //         trailingIcon: Icons.edit,
-  //         child: const Text('Edit'),
-  //       ),
-  //     ],
-  //     child: const Text("This is child"),
-  //   );
-  // }
-
+  @override
   CupertinoContextMenu createTaskContextMenu(
       int itemIndex, BuildContext context) {
     BodyTaskListProvider bodyTaskListProvider =
@@ -208,11 +168,36 @@ class BodyTaskList extends StatelessWidget {
     );
   }
 
+  // -------------------------------------------------------------------
+  // Components' callbacks
+  Future<bool> onConfirmDeleteTask(BuildContext context) async {
+    return await showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+          title: const Text('Delete Confirmation'),
+          message: const Text('This task will be deleted. Continue?'),
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
+            child: const Text('Cancel'),
+          )),
+    );
+  }
+
   void doNothing(BuildContext context) {
     print("abc");
   }
 
-  @override
   void editTask(BuildContext context, Task task) {
     Navigator.push(
       context,

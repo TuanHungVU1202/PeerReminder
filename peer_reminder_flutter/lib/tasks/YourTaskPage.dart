@@ -1,16 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:peer_reminder_flutter/tasks/AbstractTaskList.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
-import 'package:peer_reminder_flutter/tasks/ViewTaskPage.dart';
-import 'package:peer_reminder_flutter/tasks/model/TaskStatus.dart';
 import 'package:peer_reminder_flutter/tasks/provider/BodyTaskListProvider.dart';
 import 'package:provider/provider.dart';
 
 // Local imports
-import 'component/TaskTile.dart';
+import 'component/BodyTaskListYourTasks.dart';
 import 'model/Task.dart';
 
 class YourTaskPage extends AbstractTaskList {
@@ -48,6 +43,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         child: mainScaffold);
   }
 
+  @override
   RefreshIndicator createRefreshableBody() {
     BodyTaskListProvider bodyTaskListProvider =
         Provider.of<BodyTaskListProvider>(context, listen: true);
@@ -56,125 +52,11 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
         child: createYourTaskSliverBody());
   }
 
-  // -------------------------------------------------------------------
-  // UI Components
-  // CupertinoContextMenu createTaskContextMenu(int itemIndex) {
-  //   bodyTaskListProviderProvider bodyTaskListProvider =
-  //       Provider.of<bodyTaskListProviderProvider>(context, listen: true);
-  //
-  //   List<Task> filteredTaskList = bodyTaskListProvider.getFilteredTaskList;
-  //
-  //   return CupertinoContextMenu(
-  //     actions: <Widget>[
-  //       CupertinoContextMenuAction(
-  //         onPressed: () {
-  //           Navigator.of(context, rootNavigator: true).pop();
-  //           editTask(context, filteredTaskList[itemIndex]);
-  //         },
-  //         isDefaultAction: true,
-  //         trailingIcon: Icons.edit,
-  //         child: const Text('Edit'),
-  //       ),
-  //       CupertinoContextMenuAction(
-  //         onPressed: () {
-  //           Navigator.of(context, rootNavigator: true).pop();
-  //           bodyTaskListProvider.archiveTask(
-  //               filteredTaskList[itemIndex], itemIndex);
-  //           // FIXME: remove when archive task, and rebuild widget
-  //           // removeTaskFromList(itemIndex);
-  //         },
-  //         trailingIcon: CupertinoIcons.archivebox,
-  //         child: const Text('Archive'),
-  //       ),
-  //       CupertinoContextMenuAction(
-  //         onPressed: () {
-  //           Navigator.of(context, rootNavigator: true).pop();
-  //           // FIXME: rebuild to show latest trailing icon
-  //           bodyTaskListProvider.markAsDoneTask(filteredTaskList[itemIndex]);
-  //         },
-  //         trailingIcon: Icons.done,
-  //         child: const Text('Mark as Done'),
-  //       ),
-  //       // FIXME: check if email or phone valid/available/etc.
-  //       CupertinoContextMenuAction(
-  //         onPressed: () {
-  //           Navigator.of(context, rootNavigator: true).pop();
-  //           launchDialer(filteredTaskList[itemIndex].phoneNo);
-  //         },
-  //         trailingIcon: CupertinoIcons.phone,
-  //         child: const Text('Call peer'),
-  //       ),
-  //       CupertinoContextMenuAction(
-  //         onPressed: () {
-  //           Navigator.of(context, rootNavigator: true).pop();
-  //           launchEmail(filteredTaskList[itemIndex].email);
-  //         },
-  //         trailingIcon: CupertinoIcons.mail,
-  //         child: const Text('Email peer'),
-  //       ),
-  //     ],
-  //     child: TaskTile(
-  //       task: filteredTaskList[itemIndex],
-  //       isPreviewTask: false,
-  //       itemIndex,
-  //       isEnableLeading: true,
-  //       isEnableContact: true,
-  //       rootTaskList: YourTaskPage(shouldRefresh: true),
-  //       rootTaskListTitle: largeTitle,
-  //     ),
-  //     previewBuilder: (context, animation, child) {
-  //       // Preview only => isPreview = true, isEnableLeading = false
-  //       return ViewTaskPage(
-  //         task: filteredTaskList[itemIndex],
-  //         isEnableLeading: false,
-  //         isPreview: true,
-  //         isEnableContact: true,
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Future<bool> onConfirmDeleteTask() async {
-  //   return await showCupertinoModalPopup(
-  //     context: context,
-  //     builder: (BuildContext context) => CupertinoActionSheet(
-  //         title: const Text('Delete Confirmation'),
-  //         message: const Text('This task will be deleted. Continue?'),
-  //         actions: <Widget>[
-  //           CupertinoActionSheetAction(
-  //             child: const Text('Delete', style: TextStyle(color: Colors.red)),
-  //             onPressed: () {
-  //               Navigator.pop(context, true);
-  //             },
-  //           ),
-  //         ],
-  //         cancelButton: CupertinoActionSheetAction(
-  //           isDefaultAction: true,
-  //           onPressed: () {
-  //             Navigator.pop(context, false);
-  //           },
-  //           child: const Text('Cancel'),
-  //         )),
-  //   );
-  // }
-
-  // -------------------------------------------------------------------
-  // Components' callbacks
-  // FIXME: pass bool for YourTaskPage here to see if it should refresh page
-  // @override
-  // void editTask(BuildContext context, Task task) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (BuildContext context) => TaskFormPage(
-  //         task: task,
-  //         isCreate: false,
-  //         rootTaskList: YourTaskPage(shouldRefresh: true),
-  //         rootTaskListTitle: largeTitle,
-  //       ),
-  //     ),
-  //   );
-  // }
+  // Create and use state provider for main BodyTaskList
+  @override
+  Widget createBodyTaskList() {
+    return const BodyTaskListYourTasks();
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

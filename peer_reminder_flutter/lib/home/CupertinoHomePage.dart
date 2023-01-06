@@ -47,57 +47,22 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
 
   // -------------------------------------------------------------------
   // UI components
-  // CupertinoTabView _createMyTasksTabView() {
-  //   return CupertinoTabView(
-  //     builder: (context) {
-  //       return MyTaskPage(shouldRefresh: false);
-  //     },
-  //   );
-  // }
-
   CupertinoTabView _createMyTasksTabView() {
     return CupertinoTabView(
       builder: (context) {
-        return Provider<BodyTaskListProvider>(
+        return ChangeNotifierProvider<BodyTaskListProvider>(
             create: (_) => BodyTaskListProvider(),
-            // we use `builder` to obtain a new `BuildContext` that has access to the provider
-            builder: (context, child) {
-              // No longer throws
-              return MyTaskPage(shouldRefresh: false);
-            });
+            child: MyTaskPage(shouldRefresh: false));
       },
     );
   }
 
-  // CupertinoTabView _createYourTasksTabView() {
-  //   return CupertinoTabView(
-  //     builder: (context) {
-  //       return YourTaskPage(shouldRefresh: false);
-  //     },
-  //   );
-  // }
-
-  // CupertinoTabView _createYourTasksTabView() {
-  //   return CupertinoTabView(
-  //     builder: (context) {
-  //       return Provider<BodyTaskListStateProvider>(
-  //           create: (_) => BodyTaskListStateProvider(),
-  //           // we use `builder` to obtain a new `BuildContext` that has access to the provider
-  //           builder: (context, child) {
-  //             // No longer throws
-  //             return YourTaskPage(shouldRefresh: false);
-  //           });
-  //     },
-  //   );
-  // }
-
   CupertinoTabView _createYourTasksTabView() {
     return CupertinoTabView(
       builder: (context) {
-          return ChangeNotifierProvider<BodyTaskListProvider>(
+        return ChangeNotifierProvider<BodyTaskListProvider>(
             create: (_) => BodyTaskListProvider(),
-            child: YourTaskPage(shouldRefresh: false)
-          );
+            child: YourTaskPage(shouldRefresh: false));
       },
     );
   }
