@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 import '../tasks/MyTaskPage.dart';
 import '../tasks/YourTaskPage.dart';
+import '../tasks/provider/BodyTaskListProvider.dart';
 
 class CupertinoHomePage extends StatefulWidget {
   const CupertinoHomePage({Key? key}) : super(key: key);
@@ -48,7 +50,9 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
   CupertinoTabView _createMyTasksTabView() {
     return CupertinoTabView(
       builder: (context) {
-        return MyTaskPage(shouldRefresh: false);
+        return ChangeNotifierProvider<BodyTaskListProvider>(
+            create: (_) => BodyTaskListProvider(),
+            child: MyTaskPage(shouldRefresh: false));
       },
     );
   }
@@ -56,7 +60,9 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
   CupertinoTabView _createYourTasksTabView() {
     return CupertinoTabView(
       builder: (context) {
-        return YourTaskPage(shouldRefresh: false);
+        return ChangeNotifierProvider<BodyTaskListProvider>(
+            create: (_) => BodyTaskListProvider(),
+            child: YourTaskPage(shouldRefresh: false));
       },
     );
   }
