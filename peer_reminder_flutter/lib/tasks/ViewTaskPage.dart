@@ -43,6 +43,8 @@ class ViewTaskPage extends StatefulWidget {
 class _ViewTaskState extends State<ViewTaskPage> {
   @override
   Widget build(BuildContext context) {
+    print("Rebuild ViewTask");
+
     ClipRRect bodyViewTaskPage = ClipRRect(
       // To round the corners
       borderRadius: BorderRadius.circular(8.0),
