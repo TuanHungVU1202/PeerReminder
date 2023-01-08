@@ -22,6 +22,7 @@ class YourTaskPageState extends AbstractTaskListState<YourTaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    // FIXME: better log
     print("Rebuilding...");
 
     // if (widget.shouldRefresh) {

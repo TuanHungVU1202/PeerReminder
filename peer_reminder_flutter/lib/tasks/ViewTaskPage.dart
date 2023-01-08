@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +7,6 @@ import 'package:peer_reminder_flutter/common/Constant.dart';
 import 'package:peer_reminder_flutter/common/UIConstant.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/common/Util.dart';
-import 'package:peer_reminder_flutter/tasks/YourTaskPage.dart';
 
 import 'AbstractTaskList.dart';
 import 'model/Task.dart';
@@ -43,6 +40,7 @@ class ViewTaskPage extends StatefulWidget {
 class _ViewTaskState extends State<ViewTaskPage> {
   @override
   Widget build(BuildContext context) {
+    // FIXME: better log
     print("Rebuild ViewTask");
 
     ClipRRect bodyViewTaskPage = ClipRRect(
