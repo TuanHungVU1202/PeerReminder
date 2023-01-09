@@ -7,6 +7,8 @@ import 'package:peer_reminder_flutter/common/Constant.dart';
 import 'package:peer_reminder_flutter/common/UIConstant.dart';
 import 'package:peer_reminder_flutter/tasks/TaskFormPage.dart';
 import 'package:peer_reminder_flutter/common/Util.dart';
+import 'package:peer_reminder_flutter/tasks/provider/BodyTaskListProvider.dart';
+import 'package:provider/provider.dart';
 
 import 'AbstractTaskList.dart';
 import 'model/Task.dart';
@@ -247,7 +249,10 @@ class _ViewTaskState extends State<ViewTaskPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => pageToNavigate,
+        builder: (BuildContext context) {
+          return ChangeNotifierProvider<BodyTaskListProvider>(
+              create: (_) => BodyTaskListProvider(), child: pageToNavigate);
+        },
       ),
     );
   }
