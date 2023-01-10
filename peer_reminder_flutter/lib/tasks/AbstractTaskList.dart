@@ -7,6 +7,7 @@ import 'package:peer_reminder_flutter/tasks/component/BodyTaskListYourTasks.dart
 import 'package:peer_reminder_flutter/tasks/provider/BodyTaskListProvider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import '../common/Constant.dart';
 import 'TaskFormPage.dart';
 import 'model/Task.dart';
 
@@ -77,6 +78,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     return CupertinoSliverNavigationBar(
       largeTitle: Text(largeTitle),
       automaticallyImplyLeading: false,
+      trailing: _createSortButton(),
     );
   }
 
@@ -111,6 +113,18 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   // Update state for the BodyTaskList
   Widget createBodyTaskList() {
     return const BodyTaskListYourTasks();
+  }
+
+  Material _createSortButton() {
+    return Material(
+        child: IconButton(
+      icon: const Icon(Icons.sort_by_alpha),
+      tooltip: 'Sort',
+      onPressed: () {
+        // FIXME: add sort function and change icon here
+        print("Sorting");
+      },
+    ));
   }
 
   // -----------------------------
@@ -154,43 +168,4 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
     }
     return true;
   }
-
-  // void removeTaskFromList(int itemIndex) {
-  //   originalTaskList.removeAt(itemIndex);
-  //   filteredTaskList = originalTaskList;
-  //   setState(() {});
-  // }
-
-  // Future<void> updateTask(Task task) async {
-  //   // TODO: Handle update response carefully
-  //   // The response is Date from java with startDateTime, endDateTime instead of String
-  //   final response = await taskService.updateTask(task);
-  //
-  //   if (response.statusCode == HttpStatus.ok) {
-  //     var responseJson = jsonDecode(response.body);
-  //     // task = Task.fromJson(responseJson);
-  //     print("Updating task: ");
-  //     print(responseJson);
-  //   } else {
-  //     throw Exception('TaskList::_saveTask(): Failed to update Task');
-  //   }
-  // }
-
-  // Get very first task list from DB
-  // void getTaskLists() {
-  //   fetchedTaskList.then((taskList) {
-  //     for (var task in taskList) {
-  //       originalTaskList.add(task);
-  //     }
-  //
-  //     filteredTaskList = originalTaskList;
-  //
-  //     // TODO: find better way to fetch Task List in the beginning
-  //     Future.delayed(const Duration(milliseconds: 20), () {
-  //       setState(() {
-  //         bodyWidgetList = createBodyWidgetList();
-  //       });
-  //     });
-  //   });
-  // }
 }
