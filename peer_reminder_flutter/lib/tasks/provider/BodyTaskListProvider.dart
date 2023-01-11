@@ -65,7 +65,8 @@ class BodyTaskListProvider with ChangeNotifier {
       print("Updating task: ");
       print(responseJson);
     } else {
-      throw Exception('BodyTaskListProvider::_saveTask(): Failed to update Task');
+      throw Exception(
+          'BodyTaskListProvider::_saveTask(): Failed to update Task');
     }
   }
 
@@ -140,5 +141,20 @@ class BodyTaskListProvider with ChangeNotifier {
     } else {
       throw 'Could not launch $emailUri';
     }
+  }
+
+  void sortList(bool isReverse) {
+    sortTaskListByName(_filteredTaskList, isReverse);
+    notifyListeners();
+  }
+
+  void sortTaskListByName(List<Task> taskList, bool isReverse) {
+    if (isReverse) {
+      taskList.sort((b, a) =>
+          a.taskName.toLowerCase().compareTo(b.taskName.toLowerCase()));
+      return;
+    }
+    taskList.sort(
+        (a, b) => a.taskName.toLowerCase().compareTo(b.taskName.toLowerCase()));
   }
 }
