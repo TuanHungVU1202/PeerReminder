@@ -26,6 +26,7 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   final searchBarController = TextEditingController();
 
   final String largeTitle = "Task List";
+  late bool isReverse;
 
   // To make sure things are mounted
   @override
@@ -41,6 +42,8 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
 
     // Requesting Contact permission for the first time
     requestPermission();
+
+    isReverse = false;
   }
 
   @override
@@ -116,13 +119,15 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
   }
 
   Material _createSortButton() {
+    BodyTaskListProvider bodyTaskListState =
+        Provider.of<BodyTaskListProvider>(context, listen: false);
     return Material(
         child: IconButton(
       icon: const Icon(Icons.sort_by_alpha),
       tooltip: 'Sort',
       onPressed: () {
-        // FIXME: add sort function and change icon here
-        print("Sorting");
+        bodyTaskListState.sortList(isReverse);
+        isReverse = !isReverse;
       },
     ));
   }
