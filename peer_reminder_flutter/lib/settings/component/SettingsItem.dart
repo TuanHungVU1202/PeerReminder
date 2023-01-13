@@ -53,8 +53,8 @@ class SettingsItemState extends State<SettingsItem> {
             bottom: 2.0,
           ),
           child: Image.asset(
-            'assets/${widget.iconAssetLabel}.png',
-            package: 'ios_settings_icons',
+            'assets/setting_icons/${widget.iconAssetLabel}.png',
+            // package: 'settings_icons',
             height: 29.0,
           ),
         ),
