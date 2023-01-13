@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:peer_reminder_flutter/settings/SettingsPage.dart';
 import 'package:provider/provider.dart';
 
 import '../tasks/MyTaskPage.dart';
@@ -69,13 +70,7 @@ class CupertinoHomePageState extends State<CupertinoHomePage> {
 
   CupertinoTabView _createSettingsTabView() {
     return CupertinoTabView(builder: (context) {
-      return const CustomScrollView(
-        slivers: <Widget>[
-          CupertinoSliverNavigationBar(
-            largeTitle: Text('Settings'),
-          ),
-        ],
-      );
+      return const SettingsPage();
     });
   }
 }

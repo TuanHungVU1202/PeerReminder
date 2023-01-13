@@ -13,8 +13,8 @@ class SettingsGroup extends StatelessWidget {
 
   final List<Widget> items;
 
-  late Widget header;
-  late Widget footer;
+  final Widget? header;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {

@@ -27,12 +27,12 @@ class SettingsItem extends StatefulWidget {
         assert(type != null);
 
   final String label;
-  final String subtitle;
-  final String iconAssetLabel;
+  final String? subtitle;
+  final String? iconAssetLabel;
   final SettingsItemType type;
-  final String value;
+  final String? value;
   final bool hasDetails;
-  final PressOperationCallback onPress;
+  final PressOperationCallback? onPress;
 
   @override
   State<StatefulWidget> createState() => SettingsItemState();
@@ -75,7 +75,7 @@ class SettingsItemState extends State<SettingsItem> {
           Text(widget.label),
           const Padding(padding: EdgeInsets.only(top: 4.0)),
           Text(
-            widget.subtitle,
+            widget.subtitle!,
             style: const TextStyle(
               fontSize: 12.0,
               letterSpacing: -0.2,
@@ -118,7 +118,7 @@ class SettingsItemState extends State<SettingsItem> {
                 right: 2.25,
               ),
               child: Text(
-                widget.value,
+                widget.value!,
                 style: const TextStyle(color: CupertinoColors.inactiveGray),
               ),
             ),
@@ -163,7 +163,7 @@ class SettingsItemState extends State<SettingsItem> {
             setState(() {
               pressed = true;
             });
-            widget.onPress().whenComplete(() {
+            widget.onPress!().whenComplete(() {
               Future.delayed(
                 const Duration(milliseconds: 150),
                 () {
