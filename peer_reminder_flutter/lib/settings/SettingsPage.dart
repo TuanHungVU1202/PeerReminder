@@ -29,16 +29,24 @@ class SettingsPage extends StatelessWidget {
                       SettingsHeader(),
                     ]),
                     const SettingsGroup(<Widget>[
+                      // SettingsItem(
+                      //   label: 'Airplane Mode',
+                      //   iconAssetLabel: 'airplane',
+                      //   type: SettingsItemType.toggle,
+                      // ),
                       SettingsItem(
-                        label: 'Airplane Mode',
-                        iconAssetLabel: 'airplane',
-                        type: SettingsItemType.toggle,
-                      ),
-                      SettingsItem(
-                        label: 'Wi-Fi',
-                        iconAssetLabel: 'wifi',
+                        label: 'Language',
+                        iconAssetLabel: 'language',
                         type: SettingsItemType.modal,
-                        value: 'Airport Free',
+                        value: 'English',
+                        hasDetails: true,
+                      ),
+                      // FIXME: change default value
+                      SettingsItem(
+                        label: 'Theme',
+                        iconAssetLabel: 'theme',
+                        type: SettingsItemType.modal,
+                        value: 'System',
                         hasDetails: true,
                       ),
                     ]),
