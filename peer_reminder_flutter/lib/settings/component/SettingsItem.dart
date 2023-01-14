@@ -153,6 +153,7 @@ class SettingsItemState extends State<SettingsItem> {
         break;
     }
 
+    // FIXME: On press push to another page
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       color: pressed ? UIConstant.kItemPressedColor : const Color(0x00FFFFFF),

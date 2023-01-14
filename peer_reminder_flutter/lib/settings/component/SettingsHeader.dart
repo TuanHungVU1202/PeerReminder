@@ -53,7 +53,7 @@ class SettingsHeader extends StatelessWidget {
                   ),
                   Padding(padding: EdgeInsets.only(top: 6.0)),
                   Text(
-                    'Apple ID, iCloud, iTunes & App Store',
+                    'Account Settings',
                     style: TextStyle(
                       fontSize: 13.0,
                       letterSpacing: -0.1,
