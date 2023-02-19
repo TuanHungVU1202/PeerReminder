@@ -157,8 +157,8 @@ class AbstractTaskListState<T extends AbstractTaskList> extends State<T> {
           context: context,
           builder: (BuildContext context) => CupertinoAlertDialog(
                 title: const Text('Contacts Permission denied'),
-                content: const Text('Please enable contacts access '
-                    'permission in system settings to search for peer contacts'),
+                content: const Text(
+                    'Please enable contacts access permission in system settings to search for peer contacts'),
                 actions: <Widget>[
                   CupertinoDialogAction(
                     child: const Text('Maybe later'),
